@@ -1,11 +1,12 @@
 import { h } from "../dom";
 import { HEARTS, bossHp, fightOrder, lessonQuestions, worldContent } from "../content";
-import { addMissed, isUnlocked, markCleared, removeMissed } from "../progress";
+import { addMissed, canSkipTo, clearWorld, isUnlocked, removeMissed } from "../progress";
 import { go, href } from "../nav";
 import { reducedMotion } from "../typewriter";
 import { MAIN_WORLDS, WORLDS, bossId } from "../worlds";
 import { ARENA_H, ARENA_W, Arena } from "../map/arena";
 import { fontToggle } from "./font-toggle";
+import { searchButton } from "./search";
 import { blocked, btn, confetti, createDialog, md } from "./dialog";
 
 /**
@@ -16,7 +17,9 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
   const world = WORLDS.find((w) => w.num === worldNum);
   if (!world) return blocked(root, "No boss here, traveler.");
   const id = bossId(worldNum);
-  if (!isUnlocked(id)) return blocked(root, `Clear every level in ${world.name} to reach its boss.`);
+  // Skip ahead: the current world's boss can be fought early.
+  const skipping = !isUnlocked(id) && canSkipTo(id);
+  if (!isUnlocked(id) && !skipping) return blocked(root, `Clear every level in ${world.name} to reach its boss.`, true);
 
   const { recap, scenarios } = worldContent(worldNum);
   const recall = lessonQuestions(worldNum);
@@ -38,6 +41,7 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
       { class: "level-bar" },
       h("a", { class: "btn btn-small", href: href("") }, "◀ MAP"),
       h("span", { class: "chip" }, `WORLD ${worldNum} BOSS · ${world.name.toUpperCase()}`),
+      searchButton(),
       fontToggle(),
     ),
     h("main", { class: "level" }, h("h1", { class: "level-title" }, name), stage, status, d.el),
@@ -66,6 +70,7 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
     d.setName("WHAT YOU LEARNED");
     d.say(md(recap.map((r) => `- ${r}`).join("\n")), false);
     advance = intro;
+    d.extra.append(h("p", { class: "recap-sheet" }, h("a", { href: href(`cheatsheet/${worldNum}`) }, `Cheat sheet for ${world!.name}`), ": key ideas, terms and diagrams on one page."));
     d.setActions(btn("◀ MAP", () => go(""), "btn btn-ghost"), btn("I'M READY ▶", intro));
   }
 
@@ -73,7 +78,10 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
     d.setName("BOSS");
     d.say(
       md(
-        `The **${name}** guards the way out of ${world!.name}! Some questions check the basics. Others give you a situation and ask what you'd do.\n\n` +
+        (skipping
+          ? `**Skipping ahead.** Beat the **${name}** and all of ${world!.name} counts as cleared, Agentdex terms included. Lose, and nothing changes: the lessons are still there.\n\n`
+          : "") +
+          `The **${name}** guards the way out of ${world!.name}! Some questions check the basics. Others give you a situation and ask what you'd do.\n\n` +
           `Each right answer hits it. Each wrong answer costs you a heart. **${maxHp} hits** to win, **${HEARTS} hearts** to lose.`,
       ),
     );
@@ -112,13 +120,23 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
           d.setActions(btn("NEXT ▶", question));
         }
       };
-      if (correct) arena.hitBoss(after);
-      else arena.hitPlayer(after);
+      // The arena shakes when a hit lands.
+      const land = () => {
+        if (!reducedMotion()) {
+          stage.classList.remove("shake");
+          void stage.offsetWidth;
+          stage.classList.add("shake");
+        }
+        after();
+      };
+      if (correct) arena.hitBoss(land);
+      else arena.hitPlayer(land);
     });
   }
 
   function victory(): void {
-    markCleared(id);
+    // Beating a boss clears its whole world, even when you skipped ahead.
+    clearWorld(worldNum);
     d.el.classList.add("cleared");
     if (!reducedMotion()) d.el.append(confetti());
     d.setName("BOSS DEFEATED!");
@@ -128,7 +146,7 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
           ? `You beat the **${name}** and conquered the Star Road! That's expert territory: sandboxes, guardrails, MCP sign-in, cost, evals and browser agents.`
           : last
             ? `You beat the **${name}** and finished Agentica! You know where agents came from, how they work, why they're hard to secure, and how to keep them in check. **Quest complete!** A bonus Star Road has appeared on the map.`
-            : `You beat the **${name}**! ${world!.name} is clear. Head back to the map: the road to World ${worldNum + 1} is open.`,
+            : `You beat the **${name}**! ${world!.name} is clear${skipping ? ", and its Agentdex terms are yours" : ""}. Head back to the map: the road to World ${worldNum + 1} is open.`,
       ),
     );
     const toMap = () => go("");

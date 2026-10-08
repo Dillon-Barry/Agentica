@@ -6,6 +6,9 @@ import { go, href } from "../nav";
 import { reducedMotion } from "../typewriter";
 import { worldOf } from "../worlds";
 import { fontToggle } from "./font-toggle";
+import { searchButton } from "./search";
+import { copyLinkButton } from "./share";
+import { focusParts, openDiagram } from "./zoom";
 import { blocked, btn, confetti, createDialog, md } from "./dialog";
 import { attachTermPopovers, linkTerms } from "./terms";
 
@@ -13,14 +16,17 @@ import { attachTermPopovers, linkTerms } from "./terms";
 export function renderLevel(root: HTMLElement, id: string): () => void {
   const lesson = getLesson(id);
   if (!lesson) return blocked(root, "No level here, traveler.");
-  if (!isUnlocked(id)) return blocked(root, "This level is still locked. Clear the stops before it first.");
+  if (!isUnlocked(id)) return blocked(root, "This level is still locked. Clear the stops before it first.", true);
 
   const world = worldOf(id);
   const isLastLesson = world.levels[world.levels.length - 1].id === id;
 
-  const stage = h("div", { class: "stage" }, html(DIAGRAMS[lesson.diagram] ?? ""));
+  const markup = DIAGRAMS[lesson.diagram] ?? "";
+  const enlarge = btn("⤢ ENLARGE", () => openDiagram(markup, lesson.title, lesson.focus), "btn btn-small btn-ghost stage-zoom");
+  enlarge.setAttribute("aria-label", "Enlarge the diagram");
+  const stage = h("div", { class: "stage" }, html(markup), enlarge);
   if (reducedMotion()) stage.querySelector("svg")?.pauseAnimations();
-  const d = createDialog("SAGE");
+  const d = createDialog("SAGE", { buddy: true });
 
   root.append(
     h(
@@ -28,6 +34,8 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
       { class: "level-bar" },
       h("a", { class: "btn btn-small", href: href("") }, "◀ MAP"),
       h("span", { class: "chip" }, `WORLD ${lesson.id} · ${world.name.toUpperCase()}`),
+      copyLinkButton(`level/${id}`),
+      searchButton(),
       fontToggle(),
     ),
     h("main", { class: "level" }, h("h1", { class: "level-title" }, lesson.title), stage, d.el),
@@ -35,11 +43,7 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
 
   /** Light up the diagram parts this page talks about and dim the rest. */
   const svg = stage.querySelector("svg");
-  const focusDiagram = (parts: string[]) => {
-    if (!svg) return;
-    svg.classList.toggle("focusing", parts.length > 0);
-    svg.querySelectorAll<SVGGElement>("[data-part]").forEach((g) => g.classList.toggle("lit", parts.includes(g.dataset.part ?? "")));
-  };
+  const focusDiagram = (parts: string[]) => focusParts(svg, parts);
 
   /** What Enter / Space / → do right now. */
   let advance: (() => void) | undefined;
@@ -63,6 +67,7 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
     d.el.classList.add("cleared");
     if (!reducedMotion() && !d.el.querySelector(".confetti")) d.el.append(confetti());
     d.setName("LEVEL CLEAR!");
+    d.buddy?.react("cheer");
     d.setPips(lesson!.boxes.map(() => "on"));
     const terms = lesson!.terms.map((t) => t.term).join(", ");
     d.say(

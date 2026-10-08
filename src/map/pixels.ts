@@ -98,6 +98,23 @@ export function mound(w: number, h: number, base: string, light: string, dark: s
   return c;
 }
 
+// Bit's faces: rows 7 and 8 of the player sprite are the eyes.
+export type BitFace = "idle" | "blink" | "happy" | "sad";
+const EYES: Record<BitFace, [string, string]> = {
+  idle: [".kwbccbbbbccbwk.", ".kwbccbbbbccbwk."],
+  blink: [".kwbbbbbbbbbbwk.", ".kwbccbbbbccbwk."],
+  happy: [".kwbbcbbbbcbbwk.", ".kwbcbcbbcbcbwk."],
+  sad: [".kwbbbbbbbbbbwk.", ".kwbccbbbbccbwk."],
+};
+
+/** Bit with a given face and standing feet. Sad Bit's antenna light goes out. */
+export function bitSprite(face: BitFace, feet: string[] = ART.feetA): Sprite {
+  const rows = [...ART.player];
+  [rows[7], rows[8]] = EYES[face];
+  if (face === "sad") rows[1] = "......kGGk......";
+  return sprite([...rows, ...feet]);
+}
+
 // Sprite sheets ------------------------------------------------------------
 
 export const ART = {

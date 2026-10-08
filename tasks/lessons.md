@@ -33,5 +33,10 @@
 - Controls belong where the eye is: the PLAY button sits under the player's stop, not in a
   corner. After a clear, move the player on automatically instead of making them walk.
 - "Interactive" means something to *do*, not just read: user wanted a walkable overworld map.
+- Heavy parallel browser test runs (one headless Edge per Playwright worker) lagged the user's
+  machine. Rule: 2 workers locally; iterate with single specs; full suite once before commit.
+- Git Bash heredocs on this machine mangled backslashes in generated JS (`\\b` became a
+  backspace character, `\\/` lost its slash). Rule: write edit scripts with the Write tool,
+  or use the Edit tool, whenever the text contains backslashes.
 - User wants high-level, short content first. Rule: lesson boxes are 2-4 sentences (cap 70 words,
   enforced by test). Detail goes in the optional "Go deeper" section, never in the main path.

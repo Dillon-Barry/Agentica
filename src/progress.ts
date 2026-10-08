@@ -1,5 +1,5 @@
 import { getLesson } from "./content";
-import { ROUTE } from "./worlds";
+import { ROUTE, worldOf } from "./worlds";
 
 const KEY = "agentica.v3";
 
@@ -53,13 +53,35 @@ export function isCleared(id: string): boolean {
   return state.cleared.includes(id);
 }
 
-/** A stop is open once every stop before it on the route is cleared. */
-export function isUnlocked(id: string): boolean {
+/** On the game path, a stop opens once every stop before it is cleared. */
+export function isOnPath(id: string): boolean {
   for (const l of ROUTE) {
     if (l.id === id) return isAvailable(id);
     if (isAvailable(l.id) && !isCleared(l.id)) return false;
   }
   return false;
+}
+
+/** A stop can be played: it's on the path, or study mode opens everything. */
+export function isUnlocked(id: string): boolean {
+  return isAvailable(id) && (studyMode() || isOnPath(id));
+}
+
+/**
+ * Skip ahead: the boss of the world you're currently in can be fought early.
+ * Beating it clears the whole world (see clearWorld).
+ */
+export function canSkipTo(id: string): boolean {
+  const l = ROUTE.find((r) => r.id === id);
+  if (!l?.boss || isUnlocked(id)) return false;
+  const first = worldOf(id).levels[0].id;
+  return isOnPath(first);
+}
+
+/** Beating a boss clears its whole world: lessons, challenge and boss. */
+export function clearWorld(num: number): void {
+  for (const l of ROUTE) if (worldOf(l.id).num === num && !isCleared(l.id)) state.cleared.push(l.id);
+  save();
 }
 
 export function markCleared(id: string): void {
@@ -111,6 +133,30 @@ export function addMissed(question: string): void {
 export function removeMissed(question: string): void {
   state.missed = (state.missed ?? []).filter((q) => q !== question);
   save();
+}
+
+// Study mode is a reading preference, stored apart from progress.
+const STUDY_KEY = "agentica.study";
+let study = (() => {
+  try {
+    return localStorage.getItem(STUDY_KEY) === "1";
+  } catch {
+    return false;
+  }
+})();
+
+/** Study mode: every stop is open, for looking things up. Clears still count. */
+export function studyMode(): boolean {
+  return study;
+}
+
+export function setStudyMode(on: boolean): void {
+  study = on;
+  try {
+    localStorage.setItem(STUDY_KEY, on ? "1" : "0");
+  } catch {
+    /* ignore */
+  }
 }
 
 export function resetProgress(): void {

@@ -3,10 +3,16 @@ import { LESSONS, QUESTIONS } from "../content";
 import { isCleared, missedQuestions, removeMissed } from "../progress";
 import { href } from "../nav";
 import { fontToggle } from "./font-toggle";
+import { searchButton } from "./search";
 import { btn, createDialog } from "./dialog";
+import { copyLinkButton } from "./share";
+import { termSlug } from "../search";
 
-/** Glossary of collected terms, plus a review pile of boss questions you got wrong. */
-export function renderAgentdex(root: HTMLElement): () => void {
+/**
+ * Glossary of collected terms, plus a review pile of boss questions you got wrong.
+ * `target` is a term slug from a shared link: that entry is shown and highlighted.
+ */
+export function renderAgentdex(root: HTMLElement, target?: string): () => void {
   const all = LESSONS.flatMap((l) => l.terms.map((t) => ({ ...t, lesson: l.id, found: isCleared(l.id) })));
   const found = all.filter((t) => t.found).length;
 
@@ -28,7 +34,7 @@ export function renderAgentdex(root: HTMLElement): () => void {
   }
 
   function practise(pile: string[]): void {
-    const d = createDialog("REVIEW");
+    const d = createDialog("REVIEW", { buddy: true });
     const queue = [...pile];
     let right = 0;
     review.replaceChildren(d.el);
@@ -62,8 +68,9 @@ export function renderAgentdex(root: HTMLElement): () => void {
     h(
       "header",
       { class: "level-bar" },
-      h("a", { class: "btn btn-small", href: href(""), "data-autofocus": true }, "◀ MAP"),
+      h("a", { class: "btn btn-small", href: href(""), "data-autofocus": !target }, "◀ MAP"),
       h("span", { class: "chip" }, `AGENTDEX · ${found}/${all.length} FOUND`),
+      searchButton(),
       fontToggle(),
     ),
     h(
@@ -71,22 +78,37 @@ export function renderAgentdex(root: HTMLElement): () => void {
       { class: "dex" },
       h("h1", { class: "level-title" }, "Agentdex"),
       review,
-      h("p", { class: "dex-intro" }, "Every term you collect by clearing levels. Locked entries show which level holds them."),
+      h("p", { class: "dex-intro" }, "Every term you collect by clearing levels. Locked entries show which level holds them. Want them all on one page? ", h("a", { href: href("cheatsheet") }, "Open the cheat sheet"), "."),
       h(
         "ol",
         { class: "dex-list" },
-        ...all.map((t, i) =>
-          h(
+        ...all.map((t, i) => {
+          const slug = termSlug(t.term);
+          // A shared link always shows its term, collected or not.
+          const shown = t.found || slug === target;
+          return h(
             "li",
-            { class: `dex-entry${t.found ? "" : " unknown"}` },
+            { class: `dex-entry${shown ? "" : " unknown"}${slug === target ? " dex-target" : ""}`, id: `term-${slug}` },
             h("span", { class: "dex-num" }, String(i + 1).padStart(3, "0")),
-            h("div", {}, h("h2", {}, t.found ? t.term : "???"), h("p", {}, t.found ? t.def : `Clear level ${t.lesson} to unlock.`)),
-          ),
-        ),
+            h(
+              "div",
+              {},
+              h("h2", {}, shown ? t.term : "???"),
+              h("p", {}, shown ? t.def : `Clear level ${t.lesson} to unlock.`),
+              shown && !t.found ? h("p", { class: "dex-note" }, `Shared with you. Level ${t.lesson} teaches it, and clearing it adds it to your Agentdex.`) : null,
+            ),
+            shown ? copyLinkButton(`agentdex/${slug}`, "LINK", "btn btn-small btn-ghost dex-link") : null,
+          );
+        }),
       ),
     ),
   );
   renderReview();
+  if (target) {
+    const el = document.getElementById(`term-${target}`);
+    el?.scrollIntoView({ block: "center" });
+    el?.querySelector<HTMLElement>(".dex-link")?.setAttribute("data-autofocus", "");
+  }
 
   return () => {
     if (keyHandler) window.removeEventListener("keydown", keyHandler);

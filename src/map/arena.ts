@@ -1,4 +1,4 @@
-import { ART, PAL, silhouette, sprite, type Sprite } from "./pixels";
+import { ART, PAL, bitSprite, silhouette, sprite, type Sprite } from "./pixels";
 import { reducedMotion } from "../typewriter";
 import type { World } from "../types";
 
@@ -22,6 +22,10 @@ export class Arena {
   private bossFlash: Sprite;
   private player: Sprite[];
   private playerFlash: Sprite;
+  private playerHappy: Sprite;
+  private playerSad: Sprite;
+  /** Bit cheers after landing a hit and slumps after taking one. */
+  private mood?: { happy: boolean; until: number };
   private heart: Sprite;
   private heartEmpty: Sprite;
   private raf = 0;
@@ -46,7 +50,9 @@ export class Arena {
     this.ctx = canvas.getContext("2d")!;
     this.boss = sprite(ART.monster, { r: world.boss.body, R: world.boss.shade, o: "w" });
     this.bossFlash = silhouette(this.boss);
-    this.player = [sprite([...ART.player, ...ART.feetA]), sprite([...ART.player, ...ART.feetB])];
+    this.player = [bitSprite("idle", ART.feetA), bitSprite("idle", ART.feetB)];
+    this.playerHappy = bitSprite("happy");
+    this.playerSad = bitSprite("sad");
     this.playerFlash = silhouette(this.player[0], PAL.r);
     this.heart = sprite(ART.heart);
     this.heartEmpty = sprite(ART.heart, { r: "#404050" });
@@ -73,6 +79,7 @@ export class Arena {
     this.hearts = this.maxHearts;
     this.defeatedAt = 0;
     this.shot = undefined;
+    this.mood = undefined;
   }
 
   /** Bit fires at the boss; it loses one HP when the shot lands. */
@@ -80,6 +87,7 @@ export class Arena {
     this.fire(40, 112, PAL.y, () => {
       this.hp = Math.max(0, this.hp - 1);
       this.bossHitUntil = performance.now() + 350;
+      this.mood = { happy: true, until: performance.now() + 900 };
       if (this.hp === 0) this.defeatedAt = performance.now();
       done();
     });
@@ -90,6 +98,7 @@ export class Arena {
     this.fire(104, 34, this.world.boss.body, () => {
       this.hearts = Math.max(0, this.hearts - 1);
       this.playerHitUntil = performance.now() + 350;
+      this.mood = { happy: false, until: performance.now() + 1100 };
       done();
     });
   }
@@ -123,10 +132,15 @@ export class Arena {
     for (let x = 0; x < ARENA_W; x += 12) ctx.fillRect(x, FLOOR + 1, 1, ARENA_H - FLOOR - 1);
 
     // Bit.
-    const pFrame = this.player[(this.tick >> 4) & 1];
+    const mood = this.mood && now < this.mood.until ? this.mood : undefined;
+    const pFrame = mood ? (mood.happy ? this.playerHappy : this.playerSad) : this.player[(this.tick >> 4) & 1];
     const pImg = now < this.playerHitUntil && (this.tick >> 1) & 1 ? this.playerFlash : pFrame;
     const pShake = now < this.playerHitUntil ? ((this.tick >> 1) & 1 ? 1 : -1) : 0;
-    ctx.drawImage(pImg, 20 + pShake, FLOOR - pImg.height * 2 + 2, pImg.width * 2, pImg.height * 2);
+    // A happy Bit hops; a hurt one sags a pixel.
+    const left = mood ? mood.until - now : 0;
+    const hop = mood?.happy && !reducedMotion() ? Math.round(Math.abs(Math.sin((left / 900) * Math.PI * 2)) * 6) : 0;
+    const sag = mood && !mood.happy && now >= this.playerHitUntil ? 2 : 0;
+    ctx.drawImage(pImg, 20 + pShake, FLOOR - pImg.height * 2 + 2 - hop + sag, pImg.width * 2, pImg.height * 2);
 
     // Boss: bobs, flashes when hit, sinks away when beaten.
     const fall = this.defeatedAt ? Math.min(40, (now - this.defeatedAt) / 25) : 0;

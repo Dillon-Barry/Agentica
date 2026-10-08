@@ -38,7 +38,7 @@ test("PLAY card sits under Bit, opens the level, and Bit walks on after a clear"
   expect(box.y).toBeGreaterThan(40);
   expect(box.y).toBeLessThan(vh * 0.75);
 
-  await card.locator("button").click();
+  await card.locator(".btn-go").click();
   await expect(page).toHaveURL(/#\/level\/1-1$/);
   await readLesson(page);
   await page.locator(".dialog-actions button", { hasText: "TO THE MAP" }).click();

@@ -6,6 +6,7 @@ import { reducedMotion } from "../typewriter";
 import { MAIN_WORLDS, ROUTE, WORLDS, bossId } from "../worlds";
 import { CARD_H, CARD_W, drawCard } from "../certificate";
 import { fontToggle } from "./font-toggle";
+import { searchButton } from "./search";
 import { blocked, btn, confetti } from "./dialog";
 
 const NAME_KEY = "agentica.certName";
@@ -107,6 +108,7 @@ export function renderFinish(root: HTMLElement): () => void {
       { class: "level-bar" },
       h("a", { class: "btn btn-small", href: href("") }, "◀ MAP"),
       h("span", { class: "chip" }, "YOUR RESULTS"),
+      searchButton(),
       fontToggle(),
     ),
     h(
@@ -115,6 +117,7 @@ export function renderFinish(root: HTMLElement): () => void {
       h("h1", { class: "level-title" }, "You did it!"),
       hero,
       cert,
+      h("p", { class: "dex-intro" }, "Keep it handy: ", h("a", { href: href("cheatsheet") }, "the Agentica cheat sheet"), " has every key idea and term on one printable page."),
       h(
         "ol",
         { class: "finish-worlds" },

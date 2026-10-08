@@ -70,3 +70,22 @@ export function fightOrder(scenarios: QuizQuestion[], recall: QuizQuestion[]): Q
   }
   return out;
 }
+
+// Reading pace for time estimates: a relaxed 180 words a minute, plus a few
+// seconds per page to look at the diagram.
+const WPM = 180;
+const PAGE_SECONDS = 6;
+const words = (s: string) => s.split(/\s+/).filter(Boolean).length;
+
+/** Rough minutes to read a lesson's main pages (not the optional "Go deeper"). */
+export function lessonMinutes(l: Lesson): number {
+  return l.boxes.reduce((m, b) => m + words(b) / WPM + PAGE_SECONDS / 60, 0);
+}
+
+/** Rough minutes for a whole world: its lessons, a 2-minute challenge, and the boss. */
+export function worldMinutes(world: number): number {
+  const reading = LESSONS.filter((l) => l.world === world).reduce((m, l) => m + lessonMinutes(l), 0);
+  // A boss asks about HP + 1 questions at ~30 seconds each, plus the recap.
+  const boss = ((bossHp(world) + 1) * 30) / 60 + 0.5;
+  return Math.max(1, Math.round(reading + 2 + boss));
+}

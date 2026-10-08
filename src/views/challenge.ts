@@ -5,8 +5,10 @@ import { reducedMotion } from "../typewriter";
 import { WORLDS, challengeId } from "../worlds";
 import { CHALLENGES } from "../challenges";
 import { fontToggle } from "./font-toggle";
+import { searchButton } from "./search";
 import { blocked, btn, confetti, md } from "./dialog";
 import { attachTermPopovers, linkTerms } from "./terms";
+import { createBuddy } from "./buddy";
 
 /** A world's hands-on challenge, between its lessons and its boss. */
 export function renderChallenge(root: HTMLElement, worldNum: number): () => void {
@@ -14,12 +16,13 @@ export function renderChallenge(root: HTMLElement, worldNum: number): () => void
   const challenge = CHALLENGES[worldNum];
   if (!world || !challenge) return blocked(root, "No challenge here, traveler.");
   const id = challengeId(worldNum);
-  if (!isUnlocked(id)) return blocked(root, `Clear the levels in ${world.name} to reach its challenge.`);
+  if (!isUnlocked(id)) return blocked(root, `Clear the levels in ${world.name} to reach its challenge.`, true);
 
   const intro = h("div", { class: "dialog-text ch-intro" });
   intro.innerHTML = linkTerms(md(challenge.intro));
   const stage = h("section", { class: "box ch" });
-  const finish = h("section", { class: "dialog ch-done", hidden: true });
+  const finish = h("section", { class: "dialog ch-done has-buddy", hidden: true });
+  const buddy = createBuddy();
 
   root.append(
     h(
@@ -27,6 +30,7 @@ export function renderChallenge(root: HTMLElement, worldNum: number): () => void
       { class: "level-bar" },
       h("a", { class: "btn btn-small", href: href("") }, "◀ MAP"),
       h("span", { class: "chip" }, `WORLD ${worldNum} CHALLENGE · ${world.name.toUpperCase()}`),
+      searchButton(),
       fontToggle(),
     ),
     h(
@@ -57,7 +61,9 @@ export function renderChallenge(root: HTMLElement, worldNum: number): () => void
         btn("TO THE MAP ▶", () => go("")),
       ),
     );
+    finish.append(buddy.el);
     finish.hidden = false;
+    buddy.react("cheer");
     finish.classList.add("cleared");
     if (!reducedMotion()) finish.append(confetti());
     finish.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
@@ -65,5 +71,8 @@ export function renderChallenge(root: HTMLElement, worldNum: number): () => void
 
   challenge.mount(stage, done);
   let cleanup = attachTermPopovers(root);
-  return () => cleanup();
+  return () => {
+    buddy.destroy();
+    cleanup();
+  };
 }

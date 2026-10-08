@@ -8,12 +8,12 @@ import { STAR_DIAGRAMS } from "./star";
 const agentCore = svg(
   "Diagram: you give the agent a goal; the model loops, using tools and memory, until the goal is met and it reports back",
   `
-  ${box(4, 62, 52, 32, "GOAL", "d-box", "YOUR TASK")}
+  ${box(4, 62, 60, 32, "GOAL", "d-box", "YOUR TASK")}
   ${box(90, 50, 80, 56, "MODEL", "d-box d-hl", "the brain")}
   ${box(196, 8, 60, 28, "TOOLS")}
   ${box(196, 124, 60, 28, "MEMORY")}
   ${box(264, 62, 52, 32, "DONE", "d-box", "GOAL MET")}
-  ${ln(56, 78, 88, 78)}
+  ${ln(64, 78, 88, 78)}
   ${ln(166, 50, 204, 38, true)}
   ${ln(166, 106, 204, 124, true)}
   ${ln(170, 78, 262, 78)}

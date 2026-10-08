@@ -22,6 +22,20 @@ Questions you miss land in the Agentdex **review pile** to practise later. Finis
 quest to unlock the bonus **Star Road** and a certificate PNG with your name, ready for
 LinkedIn. Your name never leaves your browser.
 
+### Use it as a reference
+
+- **Search**: press `/` (or SEARCH) to find any lesson, Agentdex term, challenge or boss.
+- **Study mode**: STUDY opens every stop, for looking things up. Lessons you finish still count.
+- **Skip ahead**: already know a world? Fight its boss from the PLAY card. Win, and the whole
+  world counts as cleared.
+- **Cheat sheets**: one printable page with every world's key ideas and terms
+  (`#/cheatsheet`), or one world with its diagrams (`#/cheatsheet/3`).
+- **Links**: COPY LINK on lessons, and LINK on Agentdex terms (`#/agentdex/prompt-injection`).
+  A shared term shows its definition even to someone who hasn't collected it yet.
+- **Bigger diagrams**: ENLARGE opens a diagram full screen, and REPLAY steps through the parts
+  each page highlights.
+- Each world shows a rough time to finish (~10-14 minutes).
+
 ## Worlds
 
 | World | Topic |
@@ -47,8 +61,10 @@ site as one self-contained file, `dist/index.html`, fonts included. Double-click
 it, no server needed.
 
 `npm run e2e` runs the Playwright suite against `dist/index.html` (build first): the map,
-auto-walk, lessons, every challenge, a boss fight, the review pile, the certificate, and
-[axe](https://github.com/dequelabs/axe-core) accessibility scans of each screen. Locally
+auto-walk, lessons, every challenge, a boss fight, the review pile, the certificate, study
+mode, skip ahead, search, links, cheat sheets, diagram zoom, phone layouts, and
+[axe](https://github.com/dequelabs/axe-core) accessibility scans of each screen. Locally it
+runs two browsers at a time. Locally
 it uses the installed Microsoft Edge; CI uses Playwright's Chromium.
 `npm run og-image` redraws the link-preview image, `public/og-image.png`.
 

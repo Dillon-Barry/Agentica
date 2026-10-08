@@ -206,3 +206,24 @@ World 6 — Solo Citadel
 - Accessibility: axe found low-contrast dim text (4.24:1) and white-on-red/green labels (3.95:1, ~3:1); fixed with --dim #8c8c8c and deep red/green behind small text. Added skip link to the level list. No real screen-reader pass yet (stated in README).
 - Certificate world list overflowed with Star Road added; now shrinks to fit.
 - In-repo Playwright: 27 tests (map, lessons, 7 challenges, boss + review pile, finish/cert, og card, 9 axe/keyboard checks) run in CI after the build. 451 unit tests.
+
+## Round 5 (2026-10-08): resource, feel, phones
+- [x] 1. Study mode: HUD toggle opens every stop (lessons, challenges, bosses); saved per browser. Browsing clears nothing new; the game path stays default. Locked deep links offer "Open in study mode".
+- [x] 6. Skip ahead: a locked world's boss can be fought early ("SKIP AHEAD?" on the map card). Win = world cleared (rules below).
+- [x] 2. Search: `/` or HUD button opens a search box over lessons (title + text), Agentdex terms, challenges and bosses; arrow keys + Enter jump. Built from content at build time, no library.
+- [x] 5. Copy-link buttons on lessons and Agentdex terms; Agentdex terms get their own route (#/agentdex/<term>) that scrolls to and highlights the entry.
+- [x] 4. Cheat sheets: #/cheatsheet (all worlds) and per world, from recaps + terms + key diagrams; print stylesheet (black on white, no HUD); PRINT button.
+- [x] 15. Time estimates per world (from word counts) on map bar, intro, level list and cheat sheet.
+- [x] 16. Bigger diagrams: click/Enter opens a full-screen view with a REPLAY that steps through the page highlights; Esc closes.
+- [x] 9. Transitions: circle wipe between map and stops, star burst on clears, screen shake on boss hits; all off with reduced motion.
+- [x] 10. Bit reacts: small Bit portrait by the dialog box; idle, cheer (right/clear), slump (wrong).
+- [x] 12. Phone pass at 390x844 and 768x1024: map, lessons, challenges, boss, Agentdex, search, cheat sheet, finish; fix touch targets (44px), text size, overflow. Add e2e checks for no horizontal scroll.
+- [x] Tests: unit (search index, time estimates, skip-ahead clearing) + e2e (study mode, skip ahead, search, copy link, cheat sheet, diagram zoom, mobile overflow, axe on new screens)
+- [x] Verify in Edge, update README, commit, push, check live
+
+### Round 5 review
+- Decisions (user): a boss win clears its whole world (skip ahead included); beating the six bosses earns the certificate; lessons finished in study mode count.
+- Study mode (STUDY toggle, "Open in study mode" on locked pages), skip ahead (PLAY card, level list), search (`/`), copy links, Agentdex term routes, cheat sheets + print styles, time estimates, diagram zoom with replay, circle wipe, star burst, boss shake, Bit reacting in lessons, review, challenges and the boss arena.
+- Phone pass: map HUD folds into MENU, compact headers, zoom pans on phones; no horizontal overflow on any screen at 390px (tested).
+- Bugs found on the way: `hidden` lost to `.btn { display }` (global [hidden] rule now); skip ahead showed for bosses already open; cyan links on the sky failed contrast; shared-term focus was stolen by the MAP autofocus; a test locator filtered on text that changes.
+- Tests: 462 unit (search, time estimates, skip/study rules), 51 e2e (incl. a full boss win from real answers, 14 axe scans, phone layouts).

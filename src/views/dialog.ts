@@ -1,8 +1,10 @@
 import { marked } from "marked";
 import { h } from "../dom";
 import { href } from "../nav";
+import { setStudyMode } from "../progress";
 import { reducedMotion, typewrite, type Typing } from "../typewriter";
 import type { QuizQuestion } from "../types";
+import { createBuddy, type Buddy } from "./buddy";
 
 /** Shared RPG message box used by lessons and boss fights. */
 
@@ -13,6 +15,8 @@ export const btn = (label: string, onclick: () => void, cls = "btn") =>
 
 export interface Dialog {
   el: HTMLElement;
+  /** Bit standing on the box, when the dialog has one. */
+  buddy?: Buddy;
   setName(name: string): void;
   setPips(states: string[]): void;
   /** Show markdown-rendered HTML, typed out unless `animate` is false. */
@@ -29,7 +33,7 @@ export interface Dialog {
   destroy(): void;
 }
 
-export function createDialog(name: string): Dialog {
+export function createDialog(name: string, opts: { buddy?: boolean } = {}): Dialog {
   const nametag = h("div", { class: "nametag" }, name);
   const pips = h("div", { class: "pips", "aria-hidden": "true" });
   const text = h("div", { class: "dialog-text" });
@@ -37,12 +41,18 @@ export function createDialog(name: string): Dialog {
   const extra = h("div", { class: "dialog-extra" });
   const actions = h("div", { class: "dialog-actions" });
   const el = h("section", { class: "dialog", tabindex: "-1" }, nametag, pips, text, extra, live, actions);
+  const buddy = opts.buddy ? createBuddy() : undefined;
+  if (buddy) {
+    el.append(buddy.el);
+    el.classList.add("has-buddy");
+  }
 
   let typing: Typing | undefined;
   let picker: ((k: number) => void) | undefined;
 
   const d: Dialog = {
     el,
+    buddy,
     extra,
     live,
     setName: (n) => {
@@ -96,6 +106,7 @@ export function createDialog(name: string): Dialog {
         options[k].append(h("span", { class: "option-tag" }, correct ? "RIGHT!" : "WRONG!"));
         nametag.textContent = correct ? "RIGHT!" : "WRONG!";
         el.dataset.verdict = correct ? "right" : "wrong";
+        buddy?.react(correct ? "cheer" : "slump");
         // A wrong pick explains why that option is wrong, then why the right one is right.
         const whyNot = !correct ? q.explain?.[k] : undefined;
         const verdict = h(
@@ -115,7 +126,10 @@ export function createDialog(name: string): Dialog {
       picker(k);
       return true;
     },
-    destroy: () => typing?.cancel(),
+    destroy: () => {
+      typing?.cancel();
+      buddy?.destroy();
+    },
   };
   return d;
 }
@@ -131,21 +145,40 @@ export function confetti(): HTMLElement {
         style: `left:${(i * 37) % 100}%;background:${colors[i % colors.length]};animation-delay:${(i % 6) * 0.08}s;--drift:${((i % 5) - 2) * 18}px`,
       }),
     ),
+    // A burst of stars from the middle, like grabbing a power-up.
+    ...Array.from({ length: 10 }, (_, i) => {
+      const a = (i / 10) * Math.PI * 2;
+      return h("i", { class: "star", style: `--dx:${Math.round(Math.cos(a) * 120)}px;--dy:${Math.round(Math.sin(a) * 70)}px` }, "★");
+    }),
   );
 }
 
-/** Message shown for a locked or missing stop. */
-export function blocked(root: HTMLElement, message: string): () => void {
+/** Message shown for a locked or missing stop. Locked stops offer study mode. */
+export function blocked(root: HTMLElement, message: string, locked = false): () => void {
+  const study = () => {
+    setStudyMode(true);
+    window.dispatchEvent(new HashChangeEvent("hashchange"));
+  };
   root.append(
     h(
       "main",
-      { class: "level" },
+      { class: "level blocked" },
       h(
         "section",
         { class: "dialog" },
         h("div", { class: "nametag" }, "SAGE"),
-        h("p", { class: "dialog-text" }, message),
-        h("div", { class: "dialog-actions" }, h("a", { class: "btn", href: href(""), "data-autofocus": true }, "◀ MAP")),
+        h(
+          "div",
+          { class: "dialog-text" },
+          h("p", {}, message),
+          locked ? h("p", {}, "Just want to read it? Study mode opens every stop, and anything you finish still counts.") : null,
+        ),
+        h(
+          "div",
+          { class: "dialog-actions" },
+          h("a", { class: locked ? "btn btn-ghost" : "btn", href: href(""), "data-autofocus": !locked }, "◀ MAP"),
+          locked ? h("button", { class: "btn", type: "button", onclick: study, "data-autofocus": true }, "OPEN IN STUDY MODE ▶") : null,
+        ),
       ),
     ),
   );

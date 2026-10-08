@@ -1,6 +1,7 @@
 import { h } from "../dom";
-import { getLesson } from "../content";
+import { getLesson, worldMinutes } from "../content";
 import {
+  canSkipTo,
   clearedCount,
   getPosition,
   getRevealed,
@@ -11,16 +12,20 @@ import {
   setPosition,
   setRevealed,
   setIntroSeen,
+  setStudyMode,
+  studyMode,
 } from "../progress";
 import { go, href } from "../nav";
 import { reducedMotion } from "../typewriter";
-import { MAIN_WORLDS, MAP_H, MAP_W, ROUTE, WORLDS, worldOf } from "../worlds";
+import { MAIN_WORLDS, MAP_H, MAP_W, ROUTE, WORLDS, bossId, worldOf } from "../worlds";
 import { OverworldRenderer, type NodeState } from "../map/render";
 import { SEGMENTS, nodePx, pointAt } from "../map/route";
 import { fontToggle } from "./font-toggle";
+import { searchButton } from "./search";
 
 const SPEED = 0.09; // map pixels per ms
 const DRAW_SPEED = 0.12; // road reveal, map pixels per ms
+const MAX_REVEAL_MS = 3500; // a whole skipped world still draws in a few seconds
 
 let renderer: OverworldRenderer | undefined;
 
@@ -52,16 +57,21 @@ const BOSS_STATUS: Record<NodeState, string> = {
   soon: "Coming soon.",
 };
 
+const SKIP_STATUS = "Know this world already? Press SKIP AHEAD to fight its boss now.";
+
 export function renderMap(root: HTMLElement): () => void {
   renderer ??= new OverworldRenderer();
   const draw = renderer;
 
+  const study = studyMode();
   const states = ROUTE.map((_, i) => stateOf(i));
-  const playable = (i: number) => states[i] === "cleared" || states[i] === "open";
-  // Stops unlock in order, so playable stops are always a prefix of the route.
-  const firstBlocked = states.findIndex((_, i) => !playable(i));
+  // Bit can walk the route up to the first stop that isn't open. (Stops cleared
+  // further on, in study mode, show as cleared but stay out of reach.)
+  const firstBlocked = states.findIndex((st) => st !== "cleared" && st !== "open");
   const maxPlayable = firstBlocked === -1 ? ROUTE.length - 1 : Math.max(0, firstBlocked - 1);
-  const revealedBefore = Math.min(getRevealed(), maxPlayable + 1);
+  const playable = (i: number) => i <= maxPlayable && (states[i] === "cleared" || states[i] === "open");
+  // Study mode shows every road at once and leaves the game path's reveal alone.
+  const revealedBefore = study ? maxPlayable + 1 : Math.min(getRevealed(), maxPlayable + 1);
 
   const saved = ROUTE.findIndex((l) => l.id === getPosition());
   let pos = saved >= 0 && playable(saved) ? saved : maxPlayable;
@@ -72,19 +82,23 @@ export function renderMap(root: HTMLElement): () => void {
   const revealStart = performance.now() + 450;
   const segStart = new Map<number, number>();
   let offset = 0;
+  // Draw faster when many roads open at once (a skipped world).
+  let rawTotal = 0;
+  for (let s = revealedBefore - 1; s < maxPlayable; s++) rawTotal += SEGMENTS[s].length / DRAW_SPEED + 200;
+  const drawSpeed = DRAW_SPEED * Math.max(1, rawTotal / MAX_REVEAL_MS);
   for (let s = revealedBefore - 1; s < maxPlayable; s++) {
     segStart.set(s, offset);
-    offset += SEGMENTS[s].length / DRAW_SPEED + 200;
+    offset += SEGMENTS[s].length / drawSpeed + 200 * (DRAW_SPEED / drawSpeed);
   }
   if (revealedBefore <= maxPlayable) setRevealed(maxPlayable + 1);
   const skipReveal = reducedMotion();
 
   const roadShown = (seg: number): number => {
-    if (seg < revealedBefore - 1) return SEGMENTS[seg].length;
+    if (study || seg < revealedBefore - 1) return SEGMENTS[seg].length;
     const start = segStart.get(seg);
     if (start === undefined) return -1;
     if (skipReveal) return SEGMENTS[seg].length;
-    return Math.min(SEGMENTS[seg].length, (performance.now() - revealStart - start) * DRAW_SPEED);
+    return Math.min(SEGMENTS[seg].length, (performance.now() - revealStart - start) * drawSpeed);
   };
   const nodeHidden = (i: number): boolean =>
     i > 0 && i >= revealedBefore && i <= maxPlayable && roadShown(i - 1) < SEGMENTS[i - 1].length;
@@ -109,15 +123,54 @@ export function renderMap(root: HTMLElement): () => void {
     "section",
     { class: "map-bar" },
     h("div", { class: "bar-text" }, barWorld, barTitle, barStatus),
-    h("p", { class: "bar-hint" }, "ARROWS WALK · ENTER PLAYS · CLICK A STOP"),
+    h("p", { class: "bar-hint" }, study ? "STUDY MODE · EVERY STOP IS OPEN" : "ARROWS WALK · ENTER PLAYS · CLICK A STOP"),
   );
 
   // The PLAY card floats just under the stop Bit is standing on.
   const cardKind = h("span", { class: "stop-kind" });
   const cardTitle = h("span", { class: "stop-title" });
   const playBtn = h("button", { class: "btn btn-go", type: "button", onclick: () => enter() }, "PLAY");
-  const card = h("div", { class: "stop-card", hidden: true }, cardKind, cardTitle, playBtn);
+  // Skip ahead: fight this world's boss now; winning clears the whole world.
+  const skipBtn = h(
+    "button",
+    { class: "btn btn-small btn-ghost stop-skip", type: "button", onclick: () => go(`boss/${worldOf(ROUTE[pos].id).num}`) },
+    "SKIP AHEAD ★",
+  );
+  const card = h("div", { class: "stop-card", hidden: true }, cardKind, cardTitle, h("div", { class: "stop-actions" }, playBtn, skipBtn));
   viewport.append(card);
+
+  const studyBtn = h(
+    "button",
+    {
+      class: "btn btn-small btn-ghost",
+      type: "button",
+      "aria-pressed": String(study),
+      title: "Study mode opens every stop, so you can look anything up",
+      onclick: () => {
+        setStudyMode(!study);
+        cleanup();
+        root.replaceChildren();
+        cleanup = renderMap(root);
+      },
+    },
+    "STUDY",
+  );
+
+  // On phones the less-used buttons fold away behind MENU (always shown on wider screens).
+  const menuBtn = h(
+    "button",
+    {
+      class: "btn btn-small btn-ghost hud-menu",
+      type: "button",
+      "aria-expanded": "false",
+      "aria-controls": "hud-more",
+      onclick: () => {
+        const open = more.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", String(open));
+      },
+    },
+    "MENU",
+  );
 
   const reset = h(
     "button",
@@ -133,6 +186,15 @@ export function renderMap(root: HTMLElement): () => void {
       },
     },
     "RESET",
+  );
+
+  const more = h(
+    "div",
+    { class: "hud-more", id: "hud-more" },
+    studyBtn,
+    h("button", { class: "btn btn-small btn-ghost", type: "button", title: "How to play", onclick: () => showIntro() }, "?"),
+    fontToggle(),
+    reset,
   );
 
   // Keyboard and screen-reader users can skip the canvas and use the plain list.
@@ -161,9 +223,9 @@ export function renderMap(root: HTMLElement): () => void {
         { class: "hud-right" },
         h("span", { class: "counter", title: "Stops cleared" }, `★ ${String(clearedCount()).padStart(2, "0")}/${ROUTE.length}`),
         h("a", { class: "btn btn-small", href: href("agentdex") }, "AGENTDEX"),
-        h("button", { class: "btn btn-small btn-ghost", type: "button", title: "How to play", onclick: () => showIntro() }, "?"),
-        fontToggle(),
-        reset,
+        searchButton(),
+        menuBtn,
+        more,
       ),
     ),
     h("main", { class: "map-frame" }, viewport, bar),
@@ -217,9 +279,9 @@ export function renderMap(root: HTMLElement): () => void {
   /** True while a new road draws itself, before Bit walks on automatically. */
   let pendingWalk = false;
 
-  function walkSegment(seg: number, forward: boolean): Promise<void> {
+  function walkSegment(seg: number, forward: boolean, speed = SPEED): Promise<void> {
     const { points, length } = SEGMENTS[seg];
-    const dur = reducedMotion() ? 0 : length / SPEED;
+    const dur = reducedMotion() ? 0 : length / speed;
     const t0 = performance.now();
     return new Promise((resolve) => {
       const step = (now: number) => {
@@ -247,8 +309,10 @@ export function renderMap(root: HTMLElement): () => void {
     player.walking = true;
     card.hidden = true;
     const dir = Math.sign(target - pos);
+    // Long trips (after a skipped world) go faster, so they never drag.
+    const speed = SPEED * Math.max(1, Math.abs(target - pos) / 3);
     while (pos !== target) {
-      await walkSegment(dir > 0 ? pos : pos - 1, dir > 0);
+      await walkSegment(dir > 0 ? pos : pos - 1, dir > 0, speed);
       pos += dir;
       show(pos);
     }
@@ -268,9 +332,12 @@ export function renderMap(root: HTMLElement): () => void {
   function show(i: number, status?: string): void {
     const l = ROUTE[i];
     const w = worldOf(l.id);
-    barWorld.textContent = `WORLD ${w.num} · ${w.name.toUpperCase()}`;
+    barWorld.textContent = `WORLD ${w.num} · ${w.name.toUpperCase()} · ~${worldMinutes(w.num)} MIN`;
     barTitle.textContent = l.boss ? `★ ${w.boss.name}` : l.challenge ? `! ${w.challenge.title}` : `${l.id} ${l.title}`;
-    barStatus.textContent = status ?? (l.boss ? BOSS_STATUS : l.challenge ? CHALLENGE_STATUS : STATUS)[states[i]];
+    const skippable = canSkipTo(bossId(w.num));
+    barStatus.textContent =
+      status ??
+      (l.boss && skippable ? SKIP_STATUS : i > maxPlayable && states[i] === "cleared" ? "Cleared in study mode." : (l.boss ? BOSS_STATUS : l.challenge ? CHALLENGE_STATUS : STATUS)[states[i]]);
     bar.classList.toggle("boss", !!l.boss);
 
     // The card describes the stop Bit is standing on.
@@ -280,6 +347,7 @@ export function renderMap(root: HTMLElement): () => void {
     cardTitle.textContent = here.boss ? w.boss.name : here.challenge ? w.challenge.title : here.title;
     playBtn.textContent = here.boss ? "FIGHT ▶" : states[pos] === "cleared" ? "REPLAY ▶" : "PLAY ▶";
     card.classList.toggle("boss", !!here.boss);
+    skipBtn.hidden = here.boss || !canSkipTo(bossId(w.num));
     card.hidden = player.walking || pendingWalk || !playable(pos);
   }
 
@@ -387,7 +455,7 @@ export function renderMap(root: HTMLElement): () => void {
 
   // Just cleared a stop? Once the new road has drawn itself, Bit walks on to
   // the next stop by itself, ready to play.
-  const newRoad = revealedBefore <= maxPlayable && pos < maxPlayable;
+  const newRoad = !study && revealedBefore <= maxPlayable && pos < maxPlayable;
   pendingWalk = newRoad;
   let autoWalk = 0;
   if (newRoad) {
@@ -453,12 +521,17 @@ function showIntro(): void {
       h(
         "ol",
         { class: "intro-worlds" },
-        ...WORLDS.map((w) => h("li", {}, h("strong", {}, `${w.num > MAIN_WORLDS ? "★ BONUS" : w.num} ${w.name}`), ` · ${w.blurb}`)),
+        ...WORLDS.map((w) => h("li", {}, h("strong", {}, `${w.num > MAIN_WORLDS ? "★ BONUS" : w.num} ${w.name}`), ` · ~${worldMinutes(w.num)} min · ${w.blurb}`)),
       ),
       h(
         "p",
         { class: "intro-keys" },
         "ARROW KEYS or click a stop to walk · ENTER or PLAY to start a level · bold words in lessons can be clicked for a definition",
+      ),
+      h(
+        "p",
+        { class: "intro-keys" },
+        "Know a world already? SKIP AHEAD to its boss. Just looking something up? Press / to search, or turn on STUDY to open every stop.",
       ),
       h("div", { class: "dialog-actions" }, start),
     ),
@@ -474,22 +547,27 @@ function levelList(states: NodeState[]): HTMLDetailsElement {
     "details",
     { class: "box level-list" },
     h("summary", {}, "ALL LEVELS"),
-    h(
-      "ol",
-      {},
-      ...ROUTE.map((l, i) => {
-        const s = states[i];
-        const w = worldOf(l.id);
-        const label = l.boss ? `${w.num}-★ ${w.boss.name} (boss)` : l.challenge ? `${w.num}-! ${w.challenge.title} (challenge)` : `${l.id} ${l.title}`;
-        const link = stopLink(l);
-        return h(
-          "li",
-          { class: `ll-${s}` },
-          s === "cleared" || s === "open"
-            ? h("a", { href: href(link) }, `${s === "cleared" ? "★" : "▶"} ${label}`)
-            : h("span", {}, `${s === "soon" ? "?" : "■"} ${label} (${s === "soon" ? "coming soon" : "locked"})`),
-        );
-      }),
+    h("p", { class: "ll-sheet" }, h("a", { href: href("cheatsheet") }, "Cheat sheet"), ": every key idea and term on one printable page."),
+    ...WORLDS.map((w) =>
+      h(
+        "section",
+        { class: "ll-world" },
+        h("h2", {}, `${w.num > MAIN_WORLDS ? "★ BONUS" : `WORLD ${w.num}`} · ${w.name.toUpperCase()} · ~${worldMinutes(w.num)} MIN`),
+        h(
+          "ol",
+          {},
+          ...ROUTE.map((l, i) => [l, i] as const)
+            .filter(([l]) => worldOf(l.id).num === w.num)
+            .map(([l, i]) => {
+              const s = states[i];
+              const label = l.boss ? `★ ${w.boss.name} (boss)` : l.challenge ? `! ${w.challenge.title} (challenge)` : `${l.id} ${l.title}`;
+              const link = stopLink(l);
+              if (s === "cleared" || s === "open") return h("li", { class: `ll-${s}` }, h("a", { href: href(link) }, `${s === "cleared" ? "★" : "▶"} ${label}`));
+              if (l.boss && canSkipTo(l.id)) return h("li", { class: "ll-open" }, h("a", { href: href(link) }, `▶ ${label}: skip ahead`));
+              return h("li", { class: `ll-${s}` }, h("span", {}, `${s === "soon" ? "?" : "■"} ${label} (${s === "soon" ? "coming soon" : "locked"})`));
+            }),
+        ),
+      ),
     ),
   );
 }
