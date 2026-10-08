@@ -1,30 +1,32 @@
 /** Lesson diagrams, keyed by the lesson frontmatter `diagram:` value. World 1 lives here. */
 
-import { box, part, partName, svg } from "./kit";
+import { box, ln, mover, part, partName, svg, txt } from "./kit";
 import { MORE_DIAGRAMS } from "./worlds";
 import { EXTRA_DIAGRAMS } from "./extra";
 import { STAR_DIAGRAMS } from "./star";
 
 const agentCore = svg(
-  "Diagram: a goal feeds the model, which loops through tools and memory",
+  "Diagram: you give the agent a goal; the model loops, using tools and memory, until the goal is met and it reports back",
   `
-  ${box(8, 62, 60, 32, "GOAL")}
-  ${box(118, 50, 84, 56, "MODEL", "d-box d-hl", "the brain")}
-  ${box(250, 18, 62, 32, "TOOLS")}
-  ${box(250, 106, 62, 32, "MEMORY")}
-  <line x1="68" y1="78" x2="114" y2="78" class="d-line" marker-end="url(#arrow)"/>
-  <line x1="202" y1="62" x2="246" y2="38" class="d-line" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-  <line x1="202" y1="94" x2="246" y2="118" class="d-line" marker-start="url(#arrow)" marker-end="url(#arrow)"/>
-  <rect width="6" height="6" x="-3" y="-3" class="d-dot">
-    <animateMotion dur="4s" repeatCount="indefinite" path="M202,62 L246,38 L202,62 L202,94 L246,118 L202,94 Z"/>
-  </rect>
-  <text x="160" y="152" class="d-sub" text-anchor="middle">LOOP: THINK &gt; ACT &gt; OBSERVE &gt; REPEAT</text>`,
+  ${box(4, 62, 52, 32, "GOAL", "d-box", "YOUR TASK")}
+  ${box(90, 50, 80, 56, "MODEL", "d-box d-hl", "the brain")}
+  ${box(196, 8, 60, 28, "TOOLS")}
+  ${box(196, 124, 60, 28, "MEMORY")}
+  ${box(264, 62, 52, 32, "DONE", "d-box", "GOAL MET")}
+  ${ln(56, 78, 88, 78)}
+  ${ln(166, 50, 204, 38, true)}
+  ${ln(166, 106, 204, 124, true)}
+  ${ln(170, 78, 262, 78)}
+  ${part("loop", `<path d="M104,50 V38 H156 V46" class="d-line d-fill-none" marker-end="url(#arrow)"/>${txt(130, 32, "LOOP", "d-sub d-acc")}`)}
+  ${txt(4, 150, "THINK > ACT > OBSERVE", "d-sub", "start")}
+  ${mover("M104,50 V38 H156 V50", 2)}
+  ${mover("M166,50 L204,38 L166,50 M166,106 L204,124 L166,106", 4, "d-dot", 1)}`,
 );
 
 const eras: [string, string][] = [
   ["1966", "ELIZA"],
-  ["1980", "EXPERT"],
-  ["1995", "BDI"],
+  ["1970s", "EXPERT"],
+  ["1990s", "BDI"],
   ["2016", "ALPHAGO"],
   ["2022", "REACT"],
   ["2023", "AUTOGPT"],
@@ -33,7 +35,7 @@ const eras: [string, string][] = [
 ];
 
 const timeline = svg(
-  "Diagram: timeline of agents from ELIZA in 1966 to A2A in 2025",
+  "Diagram: timeline of agents from ELIZA in 1966 to A2A in 2025. Eras are evenly spaced, not to scale",
   `
   <line x1="10" y1="80" x2="310" y2="80" class="d-line"/>
   ${eras
@@ -52,7 +54,8 @@ const timeline = svg(
     <animateMotion dur="6s" repeatCount="indefinite" path="M10,80 L310,80"/>
   </rect>
   <text x="160" y="30" class="d-txt" text-anchor="middle">60 YEARS OF AGENTS</text>
-  <text x="235" y="140" class="d-sub d-acc" text-anchor="middle">THE LLM ERA</text>`,
+  <text x="235" y="140" class="d-sub d-acc" text-anchor="middle">THE LLM ERA</text>
+  <text x="160" y="152" class="d-sub" text-anchor="middle">NOT TO SCALE</text>`,
 );
 
 const chatVsAgent = svg(

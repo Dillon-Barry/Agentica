@@ -100,12 +100,12 @@ const toolCall = svg(
 );
 
 const mcp = svg(
-  "Diagram: one agent with an MCP client connects to many MCP servers, such as GitHub, a database and Slack, all through the same protocol",
+  "Diagram: one agent with an MCP client connects to three MCP servers, for GitHub, a database and Slack, all through the same protocol",
   `
   ${box(8, 52, 92, 56, "AGENT", "d-box d-hl", "MCP CLIENT")}
-  ${box(214, 10, 98, 30, "GITHUB")}
-  ${box(214, 65, 98, 30, "DATABASE")}
-  ${box(214, 120, 98, 30, "SLACK")}
+  ${box(214, 10, 98, 30, "GITHUB", "d-box", "MCP SERVER")}
+  ${box(214, 65, 98, 30, "DATABASE", "d-box", "MCP SERVER")}
+  ${box(214, 120, 98, 30, "SLACK", "d-box", "MCP SERVER")}
   ${ln(100, 68, 212, 26, true)}
   ${ln(100, 80, 212, 80, true)}
   ${ln(100, 92, 212, 134, true)}
@@ -159,7 +159,7 @@ const a2a = svg(
   `
   ${box(8, 62, 80, 36, "AGENT A", "d-box d-hl")}
   ${box(232, 62, 80, 36, "AGENT B")}
-  ${box(214, 8, 98, 34, "AGENT CARD", "d-box", "SKILLS + URL")}
+  ${box(214, 8, 98, 34, "AGENT CARD", "d-box", "B'S SKILLS + URL")}
   ${ln(88, 64, 212, 30, false, "d-line d-dash")}
   ${txt(140, 40, "1 DISCOVER")}
   ${ln(88, 76, 230, 76)}
@@ -220,11 +220,11 @@ const rugPull = svg(
 );
 
 const deputy = svg(
-  "Diagram: a user with no access asks an agent that holds an admin key, and the agent does the action on the database for them",
+  "Diagram: a customer with no access asks an agent that holds an admin key, and the agent reads other customers' data for them",
   `
   ${box(8, 60, 72, 40, "USER", "d-box", "NO ACCESS")}
   ${box(118, 54, 88, 52, "AGENT", "d-box d-hl", "ADMIN KEY")}
-  ${box(244, 60, 68, 40, "DB", "d-box d-bad", "DELETED")}
+  ${box(244, 60, 68, 40, "DB", "d-box d-bad", "ALL USERS")}
   ${ln(80, 80, 116, 80)}
   ${txt(98, 72, "ASKS")}
   ${ln(206, 80, 242, 80)}
@@ -242,7 +242,7 @@ const trifecta = svg(
   ${box(110, 8, 100, 34, "PRIVATE", "d-box", "DATA")}
   ${box(8, 106, 104, 34, "UNTRUSTED", "d-box", "CONTENT")}
   ${box(208, 106, 104, 34, "WAY OUT", "d-box", "EMAIL, WEB")}
-  ${txt(160, 96, "!", "d-txt d-big d-warn")}
+  ${box(128, 76, 64, 26, "AGENT", "d-box d-hl")}
   ${txt(160, 156, "ALL THREE = DATA THEFT", "d-sub d-acc")}`,
 );
 
@@ -265,17 +265,14 @@ const sprawl = svg(
 );
 
 const layers = svg(
-  "Diagram: the model sits inside layers enforced outside it: identity, policy and audit logs; a bad request is stopped at the outer layers",
+  "Diagram: the model sits inside identity and policy checks enforced outside it, and an audit log records every call; a bad request gets past identity but is stopped by policy",
   `
-  ${part("audit-log", `<rect x="8" y="8" width="304" height="144" class="d-box"/>
-  ${txt(160, 21, "AUDIT LOG")}`)}
-  ${part("policy", `<rect x="30" y="27" width="260" height="106" class="d-box"/>
-  ${txt(160, 40, "POLICY")}`)}
-  ${part("identity", `<rect x="54" y="46" width="212" height="70" class="d-box"/>
-  ${txt(160, 59, "IDENTITY")}`)}
-  ${box(100, 66, 120, 34, "MODEL", "d-box d-hl")}
-  ${txt(160, 146, "ENFORCED OUTSIDE THE MODEL", "d-sub d-acc")}
-  ${mover("M0,96 L28,96", 1.4, "d-reddot")}`,
+  ${part("identity", `<rect x="8" y="8" width="304" height="114" class="d-box"/>${txt(160, 21, "IDENTITY: WHO IS CALLING?")}`)}
+  ${part("policy", `<rect x="30" y="28" width="260" height="86" class="d-box"/>${txt(160, 41, "POLICY: MAY IT DO THIS?")}`)}
+  ${box(100, 50, 120, 34, "MODEL", "d-box d-hl")}
+  ${txt(160, 104, "ENFORCED OUTSIDE THE MODEL", "d-sub d-acc")}
+  ${part("audit-log", `<rect x="8" y="130" width="304" height="22" class="d-box d-dash"/>${txt(160, 144, "AUDIT LOG: EVERY CALL RECORDED")}`)}
+  ${mover("M0,67 L28,67", 1.4, "d-reddot")}`,
 );
 
 // ---- World 6: Solo Citadel --------------------------------------------------------
@@ -350,7 +347,7 @@ const gateway = svg(
 const together = svg(
   "Diagram: agentregistry decides what is allowed, kagent runs it, and agentgateway guards what it can do",
   `
-  ${txt(160, 26, "ONE CONTROL PLANE", "d-txt")}
+  ${txt(160, 26, "THREE STAGES OF AN AGENT'S LIFE", "d-txt")}
   ${box(8, 50, 92, 40, "REGISTRY", "d-box", "APPROVED")}
   ${box(114, 50, 92, 40, "KAGENT", "d-box d-hl", "RUNS IT")}
   ${box(220, 50, 92, 40, "GATEWAY", "d-box", "GUARDS IT")}

@@ -22,11 +22,11 @@ test("the diagram lights up the parts each page talks about", async ({ page }) =
   const next = page.locator(".dialog-actions button").last();
   await next.click();
   await next.click();
-  // Page 3 is about the goal and the model.
+  // Page 3: the goal goes in, the model works, a result comes out.
   await expect(svg).toHaveClass(/focusing/);
-  expect((await lit()).sort()).toEqual(["goal", "model"]);
+  expect((await lit()).sort()).toEqual(["done", "goal", "model"]);
   await next.click();
-  expect((await lit()).sort()).toEqual(["memory", "model", "tools"]);
+  expect((await lit()).sort()).toEqual(["loop", "memory", "model", "tools"]);
 
   await readLesson(page);
   await expect(svg).not.toHaveClass(/focusing/);

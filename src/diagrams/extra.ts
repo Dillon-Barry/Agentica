@@ -91,7 +91,10 @@ const evals = svg(
   ${part("trace", `${txt(232, 16, "TRACE", "d-txt")}${seg(150, 28, 150, 130, "d-tick")}${bars
     .map(([label, start, w], i) => {
       const y = 30 + i * 24;
-      return `<rect x="${150 + start}" y="${y}" width="${w}" height="14" class="${label.startsWith("TOOL") ? "d-box d-hl" : "d-bar"}"/>${txt(150 + start + 2, y + 24, label, "d-sub", "start")}`;
+      const x = 150 + start;
+      // Labels that would run off the right edge end at the bar instead.
+      const fits = x + 2 + label.length * 6 <= 318;
+      return `<rect x="${x}" y="${y}" width="${w}" height="14" class="${label.startsWith("TOOL") ? "d-box d-hl" : "d-bar"}"/>${txt(fits ? x + 2 : x + w, y + 24, label, "d-sub", fits ? "start" : "end")}`;
     })
     .join("")}`)}
   ${txt(232, 150, "EVERY STEP, TIME, COST", "d-sub d-acc")}
@@ -99,23 +102,24 @@ const evals = svg(
 );
 
 const identity = svg(
-  "Diagram: Alex's request becomes a short-lived token naming Alex as the user and Bit as the actor, with a narrow scope, which the tool checks",
+  "Diagram: Alex asks Bit; Bit calls the tool with a short-lived token naming Alex as the user and Bit as the actor, with a narrow scope, which the tool checks",
   `
   ${box(4, 62, 56, 36, "ALEX", "d-box", "USER")}
-  ${part("token", `<rect x="78" y="46" width="98" height="68" class="d-box d-hl"/>
-  ${txt(127, 62, "TOKEN", "d-txt")}
-  ${txt(86, 78, "sub: alex", "d-sub", "start")}
-  ${txt(86, 90, "act: bit", "d-sub", "start")}
-  ${txt(86, 102, "scope: read", "d-sub", "start")}`)}
-  ${box(194, 62, 54, 36, "BIT", "d-box d-hl", "AGENT")}
-  ${box(264, 62, 52, 36, "TOOL", "d-box", "CHECKS")}
-  ${ln(60, 80, 76, 80)}
-  ${ln(176, 80, 192, 80)}
-  ${ln(248, 80, 262, 80)}
-  ${txt(127, 36, "SHORT-LIVED, NARROW", "d-sub d-acc")}
+  ${box(74, 62, 54, 36, "BIT", "d-box d-hl", "AGENT")}
+  ${part("token", `<rect x="144" y="46" width="98" height="68" class="d-box d-hl"/>
+  ${txt(193, 62, "TOKEN", "d-txt")}
+  ${txt(152, 78, "sub: alex", "d-sub", "start")}
+  ${txt(152, 90, "act: bit", "d-sub", "start")}
+  ${txt(152, 102, "scope: read", "d-sub", "start")}`)}
+  ${box(262, 62, 54, 36, "TOOL", "d-box", "CHECKS")}
+  ${ln(60, 80, 72, 80)}
+  ${txt(66, 54, "ASKS")}
+  ${ln(128, 80, 142, 80)}
+  ${ln(242, 80, 260, 80)}
+  ${txt(193, 36, "SHORT-LIVED, NARROW", "d-sub d-acc")}
   ${txt(160, 140, "WHO IS ACTING? FOR WHOM?", "d-sub")}
   ${txt(160, 152, "ALLOWED TO DO WHAT?", "d-sub d-acc")}
-  ${mover("M60,80 L76,80 M176,80 L192,80 M248,80 L262,80", 2)}`,
+  ${mover("M60,80 L72,80 M128,80 L142,80 M242,80 L260,80", 2)}`,
 );
 
 export const EXTRA_DIAGRAMS: Record<string, string> = { plan, skills, patterns, evals, identity };

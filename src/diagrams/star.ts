@@ -24,19 +24,19 @@ const sandbox = svg(
 const guards = svg(
   "Diagram: text passes an input filter before the agent and an output filter after it; an attack is stopped at the input filter",
   `
-  ${box(4, 62, 48, 32, "INPUT")}
-  ${box(62, 56, 60, 44, "FILTER", "d-box d-hl", "IN", "in-filter")}
-  ${box(132, 56, 56, 44, "AGENT")}
-  ${box(198, 56, 60, 44, "FILTER", "d-box d-hl", "OUT", "out-filter")}
-  ${box(268, 62, 52, 32, "OUTPUT")}
-  ${ln(52, 78, 60, 78)}
-  ${ln(122, 78, 130, 78)}
-  ${ln(188, 78, 196, 78)}
-  ${ln(258, 78, 266, 78)}
-  ${txt(92, 124, "STOPS INJECTION", "d-sub")}
-  ${txt(228, 124, "STOPS LEAKS", "d-sub")}
+  ${box(5, 62, 46, 32, "INPUT")}
+  ${box(61, 56, 58, 44, "FILTER", "d-box d-hl", "IN", "in-filter")}
+  ${box(129, 56, 54, 44, "AGENT")}
+  ${box(193, 56, 58, 44, "FILTER", "d-box d-hl", "OUT", "out-filter")}
+  ${box(261, 62, 54, 32, "OUTPUT")}
+  ${ln(51, 78, 59, 78)}
+  ${ln(119, 78, 127, 78)}
+  ${ln(183, 78, 191, 78)}
+  ${ln(251, 78, 259, 78)}
+  ${txt(90, 124, "STOPS INJECTION", "d-sub")}
+  ${txt(222, 124, "STOPS LEAKS", "d-sub")}
   ${txt(160, 148, "LIKELY, NOT GUARANTEED", "d-sub d-acc")}
-  ${mover("M4,78 L60,78", 1.4, "d-reddot")}`,
+  ${mover("M5,78 L59,78", 1.4, "d-reddot")}`,
 );
 
 const oauth = svg(
@@ -46,18 +46,19 @@ const oauth = svg(
   ${box(120, 8, 96, 36, "MCP SERVER")}
   ${box(120, 116, 96, 36, "LOGIN", "d-box", "AUTH SERVER")}
   ${box(250, 8, 66, 36, "API", "d-box", "OTHER", "other-api")}
-  ${ln(68, 64, 118, 32)}
-  ${txt(70, 40, "1 WHERE DO", "d-sub", "start")}
-  ${txt(70, 50, "I SIGN IN?", "d-sub", "start")}
-  ${ln(68, 96, 118, 128)}
-  ${txt(70, 124, "2 PKCE", "d-sub", "start")}
-  ${ln(118, 22, 70, 76, false, "d-line d-dash")}
-  ${txt(160, 80, "3 TOKEN FOR", "d-sub d-acc")}
-  ${txt(160, 92, "THIS SERVER ONLY", "d-sub d-acc")}
+  ${ln(68, 62, 128, 44, true, "d-line d-dash")}
+  ${txt(4, 40, "1 WHERE DO", "d-sub", "start")}
+  ${txt(4, 50, "I SIGN IN?", "d-sub", "start")}
+  ${ln(68, 96, 118, 128, true)}
+  ${txt(4, 118, "2 SIGN IN", "d-sub", "start")}
+  ${txt(4, 128, "WITH PKCE", "d-sub", "start")}
+  ${ln(68, 74, 160, 46)}
+  ${txt(124, 76, "3 CALL WITH A TOKEN", "d-sub d-acc", "start")}
+  ${txt(124, 88, "FOR THIS SERVER ONLY", "d-sub d-acc", "start")}
   ${blocked(216, 26, 248, 26)}
   ${txt(283, 64, "NO TOKEN", "d-sub d-warn")}
   ${txt(283, 74, "PASSTHROUGH", "d-sub d-warn")}
-  ${mover("M68,96 L118,128", 1.6)}`,
+  ${mover("M68,74 L160,46", 1.6)}`,
 );
 
 const heights = [18, 34, 50, 66, 82];
@@ -68,11 +69,12 @@ const cost = svg(
   ${part("budget", `${seg(20, 40, 300, 40, "d-line d-danger")}${txt(300, 34, "BUDGET", "d-sub d-warn", "end")}`)}
   ${part(
     "context",
-    heights.map((hgt, i) => `<rect x="${40 + i * 52}" y="${134 - hgt}" width="34" height="${hgt - 14}" class="d-bar"/>`).join(""),
+    heights.map((hgt, i) => `<rect x="${40 + i * 52}" y="${134 - hgt}" width="34" height="${i ? hgt - 14 : hgt}" class="d-bar"/>`).join(""),
   )}
   ${part(
     "cache",
-    heights.map((_, i) => `<rect x="${40 + i * 52}" y="120" width="34" height="14" class="d-box d-good"/>`).join(""),
+    // Nothing is cached on the first call; after that the unchanged start is reused.
+    heights.slice(1).map((_, i) => `<rect x="${92 + i * 52}" y="120" width="34" height="14" class="d-box d-good"/>`).join(""),
   )}
   ${heights.map((_, i) => txt(57 + i * 52, 148, `STEP ${i + 1}`)).join("")}
   ${txt(160, 158, "GREEN = CACHED, CHEAPER", "d-sub d-acc")}`,

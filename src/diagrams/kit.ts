@@ -41,9 +41,11 @@ export const txt = (x: number, y: number, s: string, cls = "d-sub", anchor: "sta
   `<text x="${x}" y="${y}" class="${cls}" text-anchor="${anchor}">${s}</text>`;
 
 /** A square "packet" that travels along a path, forever. */
-export const mover = (path: string, dur: number, cls = "d-dot", begin = 0) => `
+// `offset` shifts the dot along its path. A negative begin starts it mid-run, so it
+// never waits parked at the top-left corner.
+export const mover = (path: string, dur: number, cls = "d-dot", offset = 0) => `
   <rect width="6" height="6" x="-3" y="-3" class="${cls}">
-    <animateMotion dur="${dur}s" begin="${begin}s" repeatCount="indefinite" path="${path}"/>
+    <animateMotion dur="${dur}s" begin="${-offset}s" repeatCount="indefinite" path="${path}"/>
   </rect>`;
 
 export const svg = (title: string, body: string) =>

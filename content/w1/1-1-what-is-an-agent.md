@@ -5,9 +5,9 @@ diagram: agent-core
 focus:
   - []
   - []
-  - [goal, model]
-  - [model, tools, memory]
-  - [goal, tools]
+  - [goal, model, done]
+  - [model, tools, memory, loop]
+  - [goal, tools, done]
   - []
 terms:
   - term: AI agent
