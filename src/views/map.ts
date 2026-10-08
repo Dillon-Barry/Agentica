@@ -4,15 +4,17 @@ import {
   clearedCount,
   getPosition,
   getRevealed,
+  introSeen,
   isCleared,
   isUnlocked,
   resetProgress,
   setPosition,
   setRevealed,
+  setIntroSeen,
 } from "../progress";
 import { go, href } from "../nav";
 import { reducedMotion } from "../typewriter";
-import { MAP_H, MAP_W, ROUTE, worldOf } from "../worlds";
+import { MAP_H, MAP_W, ROUTE, WORLDS, worldOf } from "../worlds";
 import { OverworldRenderer, type NodeState } from "../map/render";
 import { SEGMENTS, nodePx, pointAt } from "../map/route";
 import { fontToggle } from "./font-toggle";
@@ -24,7 +26,7 @@ let renderer: OverworldRenderer | undefined;
 
 function stateOf(i: number): NodeState {
   const l = ROUTE[i];
-  if (!l.boss && !getLesson(l.id)) return "soon";
+  if (!l.boss && !l.challenge && !getLesson(l.id)) return "soon";
   if (isCleared(l.id)) return "cleared";
   return isUnlocked(l.id) ? "open" : "locked";
 }
@@ -33,6 +35,13 @@ const STATUS: Record<NodeState, string> = {
   cleared: "Cleared! Replay any time.",
   open: "Ready. Press PLAY.",
   locked: "Locked. Clear the stops before it first.",
+  soon: "Coming soon.",
+};
+
+const CHALLENGE_STATUS: Record<NodeState, string> = {
+  cleared: "Challenge beaten! Try it again any time.",
+  open: "Hands-on challenge. Press PLAY.",
+  locked: "Clear the levels before it first.",
   soon: "Coming soon.",
 };
 
@@ -131,6 +140,7 @@ export function renderMap(root: HTMLElement): () => void {
         { class: "hud-right" },
         h("span", { class: "counter", title: "Stops cleared" }, `★ ${String(clearedCount()).padStart(2, "0")}/${ROUTE.length}`),
         h("a", { class: "btn btn-small", href: href("agentdex") }, "AGENTDEX"),
+        h("button", { class: "btn btn-small btn-ghost", type: "button", title: "How to play", onclick: () => showIntro() }, "?"),
         fontToggle(),
         reset,
       ),
@@ -226,7 +236,7 @@ export function renderMap(root: HTMLElement): () => void {
     if (player.walking || !playable(pos)) return;
     const l = ROUTE[pos];
     setPosition(l.id);
-    go(l.boss ? `boss/${worldOf(l.id).num}` : `level/${l.id}`);
+    go(stopLink(l));
   }
 
   // ---- Status bar ---------------------------------------------------------------
@@ -234,8 +244,8 @@ export function renderMap(root: HTMLElement): () => void {
     const l = ROUTE[i];
     const w = worldOf(l.id);
     barWorld.textContent = `WORLD ${w.num} · ${w.name.toUpperCase()}`;
-    barTitle.textContent = l.boss ? `★ ${w.boss.name}` : `${l.id} ${l.title}`;
-    barStatus.textContent = status ?? (l.boss ? BOSS_STATUS : STATUS)[states[i]];
+    barTitle.textContent = l.boss ? `★ ${w.boss.name}` : l.challenge ? `! ${w.challenge.title}` : `${l.id} ${l.title}`;
+    barStatus.textContent = status ?? (l.boss ? BOSS_STATUS : l.challenge ? CHALLENGE_STATUS : STATUS)[states[i]];
     playBtn.disabled = !(i === pos && playable(i));
     playBtn.textContent = l.boss ? "FIGHT" : states[i] === "cleared" ? "REPLAY" : "PLAY";
     bar.classList.toggle("boss", !!l.boss);
@@ -321,6 +331,7 @@ export function renderMap(root: HTMLElement): () => void {
     raf = requestAnimationFrame(loop);
   };
 
+  if (!introSeen()) showIntro();
   show(pos, revealedBefore <= maxPlayable ? "New road open! Press → to walk on." : undefined);
   layout();
   const resize = new ResizeObserver(layout);
@@ -338,6 +349,54 @@ export function renderMap(root: HTMLElement): () => void {
   return () => cleanup();
 }
 
+/** Where a stop's PLAY button goes. */
+function stopLink(l: (typeof ROUTE)[number]): string {
+  const n = worldOf(l.id).num;
+  return l.boss ? `boss/${n}` : l.challenge ? `challenge/${n}` : `level/${l.id}`;
+}
+
+/** First-visit welcome: what Agentica is, what you'll learn, how to play. */
+function showIntro(): void {
+  document.querySelector(".intro")?.remove();
+  const close = () => {
+    setIntroSeen();
+    overlay.remove();
+    window.removeEventListener("keydown", onKey, true);
+  };
+  const onKey = (e: KeyboardEvent) => {
+    if (e.key === "Escape" || e.key === "Enter") {
+      e.preventDefault();
+      e.stopPropagation();
+      close();
+    }
+  };
+  const start = h("button", { class: "btn btn-go", type: "button", onclick: close }, "START ▶");
+  const overlay = h(
+    "div",
+    { class: "intro", role: "dialog", "aria-modal": "true", "aria-label": "Welcome to Agentica" },
+    h(
+      "section",
+      { class: "box intro-card" },
+      h("h2", { class: "intro-title" }, "WELCOME TO AGENTICA"),
+      h("p", {}, "A short quest from zero to expert in AI agents. Walk Bit, the robot, across six worlds. Each stop is a 2-minute lesson. Each world ends with a hands-on challenge and a boss."),
+      h(
+        "ol",
+        { class: "intro-worlds" },
+        ...WORLDS.map((w) => h("li", {}, h("strong", {}, `${w.num} ${w.name}`), ` · ${w.blurb}`)),
+      ),
+      h(
+        "p",
+        { class: "intro-keys" },
+        "ARROW KEYS or click a stop to walk · ENTER or PLAY to start a level · bold words in lessons can be clicked for a definition",
+      ),
+      h("div", { class: "dialog-actions" }, start),
+    ),
+  );
+  document.body.append(overlay);
+  window.addEventListener("keydown", onKey, true);
+  start.focus();
+}
+
 /** Plain list of every stop: an overview, and a non-map way to navigate. */
 function levelList(states: NodeState[]): HTMLElement {
   return h(
@@ -349,8 +408,9 @@ function levelList(states: NodeState[]): HTMLElement {
       {},
       ...ROUTE.map((l, i) => {
         const s = states[i];
-        const label = l.boss ? `${l.id.replace("B", "★")} ${worldOf(l.id).boss.name} (boss)` : `${l.id} ${l.title}`;
-        const link = l.boss ? `boss/${worldOf(l.id).num}` : `level/${l.id}`;
+        const w = worldOf(l.id);
+        const label = l.boss ? `${w.num}-★ ${w.boss.name} (boss)` : l.challenge ? `${w.num}-! ${w.challenge.title} (challenge)` : `${l.id} ${l.title}`;
+        const link = stopLink(l);
         return h(
           "li",
           { class: `ll-${s}` },

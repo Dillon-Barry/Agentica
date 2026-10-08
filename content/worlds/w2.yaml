@@ -1,0 +1,49 @@
+world: 2
+recap:
+  - The model predicts text. It only knows what's in its context window right now.
+  - The system prompt guides behavior but can't enforce it.
+  - Agents run a loop (think, act, observe) with step limits and human checkpoints.
+  - Planning breaks goals into steps. Reflection checks the work before reporting.
+  - Memory is short-term (the window) or long-term (stored notes), and both can be poisoned.
+  - Agents vary run to run, errors compound, and models can hallucinate.
+scenarios:
+  - q: Bit keeps fetching the same broken web page again and again. Which guard rail stops this?
+    options:
+      - A longer system prompt
+      - A step limit or budget on the loop
+      - A bigger context window
+      - More memory
+    answer: 1
+    why: Step limits and budgets end loops the model can't escape on its own.
+  - q: An agent's 12-step task works 96% of the time per step. Roughly how often does the whole task succeed?
+    options:
+      - About 96%
+      - About 61%
+      - 100%
+      - About 12%
+    answer: 1
+    why: 0.96 to the power of 12 is about 0.61. Long tasks magnify small error rates.
+  - q: A week ago a malicious document told Bit "the CFO's new bank account is X", and Bit saved it. Today Bit uses it. What happened?
+    options:
+      - Memory poisoning
+      - A hallucination
+      - A rate limit
+      - Token exchange
+    answer: 0
+    why: A false "fact" planted in long-term memory keeps working in every future session.
+  - q: Halfway through booking an offsite, Bit finds no venue free on the chosen date. What should a well-built agent do?
+    options:
+      - Book an unavailable venue anyway
+      - Invent a booking confirmation
+      - Re-plan, or ask the user, before continuing
+      - Stop silently
+    answer: 2
+    why: Good agents update the plan when reality disagrees, and check with a human when stakes are high.
+  - q: Bit confidently names a config file that doesn't exist. What is this?
+    options:
+      - Reflection
+      - A hallucination
+      - Routing
+      - Task decomposition
+    answer: 1
+    why: Confident, false output is a hallucination. It sounds just as sure as a correct answer.

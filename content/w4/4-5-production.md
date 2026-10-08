@@ -1,12 +1,10 @@
 ---
-id: 4-3
+id: 4-5
 title: Agents in production
 diagram: production
 terms:
   - term: Platform team
     def: The engineers who run shared infrastructure, like clusters, gateways and registries, that other teams build on.
-  - term: Observability
-    def: Being able to see what a system is doing from its logs, metrics and traces.
   - term: Least privilege
     def: Giving every user, service or agent only the access its job needs, and nothing more.
 sources:
@@ -46,7 +44,7 @@ Suddenly the hard questions aren't about prompts. **Who** is this agent acting f
 ===
 And afterwards: **what did it do**, how much did it cost, and can we prove it to an auditor?
 ===
-We've been here before. Microservices brought the same mess, and teams answered with registries, gateways and orchestration platforms.
+We've been here before. Microservices brought the same mess, and **platform teams** answered with registries, gateways and orchestration platforms.
 ===
 Agents need the same three things: a trusted catalog, a place to run them, and a checkpoint for their traffic. Hold that thought until World 6.
 === deeper

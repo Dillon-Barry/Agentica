@@ -1,4 +1,4 @@
-import { ROUTE } from "../worlds";
+import { ROUTE, WORLDS } from "../worlds";
 
 /** Pixel position on the map. */
 export interface Pt {
@@ -78,6 +78,7 @@ export function islandBlobs(world: number): Blob[] {
   ROUTE.forEach((l, i) => {
     if (worldNum(i) === world) blobs.push({ x: l.x, y: l.y, r: 34 + wobble(l.x, l.y) });
   });
+  for (const e of WORLDS[world - 1].extraLand ?? []) blobs.push({ ...e, r: e.r + wobble(e.x, e.y) });
   // Fill the space between a world's stops so islands read as solid land.
   const own = ROUTE.filter((_, i) => worldNum(i) === world);
   const xs = own.map((l) => l.x);

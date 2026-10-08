@@ -1,7 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { HEARTS, LESSONS, bossHp, bossPool } from "../src/content";
+import { HEARTS, LESSONS, bossHp, bossPool, fightOrder, lessonQuestions, worldContent } from "../src/content";
 import { DIAGRAMS } from "../src/diagrams";
+import { CHALLENGES } from "../src/challenges";
 import { wordCount } from "../src/parse";
+import type { QuizQuestion } from "../src/types";
 import { MAP_H, MAP_W, ROUTE, WORLDS } from "../src/worlds";
 import { SEGMENTS, islandBlobs, pointAt } from "../src/map/route";
 import { ART } from "../src/map/pixels";
@@ -32,7 +34,7 @@ describe("curriculum", () => {
   });
 
   it("writes lessons in route order, so the map path never skips a gap", () => {
-    const lessonStops = ROUTE.filter((l) => !l.boss);
+    const lessonStops = ROUTE.filter((l) => !l.boss && !l.challenge);
     expect(LESSONS.map((l) => l.id)).toEqual(lessonStops.slice(0, LESSONS.length).map((l) => l.id));
   });
 });
@@ -86,7 +88,8 @@ describe("overworld map", () => {
     const blobs = WORLDS.map((w) => islandBlobs(w.num));
     blobs.forEach((a, i) =>
       blobs.slice(i + 1).forEach((b, k) => {
-        const gap = Math.min(...a.flatMap((p) => b.map((q) => Math.hypot(p.x - q.x, p.y - q.y) - p.r - q.r)));
+        let gap = Infinity;
+        for (const p of a) for (const q of b) gap = Math.min(gap, Math.hypot(p.x - q.x, p.y - q.y) - p.r - q.r);
         expect(gap, `world ${i + 1} vs ${i + 2 + k}`).toBeGreaterThan(10);
       }),
     );
@@ -99,10 +102,59 @@ describe("overworld map", () => {
   });
 });
 
-describe("boss fights", () => {
-  it.each(WORLDS.map((w) => [w.name, w.num] as const))("%s has enough questions for a full fight", (_n, num) => {
-    // Worst case: every hit lands after HEARTS - 1 misses.
-    expect(bossPool(num).length).toBeGreaterThanOrEqual(bossHp(num) + HEARTS - 1);
+const validQuestion = (q: QuizQuestion) => {
+  expect(q.q).toBeTruthy();
+  expect(q.why).toBeTruthy();
+  expect(q.options.length).toBeGreaterThanOrEqual(3);
+  expect(q.options.length).toBeLessThanOrEqual(4);
+  expect(new Set(q.options).size).toBe(q.options.length);
+  expect(Number.isInteger(q.answer)).toBe(true);
+  expect(q.answer).toBeGreaterThanOrEqual(0);
+  expect(q.answer).toBeLessThan(q.options.length);
+};
+
+describe("each world", () => {
+  describe.each(WORLDS.map((w) => [w.name, w.num] as const))("%s", (_n, num) => {
+    it("ends with a challenge stop, then a boss stop", () => {
+      const stops = ROUTE.filter((l) => l.id.startsWith(`${num}-`));
+      expect(stops.at(-2)?.challenge).toBe(true);
+      expect(stops.at(-1)?.boss).toBe(true);
+    });
+
+    it("has a hands-on challenge", () => {
+      const c = CHALLENGES[num];
+      expect(c, `challenge for world ${num}`).toBeDefined();
+      expect(c.intro).toBeTruthy();
+      expect(c.takeaway).toBeTruthy();
+    });
+
+    it("has a short recap card for the boss", () => {
+      const { recap } = worldContent(num);
+      expect(recap.length).toBeGreaterThanOrEqual(3);
+      expect(recap.length).toBeLessThanOrEqual(6);
+      for (const r of recap) expect(wordCount(r), r).toBeLessThanOrEqual(25);
+    });
+
+    it("has well-formed scenario questions with varied answers", () => {
+      const { scenarios } = worldContent(num);
+      scenarios.forEach(validQuestion);
+      expect(new Set(scenarios.map((q) => q.answer)).size).toBeGreaterThan(1);
+    });
+
+    it("has enough questions for a full fight, at least half of them scenarios", () => {
+      // Worst case: every hit lands after HEARTS - 1 misses.
+      const worst = bossHp(num) + HEARTS - 1;
+      expect(bossPool(num).length).toBeGreaterThanOrEqual(worst);
+      expect(worldContent(num).scenarios.length).toBeGreaterThanOrEqual(Math.ceil(worst / 2));
+    });
+
+    it("alternates scenario and recall questions in a fight", () => {
+      const { scenarios } = worldContent(num);
+      const order = fightOrder(scenarios, lessonQuestions(num));
+      const firstHalf = order.slice(0, bossHp(num) + HEARTS - 1);
+      const asScenario = firstHalf.filter((q) => scenarios.includes(q)).length;
+      expect(asScenario).toBeGreaterThanOrEqual(Math.ceil(firstHalf.length / 2));
+    });
   });
 });
 
@@ -128,18 +180,24 @@ describe.each(LESSONS.map((l) => [l.id, l] as const))("lesson %s", (_id, l) => {
     if (l.deeper) expect(wordCount(l.deeper)).toBeLessThanOrEqual(MAX_DEEPER_WORDS);
   });
 
-  it("has a 3-question multiple-choice test", () => {
+  it("adds 3 multiple-choice questions to its world's boss", () => {
     expect(l.quiz).toHaveLength(3);
-    for (const q of l.quiz) {
-      expect(q.q).toBeTruthy();
-      expect(q.why).toBeTruthy();
-      expect(q.options.length).toBeGreaterThanOrEqual(3);
-      expect(q.options.length).toBeLessThanOrEqual(4);
-      expect(new Set(q.options).size).toBe(q.options.length);
-      expect(Number.isInteger(q.answer)).toBe(true);
-      expect(q.answer).toBeGreaterThanOrEqual(0);
-      expect(q.answer).toBeLessThan(q.options.length);
-    }
+    l.quiz.forEach(validQuestion);
+  });
+
+  it("keeps any peek to a short intro plus a code example", () => {
+    if (!l.peek) return;
+    expect(l.peek).toMatch(/```\w+\n[\s\S]+\n```/);
+    expect(l.deeper, "a peek is shown on the Go deeper page").toBeTruthy();
+  });
+
+  it("bolds at least one of its own Agentdex terms, so it can be clicked", () => {
+    const text = l.boxes.join("\n").toLowerCase();
+    const bolded = l.terms.some((t) => {
+      const k = t.term.toLowerCase();
+      return text.includes(`**${k}**`) || text.includes(`**${k}s**`);
+    });
+    expect(bolded, l.terms.map((t) => t.term).join(", ")).toBe(true);
   });
 
   it("doesn't put every correct answer in the same slot", () => {

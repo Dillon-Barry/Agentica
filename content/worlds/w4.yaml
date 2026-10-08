@@ -1,0 +1,48 @@
+world: 4
+recap:
+  - Start simple. Patterns like chaining and routing beat free-roaming agents when steps are known.
+  - Multi-agent teams split work, but errors and attacks can flow between agents.
+  - "A2A lets agents discover each other (Agent Cards) and hand off tasks. MCP is agent to tool."
+  - Evals measure reliability over many runs. Traces show what happened in each run.
+  - In production, identity, permissions, versions, cost and audit matter more than prompt wording.
+scenarios:
+  - q: Every invoice goes through the same three steps (extract, check, file). What should you build?
+    options:
+      - A fully autonomous multi-agent swarm
+      - A prompt chain. The steps are known in advance
+      - Nothing. AI can't read invoices
+      - An evaluator-optimizer loop with ten agents
+    answer: 1
+    why: Known steps call for a workflow. It's cheaper, faster and easier to test.
+  - q: Your research agent read a poisoned forum post, and its summary now tells the coding agent to disable a security check. What does this show?
+    options:
+      - Multi-agent teams are always safe
+      - The coder should trust teammates completely
+      - Errors and attacks can flow from one agent to the next, so each needs its own checks and limits
+      - The forum is fine
+    answer: 2
+    why: In a team, one agent's output is the next one's input. Treat it as untrusted.
+  - q: A partner company's agent needs to ask your agent for shipping quotes. Which standard fits?
+    options:
+      - A2A
+      - MCP
+      - SQL
+      - Neither
+    answer: 0
+    why: Agent to agent across organisations is what A2A and its Agent Cards are for.
+  - q: After a prompt change, users say the agent "feels worse", but nobody can say how. What was missing?
+    options:
+      - A bigger model
+      - An eval suite run before and after the change
+      - More agents
+      - A new logo
+    answer: 1
+    why: Evals turn "feels worse" into measured results, before users ever see the change.
+  - q: An agent did something odd in production last Tuesday. What tells you exactly which steps it took?
+    options:
+      - The system prompt
+      - The model's training data
+      - A trace of that run
+      - The Agent Card
+    answer: 2
+    why: Traces record each model call, tool call, input, output and cost for a run.

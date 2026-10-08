@@ -1,0 +1,48 @@
+world: 1
+recap:
+  - An AI agent uses a model to pursue a goal, choosing and taking its own actions.
+  - "Four parts: a model (brain), tools (hands), memory, and a loop that repeats."
+  - Agents grew out of 60 years of ideas, from ELIZA to ReAct, MCP and A2A.
+  - A chatbot answers. A workflow follows fixed steps. An agent decides its own steps.
+  - More autonomy means more usefulness, and more risk.
+scenarios:
+  - q: A tool emails each new support ticket to the model at 9am to tag it, then files it. Is that an agent?
+    options:
+      - Yes, it uses a model
+      - No, it's a workflow. Code decides every step
+      - No, it's a chatbot
+      - Yes, because it runs on a schedule
+    answer: 1
+    why: The model helps at one fixed step, but the path is written in code. That's a workflow.
+  - q: Asked to "fix the failing test", a system reads code, runs the tests, edits files and repeats until the tests pass. What is it?
+    options:
+      - A chatbot
+      - A workflow
+      - An agent
+      - An expert system
+    answer: 2
+    why: It chooses its own next steps in a loop until the goal is met. Classic agent.
+  - q: Your team wants an assistant that only drafts replies for a human to send. Where is that on the autonomy dial?
+    options:
+      - Low autonomy. It acts only through a human
+      - Full autonomy
+      - It has no autonomy, so it isn't AI
+      - Maximum risk
+    answer: 0
+    why: A human approves every real action, which keeps the dial low and the risk small.
+  - q: An old support bot follows hundreds of hand-written if-then rules and fails on anything unexpected. What kind of system is it closest to?
+    options:
+      - A ReAct agent
+      - An expert system
+      - An LLM
+      - A multi-agent team
+    answer: 1
+    why: Hand-written rules that break outside their box are the hallmark of 1980s expert systems.
+  - q: Which change turns a chatbot into an agent?
+    options:
+      - A bigger model
+      - A friendlier tone
+      - Adding tools and a loop so its words become actions
+      - Longer answers
+    answer: 2
+    why: Often the same model sits inside both. Tools plus a loop make the difference.

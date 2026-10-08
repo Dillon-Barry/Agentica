@@ -1,0 +1,48 @@
+world: 6
+recap:
+  - kagent runs agents as Kubernetes resources, versioned, reviewed and rolled back like any app.
+  - agentregistry is the trusted catalog of MCP servers, agents, skills, prompts and models.
+  - agentgateway checks identity and policy on every call to LLMs, MCP tools and other agents, and logs it.
+  - "Together: what's allowed (registry), where it runs (kagent), what it can do (gateway)."
+  - None of it depends on the model behaving. Failures stay small, visible and reversible.
+scenarios:
+  - q: A developer wants to try a random MCP server from the internet with production agents. Which tool helps most?
+    options:
+      - agentregistry. Only vetted, versioned servers get deployed
+      - A longer system prompt
+      - A faster GPU
+      - kagent's web UI theme
+    answer: 0
+    why: The registry is the gate for what is allowed to exist in your platform.
+  - q: Bit is hijacked and tries to call delete_records. What actually stops the call?
+    options:
+      - Bit's conscience
+      - agentgateway's authorization policy, enforced outside the model
+      - The Agent Card
+      - The registry's search page
+    answer: 1
+    why: The gateway denies calls the agent has no permission for, however convincing the injected text was.
+  - q: A bad prompt change shipped to Bit an hour ago. How do you undo it fastest?
+    options:
+      - Retrain the model
+      - Email every user
+      - Roll the Agent resource back to its last good version with kagent and Git
+      - Delete the cluster
+    answer: 2
+    why: Agents as Kubernetes resources get versioned rollouts and fast rollbacks.
+  - q: An auditor asks which agent read the payroll tools last month, and for whom. Where's the answer?
+    options:
+      - In the model's memory
+      - In the gateway's logs and traces
+      - In the system prompt
+      - Nowhere
+    answer: 1
+    why: Every call through agentgateway is recorded with who, what and when.
+  - q: Which pairing is right?
+    options:
+      - "kagent: where agents run. agentregistry: what's allowed. agentgateway: what they can do"
+      - "kagent: the catalog. agentgateway: the runtime. agentregistry: the proxy"
+      - All three do the same thing
+      - None of them help with security
+    answer: 0
+    why: Runtime, catalog and checkpoint each cover a different stage of an agent's life.

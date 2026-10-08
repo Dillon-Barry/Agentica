@@ -154,3 +154,26 @@ World 6 — Solo Citadel
   time), crashing the map draw. Clock now uses performance.now() and clamps at 0; frame index
   is always wrapped positive. Verified by loading the built file in Edge: map, lesson, walk and
   boss fight all run with zero page errors.
+
+## Round 2: make it a great introduction (2026-10-08)
+- [x] 1. Challenge stop per world (before boss): Sort it, Be the loop, Read the label,
+      Assign the party, Break the trifecta, Write the gate rule
+- [x] 2. New lessons: 2-3 Planning, 3-3 Skills, 4-1 Workflow patterns, 4-4 Evals and
+      observability, 5-6 Agent identity (renumber neighbours)
+- [x] 3. Bit story thread: opening beat per world, finale is Bit's incident
+- [x] 4. Scenario questions per world (content/worlds/wN.yaml), boss draws ~half scenarios
+- [x] 5. Recap card before each boss (same yaml)
+- [x] 6. Clickable key terms -> Agentdex popover
+- [x] 7. First-visit intro overlay + help button; finish screen after final boss
+- [x] 8. Accuracy pass (MCP 10k+ servers / AAIF Dec 2025, A2A 1.0, Skills Dec 2025)
+- [x] 9. Read-only "What it looks like" peeks (tool JSON, SKILL.md, Agent Card, kagent
+      Agent, agentgateway policy, token claims)
+- [x] 10. Build-time content parsing (drop yaml from bundle); CI actions to latest majors
+- [x] New 3-row map layout for 41 stops; verify in real browser; commit + push
+
+### Round 2 review
+- 41 stops (29 lessons, 6 challenges, 6 bosses) on a 3-row snake map with landmark meadows.
+- 349 unit tests (new: challenge per world, recap size, scenario share, peek format, every lesson bolds a clickable term, parser peek/fence handling).
+- Scripted Edge run on the built file: intro + help, term popover, peek, all 6 challenges solved and saved, trifecta leaks with all legs on, gate deny-all fails legit calls, boss recap then fight, finish screen; zero page errors.
+- Found + fixed: multi-tab progress overwrite (save now merges with stored progress).
+- Facts checked: MCP to AAIF Dec 2025 (10k+ servers), A2A 1.0 Agent Card at /.well-known/agent-card.json, Agent Skills open standard Dec 2025, kagent v1alpha2 Agent shape, agentgateway mcpAuthorization CEL rules, RFC 8693 act claim.

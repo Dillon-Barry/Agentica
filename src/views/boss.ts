@@ -1,5 +1,5 @@
 import { h } from "../dom";
-import { HEARTS, bossHp, bossPool } from "../content";
+import { HEARTS, bossHp, fightOrder, lessonQuestions, worldContent } from "../content";
 import { isUnlocked, markCleared } from "../progress";
 import { go, href } from "../nav";
 import { reducedMotion } from "../typewriter";
@@ -7,15 +7,6 @@ import { WORLDS, bossId } from "../worlds";
 import { ARENA_H, ARENA_W, Arena } from "../map/arena";
 import { fontToggle } from "./font-toggle";
 import { blocked, btn, confetti, createDialog, md } from "./dialog";
-
-function shuffle<T>(list: T[]): T[] {
-  const a = [...list];
-  for (let i = a.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [a[i], a[j]] = [a[j], a[i]];
-  }
-  return a;
-}
 
 /**
  * A world's boss fight. Questions come from the world's lessons. A right
@@ -27,7 +18,8 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
   const id = bossId(worldNum);
   if (!isUnlocked(id)) return blocked(root, `Clear every level in ${world.name} to reach its boss.`);
 
-  const pool = bossPool(worldNum);
+  const { recap, scenarios } = worldContent(worldNum);
+  const recall = lessonQuestions(worldNum);
   const maxHp = bossHp(worldNum);
   const last = worldNum === WORLDS.length;
   const name = world.boss.name;
@@ -62,16 +54,24 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
   arena.start();
 
   let advance: (() => void) | undefined;
-  let order = shuffle(pool);
+  let order = fightOrder(scenarios, recall);
   let asked = 0;
 
   const report = () => (status.textContent = `${name}: ${arena.hp} of ${maxHp} HP. You: ${arena.hearts} of ${HEARTS} hearts.`);
+
+  /** Before the fight: a one-screen reminder of the world's key ideas. */
+  function showRecap(): void {
+    d.setName("WHAT YOU LEARNED");
+    d.say(md(recap.map((r) => `- ${r}`).join("\n")), false);
+    advance = intro;
+    d.setActions(btn("◀ MAP", () => go(""), "btn btn-ghost"), btn("I'M READY ▶", intro));
+  }
 
   function intro(): void {
     d.setName("BOSS");
     d.say(
       md(
-        `The **${name}** guards the way out of ${world!.name}! Answer questions from this world's lessons.\n\n` +
+        `The **${name}** guards the way out of ${world!.name}! Some questions check the basics. Others give you a situation and ask what you'd do.\n\n` +
           `Each right answer hits it. Each wrong answer costs you a heart. **${maxHp} hits** to win, **${HEARTS} hearts** to lose.`,
       ),
     );
@@ -82,7 +82,7 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
   function fight(): void {
     arena.reset();
     d.el.classList.remove("cleared");
-    order = shuffle(pool);
+    order = fightOrder(scenarios, recall);
     asked = 0;
     report();
     question();
@@ -125,8 +125,9 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
       ),
     );
     const toMap = () => go("");
-    advance = toMap;
-    d.setActions(btn("TO THE MAP ▶", toMap));
+    const toFinish = () => go("finish");
+    advance = last ? toFinish : toMap;
+    d.setActions(...(last ? [btn("◀ MAP", toMap, "btn btn-ghost"), btn("SEE YOUR RESULTS ▶", toFinish)] : [btn("TO THE MAP ▶", toMap)]));
   }
 
   function defeat(): void {
@@ -151,7 +152,8 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
   };
   window.addEventListener("keydown", onKey);
 
-  intro();
+  if (recap.length) showRecap();
+  else intro();
 
   return () => {
     arena.stop();

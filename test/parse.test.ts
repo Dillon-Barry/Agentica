@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { parseLesson, wordCount } from "../src/parse";
+import { parseLesson, parseWorld, wordCount } from "../src/parse";
 
 const lesson = (body: string, meta = "id: 2-3\ntitle: Memory\ndiagram: mem") =>
   `---\n${meta}\n---\n${body}`;
@@ -36,8 +36,31 @@ describe("parseLesson", () => {
     expect(() => parseLesson(lesson("A", "id: one"))).toThrow(/id/);
   });
 
-  it("requires deeper to be last", () => {
-    expect(() => parseLesson(lesson("A\n=== deeper\nB\n===\nC"))).toThrow(/last/);
+  it("requires dialog boxes to come before deeper and peek", () => {
+    expect(() => parseLesson(lesson("A\n=== deeper\nB\n===\nC"))).toThrow(/before/);
+  });
+
+  it("reads a peek section and ignores === inside code fences", () => {
+    const l = parseLesson(lesson("A\n=== deeper\nMore.\n=== peek\nLook:\n```yaml\na: 1\n===\n```"));
+    expect(l.deeper).toBe("More.");
+    expect(l.peek).toBe("Look:\n```yaml\na: 1\n===\n```");
+  });
+
+  it("rejects a repeated section", () => {
+    expect(() => parseLesson(lesson("A\n=== deeper\nB\n=== deeper\nC"))).toThrow(/only one/);
+  });
+});
+
+describe("parseWorld", () => {
+  it("reads recap and scenarios", () => {
+    const w = parseWorld("world: 2\nrecap:\n  - One\nscenarios:\n  - q: Q?\n    options: [A, B, C]\n    answer: 1\n    why: Because.");
+    expect(w.world).toBe(2);
+    expect(w.recap).toEqual(["One"]);
+    expect(w.scenarios[0].answer).toBe(1);
+  });
+
+  it("needs a world number", () => {
+    expect(() => parseWorld("recap: []")).toThrow(/world/);
   });
 });
 

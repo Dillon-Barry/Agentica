@@ -1,5 +1,5 @@
 import { parse as parseYaml } from "yaml";
-import type { Lesson, QuizQuestion, Source, Term } from "./types";
+import type { Lesson, QuizQuestion, Source, Term, WorldContent } from "./types";
 
 /**
  * Lesson file format:
@@ -17,6 +17,10 @@ import type { Lesson, QuizQuestion, Source, Term } from "./types";
  *   Second dialog box.
  *   === deeper
  *   Optional "Go deeper" text.
+ *   === peek
+ *   Optional read-only example, usually a fenced code block.
+ *
+ * Runs at build time (see vite.config.ts), so the YAML parser never ships.
  */
 export function parseLesson(raw: string, file = "lesson"): Lesson {
   const text = raw.replace(/\r\n/g, "\n");
@@ -29,26 +33,33 @@ export function parseLesson(raw: string, file = "lesson"): Lesson {
   if (!idMatch) throw new Error(`${file}: id "${id}" must look like "1-2"`);
 
   const boxes: string[] = [];
-  let deeper: string | undefined;
+  const extras: Partial<Record<"deeper" | "peek", string>> = {};
   let current: string[] = [];
-  let inDeeper = false;
+  let section: "box" | "deeper" | "peek" = "box";
+  let inFence = false;
 
   const flush = () => {
     const chunk = current.join("\n").trim();
     current = [];
-    if (inDeeper) deeper = chunk;
-    else if (chunk) boxes.push(chunk);
+    if (section === "box") {
+      if (chunk) boxes.push(chunk);
+    } else extras[section] = chunk;
   };
 
   for (const line of fm[2].split("\n")) {
-    const sep = /^===\s*(deeper)?\s*$/.exec(line);
+    if (/^```/.test(line)) inFence = !inFence;
+    const sep = inFence ? null : /^===\s*(deeper|peek)?\s*$/.exec(line);
     if (!sep) {
       current.push(line);
       continue;
     }
-    if (inDeeper) throw new Error(`${file}: "=== deeper" must be the last section`);
+    if (section !== "box" && !sep[1]) throw new Error(`${file}: dialog boxes must come before "=== deeper" / "=== peek"`);
     flush();
-    if (sep[1]) inDeeper = true;
+    if (sep[1]) {
+      const next = sep[1] as "deeper" | "peek";
+      if (extras[next] !== undefined || section === next) throw new Error(`${file}: only one "=== ${next}" section allowed`);
+      section = next;
+    }
   }
   flush();
 
@@ -62,7 +73,20 @@ export function parseLesson(raw: string, file = "lesson"): Lesson {
     sources: (meta.sources ?? []) as Source[],
     quiz: (meta.quiz ?? []) as QuizQuestion[],
     boxes,
-    deeper,
+    deeper: extras.deeper,
+    peek: extras.peek,
+  };
+}
+
+/** World file (content/worlds/wN.yaml): recap bullets and scenario questions. */
+export function parseWorld(raw: string, file = "world"): WorldContent {
+  const meta = (parseYaml(raw.replace(/\r\n/g, "\n")) ?? {}) as Record<string, unknown>;
+  const world = Number(meta.world);
+  if (!Number.isInteger(world)) throw new Error(`${file}: missing "world: <number>"`);
+  return {
+    world,
+    recap: (meta.recap ?? []) as string[],
+    scenarios: (meta.scenarios ?? []) as QuizQuestion[],
   };
 }
 

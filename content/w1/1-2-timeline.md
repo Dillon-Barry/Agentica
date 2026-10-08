@@ -60,7 +60,7 @@ Agents feel brand new, but the idea is about 60 years old. Each era added one mi
 ===
 **2016: AlphaGo.** DeepMind's agent beat a world champion at Go, largely by playing itself millions of times and learning from wins and losses (reinforcement learning). Superhuman, but only at one game.
 ===
-**2022: LLMs and ReAct.** Large language models could finally understand language about almost anything. The ReAct paper showed a model could *reason*, *act* with a tool, then reason again. The modern agent was born.
+**2022: LLMs and ReAct.** Large language models could finally understand language about almost anything. The **ReAct** paper showed a model could *reason*, *act* with a tool, then reason again. The modern agent was born.
 ===
 **2023-2025: The agent boom.** AutoGPT showed agents running on their own. **MCP** (2024) gave agents a standard plug for tools. **A2A** (2025) let agents talk to each other. Now the hard part is running them safely.
 === deeper

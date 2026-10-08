@@ -53,3 +53,20 @@ It applies **rate limits** and tracks LLM cost, and it logs, measures and traces
 It can also **federate** many MCP servers behind one endpoint and turn existing REST APIs into MCP tools. It's written in Rust for speed and safety.
 === deeper
 Because the gateway enforces policy outside the model, a hijacked agent hits the same wall as any unauthorized caller: no permission, no call. Policies are written in CEL, a small expression language, so rules like "only the billing agent may call refund_order" are explicit and reviewable. It runs standalone or on Kubernetes.
+=== peek
+An agentgateway MCP policy (simplified). Each rule is a CEL expression. A tool call that matches no rule is denied, and hidden from the tool list.
+
+```yaml
+mcp:
+  port: 3000
+  policies:
+    mcpAuthorization:
+      rules:
+      - 'mcp.tool.name == "read_invoices"'
+      - 'jwt.sub == "finance-lead" && mcp.tool.name == "refund_order"'
+  targets:
+  - name: billing
+    stdio:
+      cmd: npx
+      args: ["billing-mcp-server"]
+```

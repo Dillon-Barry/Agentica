@@ -7,6 +7,7 @@ import { reducedMotion } from "../typewriter";
 import { worldOf } from "../worlds";
 import { fontToggle } from "./font-toggle";
 import { blocked, btn, confetti, createDialog, md } from "./dialog";
+import { attachTermPopovers, linkTerms } from "./terms";
 
 /** A lesson: short text pages, then it's cleared. The world's boss tests it. */
 export function renderLevel(root: HTMLElement, id: string): () => void {
@@ -40,7 +41,7 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
     const last = i === lesson!.boxes.length - 1;
     d.setName("SAGE");
     d.setPips(lesson!.boxes.map((_, j) => (j <= i ? "on" : "")));
-    d.say(md(lesson!.boxes[i]));
+    d.say(linkTerms(md(lesson!.boxes[i])));
     const next = () => (last ? showClear() : showBox(i + 1));
     advance = next;
     back = i > 0 ? () => showBox(i - 1) : undefined;
@@ -59,7 +60,7 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
         `Level ${lesson!.id} cleared!` +
           (terms ? ` New in your Agentdex: ${terms}.` : "") +
           (isLastLesson
-            ? `\n\nThe **${world.boss.name}** is waiting at the end of ${world.name}. Beat it to open the next world.`
+            ? `\n\nNext: the **${world.challenge.title}** challenge, then the **${world.boss.name}**. Beat it to open the next world.`
             : `\n\nThe boss at the end of ${world.name} will test you on this.`) +
           (lesson!.deeper ? " Curious? Hit the **?** block first." : ""),
       ),
@@ -82,7 +83,12 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
 
   function showDeeper(): void {
     d.setName("BONUS");
-    d.say(md(lesson!.deeper!), false);
+    d.say(linkTerms(md(lesson!.deeper!)), false);
+    if (lesson!.peek) {
+      const peek = h("div", { class: "peek" });
+      peek.innerHTML = md(lesson!.peek);
+      d.extra.append(h("p", { class: "sources-label" }, "WHAT IT LOOKS LIKE"), peek);
+    }
     if (lesson!.sources.length) {
       d.extra.append(
         h("p", { class: "sources-label" }, "SOURCES"),
@@ -111,11 +117,13 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
     }
   };
   window.addEventListener("keydown", onKey);
+  const detachTerms = attachTermPopovers(d.el);
 
   showBox(0);
 
   return () => {
     d.destroy();
+    detachTerms();
     window.removeEventListener("keydown", onKey);
   };
 }

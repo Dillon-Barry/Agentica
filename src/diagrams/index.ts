@@ -2,6 +2,7 @@
 
 import { box, svg } from "./kit";
 import { MORE_DIAGRAMS } from "./worlds";
+import { EXTRA_DIAGRAMS } from "./extra";
 
 const agentCore = svg(
   "Diagram: a goal feeds the model, which loops through tools and memory",
@@ -81,6 +82,7 @@ const chatVsAgent = svg(
 
 export const DIAGRAMS: Record<string, string> = {
   ...MORE_DIAGRAMS,
+  ...EXTRA_DIAGRAMS,
   "agent-core": agentCore,
   timeline,
   "chat-vs-agent": chatVsAgent,

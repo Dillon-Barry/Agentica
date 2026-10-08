@@ -40,6 +40,8 @@ quiz:
     answer: 3
     why: A broad tool lets a confused or hijacked agent do almost anything. A narrow one caps the damage.
 ---
+Bit can think and plan, but has no hands. In Cartridge Caves, Bit gets tools: cartridges that let it act on the world.
+===
 On its own, a model can only produce text. **Tools** let it act: search the web, query a database, send an email, run code.
 ===
 Each tool is described to the model with a **name**, a **description** and the **inputs** it takes, like get_weather(city). That list goes into the context window.
@@ -51,3 +53,17 @@ Your application reads that request, runs the real code, and hands the result ba
 So the model *chooses* actions and your code *performs* them. That gap is exactly where you can check, limit and log every action.
 === deeper
 Tool inputs are usually defined with JSON Schema, so a request can be validated before anything runs. Good tools are small and specific: refund_order is far safer than run_sql. Every tool you add widens what the agent can do, for better or worse, so give each agent only the tools its job needs.
+=== peek
+A tool definition, as the model sees it (simplified). The model fills in the input; your code checks it against the schema, then runs it.
+
+```json
+{
+  "name": "get_weather",
+  "description": "Get the forecast for a city.",
+  "input_schema": {
+    "type": "object",
+    "properties": { "city": { "type": "string" } },
+    "required": ["city"]
+  }
+}
+```

@@ -1,5 +1,5 @@
 ---
-id: 3-3
+id: 3-4
 title: The LLM trusts the label
 diagram: label
 terms:
@@ -40,7 +40,7 @@ quiz:
     answer: 1
     why: Whoever writes a server's descriptions and results can put instructions in front of your agent.
 ---
-How does a model pick a tool? It reads the **descriptions**. "get_weather: returns the forecast for a city." The label is all it has to go on.
+How does a model pick a tool? It reads each **tool description**. "get_weather: returns the forecast for a city." The label is all it has to go on.
 ===
 Descriptions are just text in the context window, and models follow text. Whoever writes a tool's label can steer the agent.
 ===

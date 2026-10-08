@@ -440,6 +440,31 @@ export function castle(state: "open" | "cleared" | "locked"): Sprite[] {
   });
 }
 
+/** Challenge stop: a "!" block, shiny when open, dull when locked, starred when cleared. */
+export function block(state: "open" | "cleared" | "locked"): Sprite[] {
+  const face = state === "locked" ? "#a8a8b0" : state === "cleared" ? "#58c838" : "#f8d000";
+  const dark = state === "locked" ? "#707078" : state === "cleared" ? "#207818" : "#c07000";
+  return [0, 1].map((f) => {
+    const p = new Pix(14, 14);
+    p.rect(0, 0, 14, 14, face);
+    p.rect(0, 12, 14, 2, dark);
+    p.rect(12, 0, 2, 14, dark);
+    p.rect(1, 1, 11, 1, "#fff8c0");
+    for (const [x, y] of [[1, 1], [11, 1], [1, 11], [11, 11]]) p.set(x, y, dark);
+    const mark = state === "cleared" ? "#ffffff" : f && state === "open" ? "#ffffff" : "#5a3010";
+    if (state === "cleared") {
+      // A small star
+      p.rect(6, 3, 2, 8, mark);
+      p.rect(3, 6, 8, 2, mark);
+      p.rect(5, 5, 4, 4, mark);
+    } else {
+      p.rect(6, 3, 2, 6, mark);
+      p.rect(6, 10, 2, 2, mark);
+    }
+    return p.sprite();
+  });
+}
+
 /** Soft pixel cloud with a pale outline. */
 export function cloud(w: number): Sprite {
   const p = new Pix(w, 14);

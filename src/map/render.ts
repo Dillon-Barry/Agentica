@@ -95,6 +95,9 @@ export class OverworldRenderer {
       castleOpen: P.castle("open"),
       castleCleared: P.castle("cleared"),
       castleLocked: P.castle("locked"),
+      blockOpen: P.block("open"),
+      blockCleared: P.block("cleared"),
+      blockLocked: P.block("locked"),
     };
     this.smoke = [3, 4, 5].map((n) => dot("#e8e8f0", "#b8b8c8", n));
     this.clouds = [
@@ -295,6 +298,14 @@ export class OverworldRenderer {
       if (f.nodeHidden(i)) return;
       const p = nodePx(i);
       const s = f.states[i];
+      if (l.challenge) {
+        const kind = s === "cleared" ? "Cleared" : s === "open" ? "Open" : "Locked";
+        const frames = this.anim[`block${kind}`];
+        const img = frames[(f.tick >> 5) % frames.length];
+        const hop = s === "open" ? Math.round(Math.abs(Math.sin(f.tick / 25)) * 2) : 0;
+        ctx.drawImage(img, p.x - Math.floor(img.width / 2), p.y - Math.floor(img.height / 2) - hop);
+        return;
+      }
       if (l.boss) {
         const big = i === ROUTE.length - 1;
         const kind = s === "cleared" ? "Cleared" : s === "open" ? "Open" : "Locked";

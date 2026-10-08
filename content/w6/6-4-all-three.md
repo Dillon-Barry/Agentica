@@ -50,6 +50,6 @@ Replay the dungeon. **Prompt injection**: the gateway limits which tools and des
 ===
 **Excessive agency and the trifecta**: gateway policies give each agent only the tools and outbound routes it needs, cutting a leg of the trifecta.
 ===
-Through it all, gateway logs and traces answer who did what. None of this needs the model to behave. That's the point.
+Through it all, gateway logs and traces form an **audit trail** of who did what. None of this needs the model to behave. That's the point.
 === deeper
 No stack makes agents perfectly safe. Models will still be fooled and bugs will still ship. The goal is failures that are small, visible and reversible. Prevention (registry curation, least-privilege policies), containment (gateway enforcement, isolated workloads) and recovery (versioned rollbacks, audit trails) together turn agent risk into something a platform team can actually manage.

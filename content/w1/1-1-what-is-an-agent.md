@@ -46,6 +46,8 @@ quiz:
 ---
 Welcome to **Agentica**, traveler! Over six worlds you'll go from knowing nothing about AI agents to understanding how they work, why they're risky, and how teams keep them in check.
 ===
+Meet **Bit**, the little robot you walk around as. Right now Bit is a plain chatbot: ask a question, get an answer. Over six worlds, Bit becomes a real agent, gets attacked, and gets secured. Its story is the course.
+===
 An **AI agent** is a program that uses an AI model to reach a goal. It decides what to do next, then does it. You give it the *what*. It works out the *how*.
 ===
 Most agents have four parts. A **model**, the brain that reasons. **Tools**, the hands that act. **Memory**, to track what happened. And a **loop** that repeats until the goal is met.

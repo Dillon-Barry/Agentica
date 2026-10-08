@@ -1,6 +1,6 @@
 ---
 id: 6-5
-title: "Final: rogue agent"
+title: "Final: Bit goes rogue"
 diagram: rogue
 terms:
   - term: Incident response
@@ -40,16 +40,16 @@ quiz:
     answer: 2
     why: Agents are powerful and fallible. Safe systems plan for the fallible part.
 ---
-Final boss. Monday, 9:02. The "invoice-helper" agent reads a supplier email with hidden instructions, and tries to send customer records to an outside address.
+Final boss. Monday, 9:02. Bit, now handling invoices, reads a supplier email with hidden instructions, and tries to send customer records to an outside address.
 ===
-**The gate holds.** agentgateway checks the call: invoice-helper has no permission for that tool or destination. Denied, and the attempt is logged.
+**The gate holds.** agentgateway checks the call: Bit has no permission for that tool or destination. Denied, and the attempt is logged.
 ===
 **Spot it.** The denial raises an alert. Traces show exactly which agent, which user, which email and which tool call.
 ===
-**Contain it.** In kagent, the team rolls invoice-helper back to its last good version, or scales it to zero, with one change in Git.
+**Contain it.** In kagent, the team does a **rollback** to Bit's last good version, or scales it to zero, with one change in Git.
 ===
 **Clean up.** The supplier connector is flagged in agentregistry and pulled until it's fixed. Nothing leaked, because the controls never depended on the model saying no.
 ===
-You started knowing nothing about agents. Now you know where they came from, how they work, why they're hard to secure, and how to keep them in check. **Quest complete!**
+Bit is safe, and so are the customers. You started knowing nothing about agents. Now you know where they came from, how they work, why they're hard to secure, and how to keep them in check. **Quest complete!**
 === deeper
 Notice what happened: the injection still worked, and the model was fooled. The attack failed anyway, because permissions, inventory and visibility lived outside the model. When you design an agent, ask four questions. Where did its parts come from? What can it reach? Who is it acting for? Would we know if it misbehaved?

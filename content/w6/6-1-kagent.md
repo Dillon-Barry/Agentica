@@ -42,7 +42,9 @@ quiz:
     answer: 2
     why: Agents stop being one-off scripts and become managed, visible workloads.
 ---
-Welcome to the Solo Citadel. First tool: **kagent**, an open source framework from Solo.io for running AI agents on **Kubernetes**. It's now a CNCF Sandbox project.
+Bit survived the Dungeon, but only just. In the Solo Citadel, Bit moves onto a platform built to keep agents in check.
+===
+First tool: **kagent**, an open source framework from Solo.io for running AI agents on **Kubernetes**. It's now a CNCF Sandbox project.
 ===
 Kubernetes already runs much of the world's cloud software. kagent makes agents first-class citizens there, described in YAML like any other app.
 ===
@@ -53,3 +55,27 @@ Because agents are just resources, teams get the usual benefits: keep them in Gi
 kagent agents use MCP for tools and A2A to talk to other agents. Agents stop being scripts on someone's laptop and become managed workloads.
 === deeper
 kagent ships with ready-made agents and MCP tools for cloud native work, covering Kubernetes, Istio, Helm, Argo, Prometheus and more, plus a web UI and CLI. It also runs agents built with frameworks like Google's ADK, LangChain and CrewAI. Running agents as Kubernetes workloads means they can use the cluster's existing identity, access control and network policies.
+=== peek
+A kagent Agent resource (simplified). Apply it with kubectl and kagent runs the agent, with only the tools listed.
+
+```yaml
+apiVersion: kagent.dev/v1alpha2
+kind: Agent
+metadata:
+  name: bit
+spec:
+  type: Declarative
+  description: Answers questions about invoices
+  declarative:
+    modelConfig: default-model-config
+    systemMessage: |
+      You help the finance team with invoices.
+      Never send data outside the company.
+  tools:
+    - type: McpServer
+      mcpServer:
+        apiGroup: kagent.dev
+        kind: RemoteMCPServer
+        name: billing-tools
+        toolNames: [read_invoices]
+```

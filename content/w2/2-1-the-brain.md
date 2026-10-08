@@ -40,6 +40,8 @@ quiz:
     answer: 0
     why: The system prompt guides the model, but it sits in the same window as everything else, so it can be argued with.
 ---
+Bit wants to do more than chat. Welcome to The Forge, where we open Bit up and see what an agent is made of, starting with its brain.
+===
 The brain of an agent is a **large language model** (LLM). At heart it does one thing: given some text, it predicts the most likely next word. Then the next. Then the next.
 ===
 Everything the model knows *right now* sits in its **context window**: your message, its instructions, the chat so far and any tool results. If it isn't in the window, the model can't see it.

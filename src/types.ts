@@ -32,6 +32,8 @@ export interface Lesson {
   boxes: string[];
   /** Optional markdown for the "Go deeper" block. */
   deeper?: string;
+  /** Optional read-only example ("What it looks like"), usually a code block. */
+  peek?: string;
 }
 
 /** A stop on the overworld route: a lesson, or a world's boss fortress. */
@@ -42,6 +44,7 @@ export interface PlannedLevel {
   x: number;
   y: number;
   boss?: boolean;
+  challenge?: boolean;
 }
 
 export type Theme = "grass" | "forge" | "cave" | "forest" | "shadow" | "castle";
@@ -61,5 +64,15 @@ export interface World {
   blurb: string;
   theme: Theme;
   levels: PlannedLevel[];
+  challenge: { title: string; x: number; y: number };
   boss: Boss;
+  /** Extra round patches of land (map pixels), e.g. room for a landmark. */
+  extraLand?: { x: number; y: number; r: number }[];
+}
+
+/** Per-world boss material: a recap and scenario questions (content/worlds/wN.yaml). */
+export interface WorldContent {
+  world: number;
+  recap: string[];
+  scenarios: QuizQuestion[];
 }

@@ -48,6 +48,6 @@ An **MCP server** wraps a system, like GitHub or a database, and offers its tool
 ===
 Servers can offer **tools** (actions), **resources** (data to read) and **prompts** (templates). They run locally on your machine or remotely over the network.
 ===
-Build a server once and any MCP-compatible agent can use it. That's why thousands of MCP servers appeared within a year, and why keeping track of them got hard.
+Build a server once and any MCP-compatible agent can use it. By late 2025 there were over 10,000 public MCP servers, which is great for choice and hard for keeping track.
 === deeper
-MCP messages use JSON-RPC. Local servers usually talk over stdio, started by the agent's app as a process; remote ones use Streamable HTTP, with OAuth for authorization. MCP doesn't decide whether a server is trustworthy or what each user may call. That job falls to the tools around it, which is where World 6 comes in. MCP is now hosted by the Linux Foundation's Agentic AI Foundation.
+MCP messages use JSON-RPC. Local servers usually talk over stdio, started by the agent's app as a process; remote ones use Streamable HTTP, with OAuth for authorization. MCP doesn't decide whether a server is trustworthy or what each user may call. That job falls to the tools around it, which is where World 6 comes in. In December 2025 Anthropic gave MCP to the new Agentic AI Foundation, under the Linux Foundation.

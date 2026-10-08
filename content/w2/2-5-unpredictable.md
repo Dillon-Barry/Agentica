@@ -1,5 +1,5 @@
 ---
-id: 2-4
+id: 2-5
 title: Why agents are unpredictable
 diagram: branches
 terms:
@@ -46,7 +46,7 @@ Run the same agent twice on the same task and you may get two different plans. M
 ===
 Errors **compound**. If each step is 95% reliable, ten steps in a row all succeed only about 60% of the time. Long tasks magnify small slips.
 ===
-Models can **hallucinate**: state false things confidently, invent a file name, or call a tool with made-up arguments. They sound just as sure either way.
+Models suffer from **hallucination**: stating false things confidently, inventing a file name, or calling a tool with made-up arguments. They sound just as sure either way.
 ===
 Tiny input changes can flip behavior. A reworded request, a new tool, or one odd line on a web page can send the agent down a different path.
 ===
