@@ -2,6 +2,12 @@
 id: 4-4
 title: Evals and observability
 diagram: evals
+focus:
+  - []
+  - [suite]
+  - [suite]
+  - [trace]
+  - [trace]
 terms:
   - term: Trace
     def: A step-by-step record of one agent run, showing each model call, tool call, input, output, time and cost.
@@ -23,6 +29,11 @@ quiz:
       - Users never watch demos
     answer: 1
     why: Non-determinism means one good run proves little. Evals measure reliability across many runs.
+    explain:
+      - "Demos can be real. They just don't show reliability."
+      - ""
+      - "Energy use isn't the issue."
+      - "Watching doesn't prove reliability either."
   - q: What does a trace show?
     options:
       - The agent's password
@@ -31,6 +42,11 @@ quiz:
       - Only the final answer
     answer: 2
     why: Traces turn "the agent did something weird" into "step 4 called the wrong tool with this input".
+    explain:
+      - "Traces record actions, never passwords."
+      - "A trace is a step-by-step log, not a picture."
+      - ""
+      - "That's just the end. A trace shows every step."
   - q: When is LLM-as-judge useful?
     options:
       - When quality can't be checked by code, like the tone of a reply
@@ -39,6 +55,11 @@ quiz:
       - Never
     answer: 0
     why: Some qualities need judgement. A model grader, checked against human ratings, scales that judgement.
+    explain:
+      - ""
+      - "It's a way to test, not to skip testing."
+      - "Simple answers can be checked by code."
+      - "It's widely used, carefully checked against people."
 ---
 How do you know Bit is any good? One great demo proves very little, because agents don't behave the same way every run.
 ===

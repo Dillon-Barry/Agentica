@@ -1,7 +1,7 @@
 import type { PlannedLevel, World } from "./types";
 
 /** Overworld size in map pixels. Positions below are map pixels too. */
-export const MAP_W = 1000;
+export const MAP_W = 1240;
 export const MAP_H = 740;
 
 /**
@@ -10,7 +10,8 @@ export const MAP_H = 740;
  * to right. Each world is a comb of stops on two lines 70px apart, then a
  * challenge, then a boss fortress (always on the upper line, so roads reach
  * it from the side or from below). Islands grow around the route; `extraLand`
- * adds a meadow for the world's landmark.
+ * adds a meadow for the world's landmark. World 7, Star Road, is a bonus
+ * island reached from the final castle, climbing a staircase up the right.
  */
 export const WORLDS: World[] = [
   {
@@ -108,7 +109,27 @@ export const WORLDS: World[] = [
     boss: { name: "Rogue Agent", x: 920, y: 570, body: "#e83800", shade: "#a82000" },
     extraLand: [{ x: 770, y: 692, r: 28 }],
   },
+  {
+    num: 7,
+    name: "Star Road",
+    blurb: "Bonus: expert topics, open after the quest.",
+    theme: "star",
+    levels: [
+      { id: "7-1", title: "Sandboxing agents that run code", x: 1060, y: 640 },
+      { id: "7-2", title: "Guardrail models", x: 1130, y: 570 },
+      { id: "7-3", title: "MCP sign-in, step by step", x: 1060, y: 500 },
+      { id: "7-4", title: "Cost and token budgets", x: 1130, y: 430 },
+      { id: "7-5", title: "Designing good evals", x: 1060, y: 360 },
+      { id: "7-6", title: "Computer-use and browser agents", x: 1130, y: 290 },
+    ],
+    challenge: { title: "Lock the sandbox", x: 1060, y: 220 },
+    boss: { name: "Star Guardian", x: 1130, y: 150, body: "#f8d800", shade: "#c08800" },
+    extraLand: [{ x: 1190, y: 400, r: 30 }],
+  },
 ];
+
+/** The main quest ends with world 6; world 7 is the bonus Star Road. */
+export const MAIN_WORLDS = 6;
 
 export const bossId = (world: number) => `${world}-B`;
 export const challengeId = (world: number) => `${world}-C`;

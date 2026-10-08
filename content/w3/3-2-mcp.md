@@ -2,6 +2,12 @@
 id: 3-2
 title: MCP
 diagram: mcp
+focus:
+  - []
+  - [agent]
+  - [agent, github]
+  - [database, slack]
+  - [github, database, slack]
 terms:
   - term: MCP
     def: Model Context Protocol. An open standard for connecting AI agents to tools and data, introduced by Anthropic in 2024.
@@ -23,6 +29,11 @@ quiz:
       - Low screen resolution
     answer: 1
     why: With a shared standard, a tool is built once and works with any MCP-compatible agent.
+    explain:
+      - "MCP is about connecting tools, not speed."
+      - ""
+      - "Training isn't involved at all."
+      - "It's a protocol, not a display fix."
   - q: What does an MCP server do?
     options:
       - Trains the model
@@ -31,6 +42,11 @@ quiz:
       - Blocks attacks
     answer: 2
     why: An MCP server is the adapter between a real system and any agent that speaks MCP.
+    explain:
+      - "Servers expose tools. They don't train models."
+      - "Chat history lives in the app, not the server."
+      - ""
+      - "MCP connects tools. Security comes from elsewhere."
   - q: Does MCP decide which servers are safe to trust?
     options:
       - No. That job falls to the controls around it
@@ -39,6 +55,11 @@ quiz:
       - Yes, through the model
     answer: 0
     why: MCP is a protocol for connecting. Trust, vetting and permissions have to come from elsewhere.
+    explain:
+      - ""
+      - "Anyone can publish a server. Nothing verifies them by default."
+      - "No server is automatically trusted."
+      - "The model has no way to judge a server's trustworthiness."
 ---
 Before MCP, every app wired up every tool its own way. Ten agents and ten tools could mean a hundred custom connections.
 ===

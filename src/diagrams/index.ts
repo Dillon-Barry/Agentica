@@ -1,8 +1,9 @@
 /** Lesson diagrams, keyed by the lesson frontmatter `diagram:` value. World 1 lives here. */
 
-import { box, svg } from "./kit";
+import { box, part, partName, svg } from "./kit";
 import { MORE_DIAGRAMS } from "./worlds";
 import { EXTRA_DIAGRAMS } from "./extra";
+import { STAR_DIAGRAMS } from "./star";
 
 const agentCore = svg(
   "Diagram: a goal feeds the model, which loops through tools and memory",
@@ -40,11 +41,11 @@ const timeline = svg(
       const x = 25 + i * 38;
       const nameY = i % 2 === 0 ? 100 : 114;
       const cls = i >= 4 ? "d-mark d-hl" : "d-mark";
-      return `
+      return part(partName(name), `
       <rect x="${x - 4}" y="76" width="8" height="8" class="${cls}"/>
       <text x="${x}" y="66" class="d-sub" text-anchor="middle">${year}</text>
       <line x1="${x}" y1="84" x2="${x}" y2="${nameY - 8}" class="d-tick"/>
-      <text x="${x}" y="${nameY}" class="d-sub" text-anchor="middle">${name}</text>`;
+      <text x="${x}" y="${nameY}" class="d-sub" text-anchor="middle">${name}</text>`);
     })
     .join("")}
   <rect width="6" height="6" y="-3" x="-3" class="d-dot">
@@ -83,6 +84,7 @@ const chatVsAgent = svg(
 export const DIAGRAMS: Record<string, string> = {
   ...MORE_DIAGRAMS,
   ...EXTRA_DIAGRAMS,
+  ...STAR_DIAGRAMS,
   "agent-core": agentCore,
   timeline,
   "chat-vs-agent": chatVsAgent,

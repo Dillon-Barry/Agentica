@@ -14,6 +14,11 @@ scenarios:
       - kagent's web UI theme
     answer: 0
     why: The registry is the gate for what is allowed to exist in your platform.
+    explain:
+      - ""
+      - "Prompts can't vet a server."
+      - "Hardware doesn't vet code."
+      - "A UI theme does nothing for safety."
   - q: Bit is hijacked and tries to call delete_records. What actually stops the call?
     options:
       - Bit's conscience
@@ -22,6 +27,11 @@ scenarios:
       - The registry's search page
     answer: 1
     why: The gateway denies calls the agent has no permission for, however convincing the injected text was.
+    explain:
+      - "A hijacked agent has no reliable conscience."
+      - ""
+      - "Agent Cards describe skills. They don't block calls."
+      - "Search pages don't enforce anything."
   - q: A bad prompt change shipped to Bit an hour ago. How do you undo it fastest?
     options:
       - Retrain the model
@@ -30,6 +40,11 @@ scenarios:
       - Delete the cluster
     answer: 2
     why: Agents as Kubernetes resources get versioned rollouts and fast rollbacks.
+    explain:
+      - "Retraining takes far too long."
+      - "Emails don't undo a change."
+      - ""
+      - "Far too destructive."
   - q: An auditor asks which agent read the payroll tools last month, and for whom. Where's the answer?
     options:
       - In the model's memory
@@ -38,6 +53,11 @@ scenarios:
       - Nowhere
     answer: 1
     why: Every call through agentgateway is recorded with who, what and when.
+    explain:
+      - "Model memory isn't a reliable record."
+      - ""
+      - "The prompt says nothing about past calls."
+      - "The gateway recorded it."
   - q: Which pairing is right?
     options:
       - "kagent: where agents run. agentregistry: what's allowed. agentgateway: what they can do"
@@ -46,3 +66,8 @@ scenarios:
       - None of them help with security
     answer: 0
     why: Runtime, catalog and checkpoint each cover a different stage of an agent's life.
+    explain:
+      - ""
+      - "The roles are scrambled."
+      - "Each covers a different stage."
+      - "Security is their main purpose."

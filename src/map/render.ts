@@ -1,4 +1,4 @@
-import { MAP_H, MAP_W, ROUTE, WORLDS } from "../worlds";
+import { MAIN_WORLDS, MAP_H, MAP_W, ROUTE, WORLDS, bossId } from "../worlds";
 import type { Theme } from "../types";
 import { ART, PAL, dot, sprite, type Sprite } from "./pixels";
 import * as P from "./props";
@@ -40,7 +40,7 @@ interface Prop {
 
 type Kind =
   | "tree" | "pine" | "bush" | "hill" | "flower" | "rock" | "cactus" | "mushroom"
-  | "tombstone" | "deadTree" | "crystal" | "stalagmite" | "ghost" | "swamp" | "house";
+  | "tombstone" | "deadTree" | "crystal" | "stalagmite" | "ghost" | "swamp" | "house" | "starlet";
 
 /** What grows on each kind of island, most common first. */
 const FLORA: Record<Theme, Kind[]> = {
@@ -50,6 +50,7 @@ const FLORA: Record<Theme, Kind[]> = {
   forest: ["pine", "mushroom", "pine", "tree", "pine", "mushroom"],
   shadow: ["deadTree", "tombstone", "swamp", "deadTree", "tombstone", "deadTree", "ghost", "swamp", "tombstone"],
   castle: ["pine", "rock", "flower", "bush", "pine"],
+  star: ["starlet", "crystal", "starlet", "rock", "starlet"],
 };
 
 const LANDMARK: Record<Theme, () => { frames: Sprite[]; rate: number; smoke?: Pt }> = {
@@ -59,6 +60,7 @@ const LANDMARK: Record<Theme, () => { frames: Sprite[]; rate: number; smoke?: Pt
   forest: () => ({ frames: P.guildHall(), rate: 36 }),
   shadow: () => ({ frames: P.ghostHouse(), rate: 50 }),
   castle: () => ({ frames: P.tower(), rate: 36 }),
+  star: () => ({ frames: P.starGate(), rate: 40 }),
 };
 
 const hash = (x: number, y: number) => {
@@ -155,6 +157,7 @@ export class OverworldRenderer {
         case "pine": return { frames: get(P.pine), rate: 90 };
         case "flower": return { frames: get(() => P.flower(theme === "castle" ? "#f8d800" : "#f878b8")), rate: 60 };
         case "crystal": return { frames: get(P.crystal), rate: 40 };
+        case "starlet": return { frames: get(P.starlet), rate: 30 };
         case "ghost": return { frames: get(P.ghost), rate: 32, bob: 2 };
         case "swamp": return { frames: get(P.swamp), rate: 32 };
         case "bush": return { frames: get(() => [P.bush(t.dark, t.base, t.dark)]), rate: 0 };
@@ -307,7 +310,7 @@ export class OverworldRenderer {
         return;
       }
       if (l.boss) {
-        const big = i === ROUTE.length - 1;
+        const big = l.id === bossId(MAIN_WORLDS);
         const kind = s === "cleared" ? "Cleared" : s === "open" ? "Open" : "Locked";
         const frames = this.anim[`${big ? "castle" : "fortress"}${kind}`];
         const img = frames[(f.tick >> 5) % frames.length];

@@ -2,6 +2,12 @@
 id: 4-1
 title: Workflow patterns
 diagram: patterns
+focus:
+  - []
+  - [chain, route]
+  - [parallel]
+  - [evaluate]
+  - [chain]
 terms:
   - term: Prompt chaining
     def: Splitting a job into fixed steps, where each model call works on the output of the one before.
@@ -21,6 +27,11 @@ quiz:
       - No AI at all
     answer: 0
     why: Routing sends each request down the path built for it.
+    explain:
+      - ""
+      - "That's for improving quality in a loop, not sorting."
+      - "Overkill when the categories are known."
+      - "A model is good at sorting text like this."
   - q: When should you choose a simple workflow over a full agent?
     options:
       - Never. Agents are always better
@@ -29,6 +40,11 @@ quiz:
       - When you want the result to be less predictable
     answer: 1
     why: If you know the steps, a workflow is cheaper, faster and easier to test than an agent deciding for itself.
+    explain:
+      - "Agents cost more and are harder to test."
+      - ""
+      - "Model size has nothing to do with it."
+      - "Predictable results are a reason to use a workflow."
   - q: What does the evaluator-optimizer pattern do?
     options:
       - Measures electricity use
@@ -37,6 +53,11 @@ quiz:
       - Deletes failed attempts
     answer: 2
     why: A second pair of eyes, even a model's, catches problems the first pass missed.
+    explain:
+      - "It evaluates work, not electricity."
+      - "That's the parallelization pattern."
+      - ""
+      - "It improves attempts rather than deleting them."
 ---
 Bit joins the Guild Hall, where AI gets organised. Not every job needs a free-roaming agent. Builders reuse a handful of proven **patterns**.
 ===

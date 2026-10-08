@@ -72,6 +72,7 @@ export function parseLesson(raw: string, file = "lesson"): Lesson {
     terms: (meta.terms ?? []) as Term[],
     sources: (meta.sources ?? []) as Source[],
     quiz: (meta.quiz ?? []) as QuizQuestion[],
+    focus: ((meta.focus ?? []) as (string[] | null)[]).map((f) => f ?? []),
     boxes,
     deeper: extras.deeper,
     peek: extras.peek,

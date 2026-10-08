@@ -1,9 +1,9 @@
 import { h } from "../dom";
 import { HEARTS, bossHp, fightOrder, lessonQuestions, worldContent } from "../content";
-import { isUnlocked, markCleared } from "../progress";
+import { addMissed, isUnlocked, markCleared, removeMissed } from "../progress";
 import { go, href } from "../nav";
 import { reducedMotion } from "../typewriter";
-import { WORLDS, bossId } from "../worlds";
+import { MAIN_WORLDS, WORLDS, bossId } from "../worlds";
 import { ARENA_H, ARENA_W, Arena } from "../map/arena";
 import { fontToggle } from "./font-toggle";
 import { blocked, btn, confetti, createDialog, md } from "./dialog";
@@ -21,7 +21,9 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
   const { recap, scenarios } = worldContent(worldNum);
   const recall = lessonQuestions(worldNum);
   const maxHp = bossHp(worldNum);
-  const last = worldNum === WORLDS.length;
+  // World 6 ends the main quest; world 7 (Star Road) is the bonus after it.
+  const last = worldNum >= MAIN_WORLDS;
+  const bonus = worldNum > MAIN_WORLDS;
   const name = world.boss.name;
 
   const canvas = h("canvas", { class: "arena-canvas", "aria-hidden": "true" });
@@ -94,6 +96,9 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
     advance = () => d.finishTyping();
     d.ask(q, (correct) => {
       advance = undefined;
+      // Wrong answers go to the review pile on the Agentdex page.
+      if (correct) removeMissed(q.q);
+      else addMissed(q.q);
       const after = () => {
         report();
         if (arena.hp === 0) {
@@ -119,9 +124,11 @@ export function renderBoss(root: HTMLElement, worldNum: number): () => void {
     d.setName("BOSS DEFEATED!");
     d.say(
       md(
-        last
-          ? `You beat the **${name}** and finished Agentica! You know where agents came from, how they work, why they're hard to secure, and how to keep them in check. **Quest complete!**`
-          : `You beat the **${name}**! ${world!.name} is clear. Head back to the map: the road to World ${worldNum + 1} is open.`,
+        bonus
+          ? `You beat the **${name}** and conquered the Star Road! That's expert territory: sandboxes, guardrails, MCP sign-in, cost, evals and browser agents.`
+          : last
+            ? `You beat the **${name}** and finished Agentica! You know where agents came from, how they work, why they're hard to secure, and how to keep them in check. **Quest complete!** A bonus Star Road has appeared on the map.`
+            : `You beat the **${name}**! ${world!.name} is clear. Head back to the map: the road to World ${worldNum + 1} is open.`,
       ),
     );
     const toMap = () => go("");

@@ -2,6 +2,12 @@
 id: 5-4
 title: The lethal trifecta
 diagram: trifecta
+focus:
+  - []
+  - [private, untrusted]
+  - [way-out]
+  - [private, untrusted, way-out]
+  - []
 terms:
   - term: Lethal trifecta
     def: Private data, untrusted content and a way to send data out. An agent with all three can be tricked into leaking data.
@@ -19,6 +25,11 @@ quiz:
       - Login, logout and reset
     answer: 2
     why: Each one is harmless alone. Together, one injected instruction can steal data.
+    explain:
+      - "Those are general features, not the dangerous combination."
+      - "Those are formats, not risks."
+      - ""
+      - "Those are account actions, not the trifecta."
   - q: What is the most reliable defense?
     options:
       - Remove at least one of the three legs
@@ -27,6 +38,11 @@ quiz:
       - Only run the agent at night
     answer: 0
     why: Without all three legs, the attack has no way to complete, whatever the model is tricked into wanting.
+    explain:
+      - ""
+      - "Being careful is a prompt, and prompts can be beaten."
+      - "Longer prompts don't remove capabilities."
+      - "Attackers don't keep office hours."
   - q: How can just loading an image leak data?
     options:
       - Images contain viruses
@@ -35,6 +51,11 @@ quiz:
       - It can't
     answer: 1
     why: An attacker can get the agent to build a link with private data inside it. Loading the link sends that data out.
+    explain:
+      - "The image itself isn't the problem. Its link is."
+      - ""
+      - "Memory isn't how it leaks."
+      - "It can, and it's a known trick."
 ---
 Fourth monster, and the most dangerous. Security researcher Simon Willison named it the **lethal trifecta**: three abilities that are deadly together.
 ===

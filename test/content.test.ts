@@ -33,6 +33,11 @@ describe("curriculum", () => {
     expect(terms.filter((t, i) => terms.indexOf(t) !== i)).toEqual([]);
   });
 
+  it("never repeats a question, since the review pile keys on question text", () => {
+    const qs = [...LESSONS.flatMap((l) => l.quiz), ...WORLDS.flatMap((w) => worldContent(w.num).scenarios)].map((q) => q.q);
+    expect(qs.filter((q, i) => qs.indexOf(q) !== i)).toEqual([]);
+  });
+
   it("writes lessons in route order, so the map path never skips a gap", () => {
     const lessonStops = ROUTE.filter((l) => !l.boss && !l.challenge);
     expect(LESSONS.map((l) => l.id)).toEqual(lessonStops.slice(0, LESSONS.length).map((l) => l.id));
@@ -111,6 +116,12 @@ const validQuestion = (q: QuizQuestion) => {
   expect(Number.isInteger(q.answer)).toBe(true);
   expect(q.answer).toBeGreaterThanOrEqual(0);
   expect(q.answer).toBeLessThan(q.options.length);
+  // Every wrong option explains itself; the right one is covered by `why`.
+  expect(q.explain, q.q).toHaveLength(q.options.length);
+  q.explain!.forEach((e, k) => {
+    // An empty right slot also catches lists shifted by one.
+    expect(!!e, `${q.q} / option ${k}`).toBe(k !== q.answer);
+  });
 };
 
 describe("each world", () => {
@@ -166,6 +177,13 @@ describe.each(LESSONS.map((l) => [l.id, l] as const))("lesson %s", (_id, l) => {
   it("has a title and a known diagram", () => {
     expect(l.title).not.toBe("");
     expect(DIAGRAMS[l.diagram], `diagram "${l.diagram}"`).toBeDefined();
+  });
+
+  it("lights up diagram parts that exist, at most one list per box", () => {
+    expect(l.focus.length, "focus lists").toBeGreaterThan(0);
+    expect(l.focus.length).toBeLessThanOrEqual(l.boxes.length);
+    const parts = new Set([...DIAGRAMS[l.diagram].matchAll(/data-part="([^"]+)"/g)].map((m) => m[1]));
+    for (const p of l.focus.flat()) expect(parts.has(p), `part "${p}" in ${l.diagram}`).toBe(true);
   });
 
   it("has 3-8 short dialog boxes", () => {

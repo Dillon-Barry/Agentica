@@ -2,6 +2,12 @@
 id: 4-2
 title: Multi-agent teams
 diagram: team
+focus:
+  - [research, coder, review]
+  - [orchestrator]
+  - [research, coder, review]
+  - [orchestrator]
+  - [research, coder]
 terms:
   - term: Orchestrator
     def: An agent that splits a goal into parts, hands them to other agents and combines their results.
@@ -23,6 +29,11 @@ quiz:
       - Breaks a goal into parts and delegates them to other agents
     answer: 3
     why: The orchestrator plans and delegates, then pulls the specialists' results together.
+    explain:
+      - "\"Orchestrator\" here means a coordinating agent, not music."
+      - "Storage isn't its job."
+      - "That's a gateway's job."
+      - ""
   - q: What's a downside of multi-agent systems?
     options:
       - They can't use tools
@@ -31,6 +42,11 @@ quiz:
       - They don't need prompts
     answer: 1
     why: Each agent adds cost and another place for errors, and outputs become the next agent's inputs.
+    explain:
+      - "Each agent can use tools."
+      - ""
+      - "They run anywhere a normal agent does."
+      - "Every agent still needs a prompt."
   - q: Why should each agent have its own permissions?
     options:
       - So a problem in one agent doesn't hand the others' power to an attacker
@@ -39,6 +55,11 @@ quiz:
       - So they can share passwords
     answer: 0
     why: Separate permissions contain the damage when one agent is fooled.
+    explain:
+      - ""
+      - "Permissions limit risk; they don't add speed."
+      - "MCP doesn't require it. Good security does."
+      - "Shared passwords are exactly what to avoid."
 ---
 One agent doing everything gets overloaded: too many tools, too much context. So teams split the work across **specialist agents**.
 ===

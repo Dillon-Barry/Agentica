@@ -2,6 +2,13 @@
 id: 3-1
 title: Tools
 diagram: tool-call
+focus:
+  - []
+  - [model, app]
+  - [request]
+  - [model, request]
+  - [app, result]
+  - [model, app]
 terms:
   - term: Function calling
     def: The model writing a structured request to use a tool, which your code then runs. The model never runs anything itself.
@@ -23,6 +30,11 @@ quiz:
       - Nothing happens until a human types it
     answer: 1
     why: The model only produces text. Your application reads the request and does the real work.
+    explain:
+      - "The model only writes text. It never runs code."
+      - ""
+      - "It's the other way round: the model asks, your app calls."
+      - "The app runs the request automatically."
   - q: Which three things describe a tool to the model?
     options:
       - Name, description and inputs
@@ -31,6 +43,11 @@ quiz:
       - Password, URL and port
     answer: 0
     why: The model chooses and fills in tools based purely on their name, description and input schema.
+    explain:
+      - ""
+      - "Business details aren't in a tool definition."
+      - "Looks don't matter to a model reading text."
+      - "Secrets should never go in a tool description."
   - q: Why is a narrow tool like refund_order safer than run_sql?
     options:
       - It runs faster
@@ -39,6 +56,11 @@ quiz:
       - It limits the agent to exactly what the job needs
     answer: 3
     why: A broad tool lets a confused or hijacked agent do almost anything. A narrow one caps the damage.
+    explain:
+      - "Speed isn't the safety benefit."
+      - "Age doesn't make a tool safer."
+      - "Models write SQL easily. That's exactly the risk."
+      - ""
 ---
 Bit can think and plan, but has no hands. In Cartridge Caves, Bit gets tools: cartridges that let it act on the world.
 ===

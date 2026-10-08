@@ -10,11 +10,24 @@ const arrowDefs = `
     </marker>
   </defs>`;
 
-/** Box with a centred label and optional small second line. */
-export const box = (x: number, y: number, w: number, hgt: number, label: string, cls = "d-box", sub?: string) => `
+/** Lower-case, dash-separated name for a diagram part, e.g. "AGENT CARD" -> "agent-card". */
+export const partName = (label: string) => label.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+/**
+ * Wrap a piece of a diagram as a named part. Lessons can light up parts page
+ * by page (frontmatter `focus:`), dimming the rest.
+ */
+export const part = (name: string, body: string) => `<g data-part="${name}">${body}</g>`;
+
+/** Box with a centred label and optional small second line. Named after its label. */
+export const box = (x: number, y: number, w: number, hgt: number, label: string, cls = "d-box", sub?: string, name = partName(label)) =>
+  part(
+    name,
+    `
   <rect x="${x}" y="${y}" width="${w}" height="${hgt}" class="${cls}"/>
   <text x="${x + w / 2}" y="${y + hgt / 2 + (sub ? -2 : 3)}" class="d-txt" text-anchor="middle">${label}</text>
-  ${sub ? `<text x="${x + w / 2}" y="${y + hgt / 2 + 10}" class="d-sub" text-anchor="middle">${sub}</text>` : ""}`;
+  ${sub ? `<text x="${x + w / 2}" y="${y + hgt / 2 + 10}" class="d-sub" text-anchor="middle">${sub}</text>` : ""}`,
+  );
 
 /** Line with an arrowhead at the end (and optionally the start). */
 export const ln = (x1: number, y1: number, x2: number, y2: number, both = false, cls = "d-line") =>

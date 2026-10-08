@@ -12,6 +12,8 @@ interface Saved {
   revealed?: number;
   /** The first-visit intro has been dismissed. */
   introSeen?: boolean;
+  /** Boss questions answered wrongly (by question text), for the review pile. */
+  missed?: string[];
 }
 
 // Storage can be blocked (private windows, previews). Fall back to memory so
@@ -93,6 +95,21 @@ export function introSeen(): boolean {
 
 export function setIntroSeen(): void {
   state.introSeen = true;
+  save();
+}
+
+/** Questions to practise again, most recent last. */
+export function missedQuestions(): string[] {
+  return state.missed ?? [];
+}
+
+export function addMissed(question: string): void {
+  state.missed = [...(state.missed ?? []).filter((q) => q !== question), question];
+  save();
+}
+
+export function removeMissed(question: string): void {
+  state.missed = (state.missed ?? []).filter((q) => q !== question);
   save();
 }
 

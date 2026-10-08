@@ -2,6 +2,12 @@
 id: 6-3
 title: agentgateway
 diagram: gateway
+focus:
+  - [gateway]
+  - [llm, mcp, agents]
+  - [gateway]
+  - [gateway]
+  - [mcp]
 terms:
   - term: agentgateway
     def: An open source proxy for agent traffic to LLMs, MCP servers and other agents. Created by Solo.io, now hosted by the Linux Foundation's Agentic AI Foundation.
@@ -25,6 +31,11 @@ quiz:
       - Inside the registry
     answer: 1
     why: It's a proxy on the path of every request, which is what lets it enforce policy.
+    explain:
+      - "It's outside the model, on the traffic path."
+      - ""
+      - "It handles network traffic, not keystrokes."
+      - "The registry is a separate catalog."
   - q: Why is a gateway policy stronger than a prompt rule?
     options:
       - It's checked outside the model, so a fooled agent still gets denied
@@ -33,6 +44,11 @@ quiz:
       - It uses less electricity
     answer: 0
     why: The gateway doesn't care how convincing the injected text was. No permission, no call.
+    explain:
+      - ""
+      - "Policies aren't prompts."
+      - "Policies don't touch training."
+      - "Energy isn't the reason."
   - q: What does MCP federation mean here?
     options:
       - Deleting old servers
@@ -41,6 +57,11 @@ quiz:
       - Running servers on phones
     answer: 2
     why: One endpoint means one place to authenticate, authorize and log every tool call.
+    explain:
+      - "Federation combines servers. It doesn't delete them."
+      - "It joins servers, not languages."
+      - ""
+      - "Device type has nothing to do with it."
 ---
 Third tool: **agentgateway**, an open source proxy built for agent traffic. Solo.io created it, and it's now hosted by the Linux Foundation's Agentic AI Foundation, alongside MCP.
 ===

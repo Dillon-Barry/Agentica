@@ -2,6 +2,12 @@
 id: 6-4
 title: All three together
 diagram: together
+focus:
+  - [registry, kagent, gateway]
+  - [gateway]
+  - [registry, kagent]
+  - [gateway]
+  - [gateway]
 terms:
   - term: Control plane
     def: The shared layer that decides what is allowed and how things run, separate from the agents doing the work.
@@ -25,6 +31,11 @@ quiz:
       - "agentregistry: what's allowed. kagent: where it runs. agentgateway: what it can do"
     answer: 3
     why: Catalog, runtime and checkpoint. Each covers a different stage of an agent's life.
+    explain:
+      - "The registry catalogs. kagent runs agents."
+      - "Proxying is agentgateway's job."
+      - "Approving catalog entries is agentregistry's job."
+      - ""
   - q: How does the stack help against a rug pull?
     options:
       - Only vetted, versioned servers from the registry get deployed
@@ -33,6 +44,11 @@ quiz:
       - It can't
     answer: 0
     why: A changed server is a new version that has to go through the registry before it's used.
+    explain:
+      - ""
+      - "The model can't see a server's history."
+      - "Prompts can't stop a changed tool."
+      - "It can, through versioned approvals."
   - q: Do these controls rely on the model behaving?
     options:
       - Yes, completely
@@ -41,6 +57,11 @@ quiz:
       - Only for small models
     answer: 1
     why: That's the whole point. They hold even when the model is fooled.
+    explain:
+      - "The whole point is that they don't."
+      - ""
+      - "They work all the time."
+      - "Model size doesn't matter to them."
 ---
 Each tool covers a different stage of an agent's life. **agentregistry**: what is *allowed* to exist. **kagent**: where it *runs*. **agentgateway**: what it can *do*.
 ===

@@ -2,6 +2,12 @@
 id: 2-5
 title: Why agents are unpredictable
 diagram: branches
+focus:
+  - [goal, ok, fail]
+  - []
+  - [fail]
+  - []
+  - []
 terms:
   - term: Non-determinism
     def: Getting different outputs from the same input. LLMs pick words with some randomness, so runs differ.
@@ -25,6 +31,11 @@ quiz:
       - About 10%
     answer: 2
     why: 0.95 multiplied by itself ten times is about 0.6. Small slips add up over long tasks.
+    explain:
+      - "That's one step. Ten steps in a row multiply the risk."
+      - "Even reliable steps sometimes fail."
+      - ""
+      - "Too low. 0.95 multiplied ten times is about 0.6."
   - q: What is a hallucination?
     options:
       - The model confidently stating something false
@@ -33,6 +44,11 @@ quiz:
       - An approved answer
     answer: 0
     why: Hallucinations sound just as confident as correct answers, which makes them hard to spot.
+    explain:
+      - ""
+      - "A crash is a tool failure, not a hallucination."
+      - "That's a network problem."
+      - "A hallucination is false output that sounds sure."
   - q: Agents are unpredictable. What's the sensible response?
     options:
       - Test once, then ship
@@ -41,6 +57,11 @@ quiz:
       - Add limits, monitoring and controls that hold whatever the model decides
     answer: 3
     why: You can't test every path, so you build controls that stay in force no matter which path the model takes.
+    explain:
+      - "One test can't cover every path."
+      - "A promise is just more text the model may ignore."
+      - "That throws away what makes agents useful."
+      - ""
 ---
 Run the same agent twice on the same task and you may get two different plans. Models pick each next word with some randomness, and small differences snowball.
 ===

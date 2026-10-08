@@ -1,3 +1,4 @@
+/// <reference types="vitest" />
 import { readdirSync, readFileSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { defineConfig, type Plugin } from "vite";
@@ -39,4 +40,6 @@ function content(): Plugin {
 export default defineConfig({
   base: "./",
   plugins: [content(), viteSingleFile()],
+  // Unit tests only; the Playwright suite in e2e/ runs separately.
+  test: { include: ["test/**/*.test.ts"] },
 });

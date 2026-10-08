@@ -2,6 +2,12 @@
 id: 3-4
 title: The LLM trusts the label
 diagram: label
+focus:
+  - [cartridge, model]
+  - [cartridge]
+  - [model]
+  - [hidden]
+  - [cartridge, model]
 terms:
   - term: Tool description
     def: The text label that tells a model what a tool does. The model relies on it completely, and users rarely see it.
@@ -23,6 +29,11 @@ quiz:
       - By file size
     answer: 0
     why: The description is the model's only guide to what a tool does and when to use it.
+    explain:
+      - ""
+      - "Random tries would be slow and risky."
+      - "The model chooses on its own from the descriptions."
+      - "File size tells the model nothing."
   - q: Who sees the full tool descriptions?
     options:
       - Only the user
@@ -31,6 +42,11 @@ quiz:
       - Only the tool's author
     answer: 2
     why: Descriptions go straight into the model's context. Most apps never show them to the person using the agent.
+    explain:
+      - "Users usually never see the full text."
+      - "Descriptions exist to be read by the model."
+      - ""
+      - "The model always reads them; that's the point."
   - q: Why is plugging in an MCP server a trust decision?
     options:
       - Servers cost money
@@ -39,6 +55,11 @@ quiz:
       - It changes how the model was trained
     answer: 1
     why: Whoever writes a server's descriptions and results can put instructions in front of your agent.
+    explain:
+      - "Cost is a separate question."
+      - ""
+      - "Speed isn't the trust issue."
+      - "Servers don't touch training. They add text to the context."
 ---
 How does a model pick a tool? It reads each **tool description**. "get_weather: returns the forecast for a city." The label is all it has to go on.
 ===

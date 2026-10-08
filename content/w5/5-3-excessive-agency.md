@@ -2,6 +2,12 @@
 id: 5-3
 title: Excessive agency
 diagram: deputy
+focus:
+  - [agent]
+  - [agent, db]
+  - [user, agent]
+  - [user, agent, db]
+  - [agent]
 terms:
   - term: Excessive agency
     def: An agent having more tools, permissions or autonomy than its job needs. An OWASP top LLM risk.
@@ -23,6 +29,11 @@ quiz:
       - Having too many users
     answer: 1
     why: Extra power sits unused until the agent is fooled. Then the attacker gets all of it.
+    explain:
+      - "Speed isn't agency."
+      - ""
+      - "Memory size is a different issue."
+      - "Agency is about the agent's power, not user numbers."
   - q: In a confused deputy attack, what happens?
     options:
       - The agent forgets its prompt
@@ -31,6 +42,11 @@ quiz:
       - The model crashes
     answer: 2
     why: The attacker has no access, but the agent does, and the agent can be talked into lending it.
+    explain:
+      - "The prompt is fine. The power is misused."
+      - "This is about lent privileges, not conflict."
+      - ""
+      - "Nothing crashes. It works too well, for the wrong person."
   - q: Which fix helps most?
     options:
       - Least privilege, and acting with the user's own identity
@@ -39,6 +55,11 @@ quiz:
       - Use a bigger model
     answer: 0
     why: If the agent only holds what the current user is allowed, there's nothing extra to lend.
+    explain:
+      - ""
+      - "That gives an attacker more to borrow."
+      - "Hiding the prompt doesn't remove the agent's power."
+      - "Model size doesn't limit permissions."
 ---
 Third monster: **excessive agency**. The agent has more power than its job needs: write access when it only reads, admin keys when it only searches.
 ===

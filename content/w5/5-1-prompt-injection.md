@@ -2,6 +2,13 @@
 id: 5-1
 title: Prompt injection
 diagram: injection
+focus:
+  - []
+  - [hidden]
+  - [page, leak]
+  - [page]
+  - [agent]
+  - []
 terms:
   - term: Prompt injection
     def: An attack that hides instructions in text an AI will read, to make it do something its owner didn't intend.
@@ -23,6 +30,11 @@ quiz:
       - A model update
     answer: 2
     why: The attacker never talks to the agent directly. They plant text where the agent will find it.
+    explain:
+      - "Rude messages aren't attacks on instructions."
+      - "That's a network problem."
+      - ""
+      - "Updates aren't injection."
   - q: Why does prompt injection work?
     options:
       - The model can't reliably tell your instructions from text in the data
@@ -31,6 +43,11 @@ quiz:
       - The internet is slow
     answer: 0
     why: Instructions and data arrive as one stream of text, and the model has no dependable way to separate them.
+    explain:
+      - ""
+      - "Agents have tools, which makes injection worse."
+      - "Password length has nothing to do with it."
+      - "Speed doesn't matter. Mixed-up text does."
   - q: What's the safest assumption?
     options:
       - Only users can inject prompts
@@ -39,6 +56,11 @@ quiz:
       - Injection only affects chatbots
     answer: 1
     why: Every web page, email, file and tool result is a possible attack vector.
+    explain:
+      - "Any text the agent reads can carry an attack."
+      - ""
+      - "No model is immune."
+      - "Agents with tools are the bigger target."
 ---
 Bit is now a busy agent with tools, memory and teammates. That makes Bit worth attacking. Welcome to the Shadow Dungeon.
 ===

@@ -36,6 +36,11 @@ export function bossHp(world: number): number {
 
 export const HEARTS = 3;
 
+/** Every question in the course, by its text: lesson questions and boss scenarios. */
+export const QUESTIONS: Map<string, QuizQuestion> = new Map(
+  [...data.lessons.flatMap((l) => l.quiz), ...data.worlds.flatMap((w) => w.scenarios)].map((q) => [q.q, q] as const),
+);
+
 /** Every Agentdex term, for linking bold words in lessons to their definition. */
 export const TERMS: Map<string, { term: string; def: string }> = new Map(
   LESSONS.flatMap((l) => l.terms.map((t) => [t.term.toLowerCase(), t] as const)),

@@ -14,6 +14,11 @@ scenarios:
       - Yes, because it runs on a schedule
     answer: 1
     why: The model helps at one fixed step, but the path is written in code. That's a workflow.
+    explain:
+      - "Using a model isn't enough. It must choose its own steps."
+      - ""
+      - "It doesn't just answer. It runs a fixed process."
+      - "Schedules don't make something an agent."
   - q: Asked to "fix the failing test", a system reads code, runs the tests, edits files and repeats until the tests pass. What is it?
     options:
       - A chatbot
@@ -22,6 +27,11 @@ scenarios:
       - An expert system
     answer: 2
     why: It chooses its own next steps in a loop until the goal is met. Classic agent.
+    explain:
+      - "It acts, not just answers."
+      - "Nobody scripted its steps in advance."
+      - ""
+      - "Expert systems follow fixed hand-written rules."
   - q: Your team wants an assistant that only drafts replies for a human to send. Where is that on the autonomy dial?
     options:
       - Low autonomy. It acts only through a human
@@ -30,6 +40,11 @@ scenarios:
       - Maximum risk
     answer: 0
     why: A human approves every real action, which keeps the dial low and the risk small.
+    explain:
+      - ""
+      - "A human sends every reply, so it's not fully autonomous."
+      - "It still decides what to draft. It's AI, with low autonomy."
+      - "Keeping a human on every send keeps the risk low."
   - q: An old support bot follows hundreds of hand-written if-then rules and fails on anything unexpected. What kind of system is it closest to?
     options:
       - A ReAct agent
@@ -38,6 +53,11 @@ scenarios:
       - A multi-agent team
     answer: 1
     why: Hand-written rules that break outside their box are the hallmark of 1980s expert systems.
+    explain:
+      - "ReAct agents reason with a model, not fixed rules."
+      - ""
+      - "LLMs handle unexpected input far better."
+      - "It's one rule engine, not a team."
   - q: Which change turns a chatbot into an agent?
     options:
       - A bigger model
@@ -46,3 +66,8 @@ scenarios:
       - Longer answers
     answer: 2
     why: Often the same model sits inside both. Tools plus a loop make the difference.
+    explain:
+      - "A bigger model is still a chatbot without tools."
+      - "Tone doesn't add actions."
+      - ""
+      - "Longer answers are still just answers."

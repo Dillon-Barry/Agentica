@@ -2,6 +2,13 @@
 id: 6-1
 title: kagent
 diagram: kagent
+focus:
+  - []
+  - [cluster]
+  - [cluster]
+  - [agent-yaml]
+  - [agent]
+  - [agent, model, tools]
 terms:
   - term: kagent
     def: An open source framework, created by Solo.io and now a CNCF Sandbox project, for building and running AI agents on Kubernetes.
@@ -25,6 +32,11 @@ quiz:
       - A password manager
     answer: 1
     why: kagent makes agents first-class Kubernetes workloads.
+    explain:
+      - "kagent runs agents. Models come from providers."
+      - ""
+      - "It runs on Kubernetes, not in a browser."
+      - "It isn't for passwords."
   - q: How do you define an agent in kagent?
     options:
       - As a Kubernetes resource in YAML, with its prompt, model and tools
@@ -33,6 +45,11 @@ quiz:
       - In a spreadsheet
     answer: 0
     why: The Agent resource declares everything the agent is, so it can be reviewed and versioned like code.
+    explain:
+      - ""
+      - "It's declarative YAML, no email involved."
+      - "Weights don't hold agent configuration."
+      - "Agents are Kubernetes resources, not spreadsheet rows."
   - q: Why does treating agents as Kubernetes resources help?
     options:
       - It makes the model smarter
@@ -41,6 +58,11 @@ quiz:
       - It hides agents from security teams
     answer: 2
     why: Agents stop being one-off scripts and become managed, visible workloads.
+    explain:
+      - "Kubernetes manages the agent, not the model's ability."
+      - "Agents still use tools."
+      - ""
+      - "It makes agents more visible, not less."
 ---
 Bit survived the Dungeon, but only just. In the Solo Citadel, Bit moves onto a platform built to keep agents in check.
 ===

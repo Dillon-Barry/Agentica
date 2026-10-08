@@ -2,6 +2,12 @@
 id: 3-3
 title: Skills
 diagram: skills
+focus:
+  - []
+  - [skill]
+  - [context]
+  - [context, skill]
+  - [skill]
 terms:
   - term: Skill
     def: A packaged set of instructions, and sometimes scripts and files, that teaches an agent how to do a specific kind of task. Loaded only when needed.
@@ -21,6 +27,11 @@ quiz:
       - Another word for an MCP server
     answer: 1
     why: A tool gives an agent a new action. A skill gives it know-how about doing a job well.
+    explain:
+      - "Skills add know-how, not speed."
+      - ""
+      - "Skills are instructions, not credentials."
+      - "MCP servers offer tools. Skills are playbooks."
   - q: Why does an agent only see each skill's name and description at first?
     options:
       - To keep the context window small until a skill is actually needed
@@ -29,6 +40,11 @@ quiz:
       - To make the agent slower
     answer: 0
     why: Loading every skill in full would waste context. Progressive disclosure keeps it lean.
+    explain:
+      - ""
+      - "Nothing is secret. It's about saving space."
+      - "Skills hold full instructions, scripts and files."
+      - "The goal is efficiency, not slowness."
   - q: What's the security catch with skills?
     options:
       - There isn't one
@@ -37,6 +53,11 @@ quiz:
       - Skills only run on weekends
     answer: 2
     why: Like a tool description, a skill is text the model treats as guidance. An untrusted skill is an injection waiting to happen.
+    explain:
+      - "Skills are instructions the model follows, so source matters."
+      - "Skills are mostly text. That's why they matter."
+      - ""
+      - "Skills load whenever a task needs them."
 ---
 Tools give Bit new actions. But knowing *how* to do a job well is different. That's where **skills** come in.
 ===

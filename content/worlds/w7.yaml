@@ -1,0 +1,87 @@
+world: 7
+recap:
+  - "Agent-written code is untrusted. Run it in a locked-down sandbox: no network, one folder, no secrets."
+  - Guardrail models screen inputs and outputs, but they're probabilistic. One layer, never the boundary.
+  - "MCP sign-in: OAuth 2.1 with PKCE, tokens bound to one server, no token passthrough."
+  - Agent loops multiply cost. Use caching, model routing and token budgets.
+  - Good evals start from success criteria, check the path, and run each case several times.
+  - Browser agents read untrusted pages and click real buttons. Sandbox them and confirm risky actions.
+scenarios:
+  - q: Bit's coding sandbox can reach the whole internet, "in case it needs packages". An injected README tells Bit to upload .env files. Best fix?
+    options:
+      - A bigger sandbox
+      - Block the network by default and allow only the package registry
+      - Trust the README
+      - Give Bit more memory
+    answer: 1
+    why: With egress limited to the registry, there's nowhere to send the secrets.
+    explain:
+      - Size doesn't stop data leaving.
+      - ""
+      - The README is exactly the untrusted text doing the attacking.
+      - Memory has nothing to do with exfiltration.
+  - q: Your prompt-injection classifier catches 95% of attacks in testing. Can you remove the gateway's tool permissions now?
+    options:
+      - Yes, 95% is plenty
+      - No. The 5% that slip past still need permissions to stop them
+      - Yes, if the model is big enough
+      - Only at weekends
+    answer: 1
+    why: Guardrails are a layer. Deterministic permissions catch what they miss.
+    explain:
+      - One in twenty attacks getting through, with nothing behind it, is a breach waiting to happen.
+      - ""
+      - Model size doesn't make a classifier a guarantee.
+      - Attackers don't keep office hours.
+  - q: An MCP server you run calls a payroll API on the user's behalf. What should it send to that API?
+    options:
+      - Its own token, issued by the payroll API's login server
+      - The same token the user's app sent it
+      - No token at all
+      - The user's password
+    answer: 0
+    why: Passing the user's token through is forbidden. The server must get its own token for the next hop.
+    explain:
+      - ""
+      - That's token passthrough, which the MCP spec forbids.
+      - The payroll API needs proof the call is authorized.
+      - Passwords should never be handled like this.
+  - q: A support agent's monthly bill tripled. Traces show every step re-sends a 40-page manual. Best fix?
+    options:
+      - Turn off logging
+      - Cache the stable manual and retrieve only the relevant sections
+      - Switch to a bigger model
+      - Add more steps
+    answer: 1
+    why: Caching and retrieval cut repeated tokens without hurting answers.
+    explain:
+      - Logging is how you found the problem.
+      - ""
+      - A bigger model usually costs more per token.
+      - More steps means more re-sent context.
+  - q: A browser agent will order office supplies. Which design is safest?
+    options:
+      - Logged into the CEO's personal browser
+      - A sandboxed browser, an allowlisted shop, and a human approving the order
+      - Any site, automatic checkout
+      - The company card number written in its prompt
+    answer: 1
+    why: Contain the browser, limit the sites, and keep a person on the payment.
+    explain:
+      - A personal browser exposes every account that person is logged into.
+      - ""
+      - Any site means any injected instruction can reach it, and checkout can't be undone.
+      - Anything in the prompt can be leaked by an injection.
+  - q: Your eval suite passes 100%, but users keep reporting failures. What's the most likely problem?
+    options:
+      - The evals only cover easy, happy-path cases
+      - The users are wrong
+      - There are too many tests
+      - The model is too small
+    answer: 0
+    why: An eval set that misses real-world cases gives false confidence. Feed production failures back in.
+    explain:
+      - ""
+      - Real reports are your best source of new test cases.
+      - More good tests rarely hurt. Missing ones do.
+      - The gap is between what's tested and what happens.

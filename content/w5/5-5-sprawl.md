@@ -2,6 +2,12 @@
 id: 5-5
 title: Sprawl
 diagram: sprawl
+focus:
+  - []
+  - [agent, mcp]
+  - [key]
+  - []
+  - []
 terms:
   - term: Shadow AI
     def: Agents, MCP servers and AI tools running in an organization without anyone tracking or approving them.
@@ -23,6 +29,11 @@ quiz:
       - An AI that copies users
     answer: 1
     why: If nobody knows an agent exists, nobody is checking what it can reach or do.
+    explain:
+      - "It's about being untracked, not timing."
+      - ""
+      - "It's an organizational risk, not a theme."
+      - "Copying isn't the issue. Visibility is."
   - q: Why are long-lived shared API keys risky?
     options:
       - They're hard to type
@@ -31,6 +42,11 @@ quiz:
       - They expire too quickly
     answer: 2
     why: Shared keys blur identity, and keys that never expire stay useful to an attacker indefinitely.
+    explain:
+      - "Typing isn't the risk."
+      - "Speed isn't the problem."
+      - ""
+      - "The danger is that they don't expire."
   - q: Where does fixing sprawl start?
     options:
       - An inventory, real agent identities and trustworthy logs
@@ -39,6 +55,11 @@ quiz:
       - Writing a longer system prompt
     answer: 0
     why: You can't secure what you can't see. Visibility comes first.
+    explain:
+      - ""
+      - "Hardware doesn't fix visibility."
+      - "That throws away the value too."
+      - "Prompts don't give you an inventory."
 ---
 Fifth monster: **sprawl**. It isn't one attack. It's the fog that lets every other attack hide.
 ===

@@ -9,12 +9,18 @@ and **agentgateway** help.
 Walk Bit, a little robot, across a pixel-art overworld. Bit's story is the course: it starts
 as a chatbot, becomes an agent, gets attacked, and gets secured. Each world has:
 
-- **Lessons**: short dialog pages with a diagram, clickable key terms, and an optional
-  "Go deeper" page (some with a read-only "What it looks like" code example).
+- **Lessons**: short dialog pages with a diagram that lights up the part each page talks
+  about, clickable key terms, and an optional "Go deeper" page (some with a read-only
+  "What it looks like" code example).
 - **A hands-on challenge** before the boss: sort systems, be the agent loop, spot poisoned
-  tools, assign a team, break the lethal trifecta, write a gateway policy.
+  tools, assign a team, break the lethal trifecta, write a gateway policy, lock a sandbox.
 - **A boss fight**: a recap card, then a quiz battle with hearts and an HP bar. About half
-  the questions are scenarios ("what would you do?"), the rest check the basics.
+  the questions are scenarios ("what would you do?"), the rest check the basics. A wrong
+  answer explains why that option is wrong, then why the right one is right.
+
+Questions you miss land in the Agentdex **review pile** to practise later. Finish the main
+quest to unlock the bonus **Star Road** and a certificate PNG with your name, ready for
+LinkedIn. Your name never leaves your browser.
 
 ## Worlds
 
@@ -26,6 +32,7 @@ as a chatbot, becomes an agent, gets attacked, and gets secured. Each world has:
 | 4. Guild Hall | Workflow patterns, multi-agent teams, A2A, evals, production |
 | 5. Shadow Dungeon | Prompt injection, poisoned tools, excessive agency, the lethal trifecta, sprawl, identity |
 | 6. Solo Citadel | kagent, agentregistry, agentgateway, and a final incident |
+| ★ Star Road (bonus) | Sandboxing, guardrails, MCP sign-in (OAuth), cost and token budgets, eval design, computer-use agents |
 
 ## Run locally
 
@@ -34,9 +41,29 @@ npm install
 npm run dev
 ```
 
-`npm test` checks every lesson, world file and the map (word limits, quiz shape, diagrams,
-roads, islands, boss question pools). `npm run build` outputs the whole site as one
-self-contained file, `dist/index.html`. Double-click it to open it, no server needed.
+`npm test` checks every lesson, world file and the map (word limits, quiz shape, explanations,
+diagram focus parts, roads, islands, boss question pools). `npm run build` outputs the whole
+site as one self-contained file, `dist/index.html`, fonts included. Double-click it to open
+it, no server needed.
+
+`npm run e2e` runs the Playwright suite against `dist/index.html` (build first): the map,
+auto-walk, lessons, every challenge, a boss fight, the review pile, the certificate, and
+[axe](https://github.com/dequelabs/axe-core) accessibility scans of each screen. Locally
+it uses the installed Microsoft Edge; CI uses Playwright's Chromium.
+`npm run og-image` redraws the link-preview image, `public/og-image.png`.
+
+### Accessibility
+
+Text meets WCAG AA contrast, everything works by keyboard (arrow keys walk the map, 1-4 or
+A-D answer), answers are announced in a live region, and a skip link jumps past the map
+to a plain list of every level. These are checked automatically; no one has yet tested
+the site with a real screen reader, so reports are welcome.
+
+### Fonts
+
+Atkinson Hyperlegible Next, Pixelify Sans and Press Start 2P are bundled from
+`src/fonts/` under the SIL Open Font License (see `src/fonts/LICENSES.md`). The site makes
+no third-party requests.
 
 ## Writing a lesson
 
@@ -59,6 +86,13 @@ quiz:                      # these questions feed the world's boss fight
     options: [Wrong, Right, Wrong]
     answer: 1              # index of the correct option
     why: Shown after answering.
+    explain:               # one per option: why each wrong one is wrong ("" for the right one)
+      - Why the first option is wrong.
+      - ""
+      - Why the third option is wrong.
+focus:                     # optional, one per dialog box: diagram parts to light up
+  - []                     # [] shows the whole diagram
+  - [system]               # part names: box labels in kebab case, or part("name") in src/diagrams/
 ---
 First dialog box. Keep it to 2-4 sentences (70 words max).
 ===
@@ -77,5 +111,5 @@ Each world also has `content/worlds/w<world>.yaml` with the boss's `recap` bulle
 
 ## Deploy
 
-Pushing to `main` runs `.github/workflows/deploy.yml`, which tests, builds and publishes to
-GitHub Pages.
+Pushing to `main` runs `.github/workflows/deploy.yml`, which tests (unit and e2e), builds and
+publishes to GitHub Pages.

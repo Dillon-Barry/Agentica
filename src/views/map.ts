@@ -14,7 +14,7 @@ import {
 } from "../progress";
 import { go, href } from "../nav";
 import { reducedMotion } from "../typewriter";
-import { MAP_H, MAP_W, ROUTE, WORLDS, worldOf } from "../worlds";
+import { MAIN_WORLDS, MAP_H, MAP_W, ROUTE, WORLDS, worldOf } from "../worlds";
 import { OverworldRenderer, type NodeState } from "../map/render";
 import { SEGMENTS, nodePx, pointAt } from "../map/route";
 import { fontToggle } from "./font-toggle";
@@ -135,7 +135,23 @@ export function renderMap(root: HTMLElement): () => void {
     "RESET",
   );
 
+  // Keyboard and screen-reader users can skip the canvas and use the plain list.
+  const list = levelList(states);
+  const skip = h(
+    "button",
+    {
+      class: "skip-link",
+      type: "button",
+      onclick: () => {
+        list.open = true;
+        list.querySelector("summary")!.focus();
+      },
+    },
+    "Skip to the list of all levels",
+  );
+
   root.append(
+    skip,
     h(
       "header",
       { class: "hud" },
@@ -151,7 +167,7 @@ export function renderMap(root: HTMLElement): () => void {
       ),
     ),
     h("main", { class: "map-frame" }, viewport, bar),
-    levelList(states),
+    list,
   );
   // The overworld takes the whole window, edge to edge.
   document.body.classList.add("map-mode");
@@ -433,11 +449,11 @@ function showIntro(): void {
       "section",
       { class: "box intro-card" },
       h("h2", { class: "intro-title" }, "WELCOME TO AGENTICA"),
-      h("p", {}, "A short quest from zero to expert in AI agents. Walk Bit, the robot, across six worlds. Each stop is a 2-minute lesson. Each world ends with a hands-on challenge and a boss."),
+      h("p", {}, "A short quest from zero to expert in AI agents. Walk Bit, the robot, across six worlds, plus a bonus Star Road for experts. Each stop is a 2-minute lesson. Each world ends with a hands-on challenge and a boss."),
       h(
         "ol",
         { class: "intro-worlds" },
-        ...WORLDS.map((w) => h("li", {}, h("strong", {}, `${w.num} ${w.name}`), ` · ${w.blurb}`)),
+        ...WORLDS.map((w) => h("li", {}, h("strong", {}, `${w.num > MAIN_WORLDS ? "★ BONUS" : w.num} ${w.name}`), ` · ${w.blurb}`)),
       ),
       h(
         "p",
@@ -453,7 +469,7 @@ function showIntro(): void {
 }
 
 /** Plain list of every stop: an overview, and a non-map way to navigate. */
-function levelList(states: NodeState[]): HTMLElement {
+function levelList(states: NodeState[]): HTMLDetailsElement {
   return h(
     "details",
     { class: "box level-list" },

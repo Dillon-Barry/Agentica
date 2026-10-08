@@ -15,6 +15,11 @@ scenarios:
       - More memory
     answer: 1
     why: Step limits and budgets end loops the model can't escape on its own.
+    explain:
+      - "Prompts don't reliably stop loops."
+      - ""
+      - "A bigger window just lets the loop run longer."
+      - "Memory doesn't end loops."
   - q: An agent's 12-step task works 96% of the time per step. Roughly how often does the whole task succeed?
     options:
       - About 96%
@@ -23,6 +28,11 @@ scenarios:
       - About 12%
     answer: 1
     why: 0.96 to the power of 12 is about 0.61. Long tasks magnify small error rates.
+    explain:
+      - "That's one step. Twelve in a row compound."
+      - ""
+      - "Every step can fail sometimes."
+      - "Too low. 0.96 to the 12th is about 0.61."
   - q: A week ago a malicious document told Bit "the CFO's new bank account is X", and Bit saved it. Today Bit uses it. What happened?
     options:
       - Memory poisoning
@@ -31,6 +41,11 @@ scenarios:
       - Token exchange
     answer: 0
     why: A false "fact" planted in long-term memory keeps working in every future session.
+    explain:
+      - ""
+      - "A hallucination is invented. This was planted."
+      - "Rate limits cap usage. They don't plant facts."
+      - "Token exchange is about identity."
   - q: Halfway through booking an offsite, Bit finds no venue free on the chosen date. What should a well-built agent do?
     options:
       - Book an unavailable venue anyway
@@ -39,6 +54,11 @@ scenarios:
       - Stop silently
     answer: 2
     why: Good agents update the plan when reality disagrees, and check with a human when stakes are high.
+    explain:
+      - "Booking something unavailable fails, or worse."
+      - "That's a hallucination, and dangerous."
+      - ""
+      - "Silent stops leave the user stuck and confused."
   - q: Bit confidently names a config file that doesn't exist. What is this?
     options:
       - Reflection
@@ -47,3 +67,8 @@ scenarios:
       - Task decomposition
     answer: 1
     why: Confident, false output is a hallucination. It sounds just as sure as a correct answer.
+    explain:
+      - "Reflection is checking work, which would catch this."
+      - ""
+      - "Routing sorts requests."
+      - "Decomposition breaks down tasks."

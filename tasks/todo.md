@@ -72,7 +72,7 @@ World 6 — Solo Citadel
 - [x] M3 Worlds 2-4
 - [x] M4 World 5
 - [x] M5 World 6, polish, README screenshots
-- [ ] Create GitHub repo + push (needs user go-ahead)
+- [x] Create GitHub repo + push (needs user go-ahead)
 
 ## Review
 ### M1 + M2 (2026-10-08)
@@ -185,3 +185,24 @@ World 6 — Solo Citadel
   focus so Enter starts it. No auto-walk when returning without a new clear.
 - Verified in Edge: font applied, card position + click, auto-walk + saved position + focus,
   no walk on plain return, pixel toggle; full round-2 regression (20 checks) still passes.
+
+## Round 4 (2026-10-08): expert depth + polish
+- [x] Research: MCP authorization (current spec), sandboxing, guardrails, cost, evals, computer use
+- [x] 9. Self-host fonts (OFL, with licence files); no Google Fonts calls
+- [x] 1. Star Road (world 7, bonus after final boss): 6 lessons, "Lock the sandbox" challenge, Star Guardian boss, new island
+- [x] 2. Diagrams follow the text: named parts + per-box `focus` lists, others dim
+- [x] 4. Per-option explanations for every question (`explain:`)
+- [x] 3. Review pile of missed boss questions (Agentdex REVIEW tab)
+- [x] 7. Certificate PNG with your name (local only) + Open Graph preview image
+- [x] 11. Accessibility: axe scan + fixes (contrast, focus, live regions, level list route)
+- [x] 10. Playwright e2e + axe in repo, run in CI
+- [x] Verify in browser, commit, push, check live
+
+### Round 4 review
+- Star Road: 6 expert lessons (sandboxing, guardrails, MCP sign-in, cost, eval design, computer use), "Lock the sandbox" challenge, Star Guardian boss; opens after 6-B. Finish counts main stops only; the big castle stays on 6-B.
+- Every diagram has named parts; every lesson has per-page `focus` lists (tested: parts exist, no more lists than pages).
+- Every question explains each wrong option (tested: one entry per option, empty only on the right one; caught one shifted list in 3-4). Question texts are unique (the review pile keys on them).
+- Fonts self-hosted (OFL), no third-party requests. Open Graph/Twitter tags + generated og-image.png.
+- Accessibility: axe found low-contrast dim text (4.24:1) and white-on-red/green labels (3.95:1, ~3:1); fixed with --dim #8c8c8c and deep red/green behind small text. Added skip link to the level list. No real screen-reader pass yet (stated in README).
+- Certificate world list overflowed with Star Road added; now shrinks to fit.
+- In-repo Playwright: 27 tests (map, lessons, 7 challenges, boss + review pile, finish/cert, og card, 9 axe/keyboard checks) run in CI after the build. 451 unit tests.

@@ -14,6 +14,11 @@ scenarios:
       - An evaluator-optimizer loop with ten agents
     answer: 1
     why: Known steps call for a workflow. It's cheaper, faster and easier to test.
+    explain:
+      - "Overkill and harder to test for known steps."
+      - ""
+      - "Models read invoices well."
+      - "Ten agents is overkill for a fixed process."
   - q: Your research agent read a poisoned forum post, and its summary now tells the coding agent to disable a security check. What does this show?
     options:
       - Multi-agent teams are always safe
@@ -22,6 +27,11 @@ scenarios:
       - The forum is fine
     answer: 2
     why: In a team, one agent's output is the next one's input. Treat it as untrusted.
+    explain:
+      - "This shows they aren't."
+      - "Blind trust passes the attack along."
+      - ""
+      - "The forum post is the attack."
   - q: A partner company's agent needs to ask your agent for shipping quotes. Which standard fits?
     options:
       - A2A
@@ -30,6 +40,11 @@ scenarios:
       - Neither
     answer: 0
     why: Agent to agent across organisations is what A2A and its Agent Cards are for.
+    explain:
+      - ""
+      - "MCP connects agents to tools, not to other agents."
+      - "SQL is for databases."
+      - "A2A fits exactly."
   - q: After a prompt change, users say the agent "feels worse", but nobody can say how. What was missing?
     options:
       - A bigger model
@@ -38,6 +53,11 @@ scenarios:
       - A new logo
     answer: 1
     why: Evals turn "feels worse" into measured results, before users ever see the change.
+    explain:
+      - "A bigger model can't tell you what changed."
+      - ""
+      - "More agents add complexity, not measurement."
+      - "Branding doesn't measure quality."
   - q: An agent did something odd in production last Tuesday. What tells you exactly which steps it took?
     options:
       - The system prompt
@@ -46,3 +66,8 @@ scenarios:
       - The Agent Card
     answer: 2
     why: Traces record each model call, tool call, input, output and cost for a run.
+    explain:
+      - "The prompt shows intentions, not what happened."
+      - "Training data says nothing about last Tuesday."
+      - ""
+      - "Agent Cards describe abilities, not runs."

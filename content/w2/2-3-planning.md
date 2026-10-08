@@ -2,6 +2,12 @@
 id: 2-3
 title: Planning
 diagram: plan
+focus:
+  - [goal]
+  - [steps]
+  - [steps]
+  - [reflect]
+  - [reflect]
 terms:
   - term: Task decomposition
     def: Breaking a big goal into smaller steps an agent can tackle one at a time.
@@ -25,6 +31,11 @@ quiz:
       - Translating a task into another language
     answer: 1
     why: Small steps are easier to do, check and fix than one giant leap.
+    explain:
+      - "Decomposing means breaking down, not throwing away."
+      - ""
+      - "Decomposed steps usually run one at a time."
+      - "It's about splitting work, not translating it."
   - q: Why do agents often re-plan partway through?
     options:
       - Because plans are illegal
@@ -33,6 +44,11 @@ quiz:
       - Models can't remember plans
     answer: 2
     why: Real results often differ from expectations. Good agents update the plan instead of charging ahead.
+    explain:
+      - "Plans are perfectly fine. Reality just changes them."
+      - "Re-planning saves wasted steps."
+      - ""
+      - "The plan sits in the context. New facts change it."
   - q: What does reflection add to an agent?
     options:
       - A step where it checks its own work and fixes mistakes
@@ -41,6 +57,11 @@ quiz:
       - A second, larger model that replaces it
     answer: 0
     why: A quick self-check catches many errors before they reach you, though it can't catch everything.
+    explain:
+      - ""
+      - "It's a self-check, not a screen feature."
+      - "Speed isn't the point. Catching mistakes is."
+      - "The same agent checks its own work."
 ---
 Before Bit can do anything big, it needs a plan. "Book a team offsite" is too vague to act on directly.
 ===

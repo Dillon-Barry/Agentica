@@ -465,6 +465,48 @@ export function block(state: "open" | "cleared" | "locked"): Sprite[] {
   });
 }
 
+/** A small twinkling star for the Star Road. */
+export function starlet(): Sprite[] {
+  return [0, 1, 2].map((f) => {
+    const p = new Pix(7, 7);
+    const c = f === 1 ? "#ffffff" : "#f8e070";
+    p.rect(3, 0, 1, 7, c);
+    p.rect(0, 3, 7, 1, c);
+    p.rect(2, 2, 3, 3, c);
+    if (f === 1) p.set(3, 3, "#fff8c0");
+    if (f === 2) {
+      p.set(3, 0, "x");
+      p.set(3, 6, "x");
+      p.set(0, 3, "x");
+      p.set(6, 3, "x");
+    }
+    return p.sprite();
+  });
+}
+
+/** Star Road landmark: a big star on a stone plinth, glowing in a slow pulse. */
+export function starGate(): Sprite[] {
+  return [0, 1, 2].map((f) => {
+    const p = new Pix(28, 32);
+    const glow = ["#f8d800", "#fff070", "#f8b800"][f];
+    p.rect(8, 24, 12, 8, C.stone);
+    p.rect(16, 24, 4, 8, C.stoneDark);
+    p.rect(6, 22, 16, 3, C.stoneLight);
+    // Five-point star: two triangles and a body, with a lit core.
+    p.tri(14, 0, 9, 4, glow);
+    p.rect(2, 8, 24, 4, glow);
+    p.tri(14, 8, 20, 9, glow);
+    for (let y = 16; y < 22; y++) {
+      p.rect(5 + (y - 16), y, 4, 1, glow);
+      p.rect(19 - (y - 16), y, 4, 1, glow);
+    }
+    p.rect(11, 9, 6, 5, "#fffbe0");
+    p.rect(12, 10, 1, 2, PAL.k);
+    p.rect(15, 10, 1, 2, PAL.k);
+    return p.sprite();
+  });
+}
+
 /** Soft pixel cloud with a pale outline. */
 export function cloud(w: number): Sprite {
   const p = new Pix(w, 14);

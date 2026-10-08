@@ -33,6 +33,14 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
     h("main", { class: "level" }, h("h1", { class: "level-title" }, lesson.title), stage, d.el),
   );
 
+  /** Light up the diagram parts this page talks about and dim the rest. */
+  const svg = stage.querySelector("svg");
+  const focusDiagram = (parts: string[]) => {
+    if (!svg) return;
+    svg.classList.toggle("focusing", parts.length > 0);
+    svg.querySelectorAll<SVGGElement>("[data-part]").forEach((g) => g.classList.toggle("lit", parts.includes(g.dataset.part ?? "")));
+  };
+
   /** What Enter / Space / → do right now. */
   let advance: (() => void) | undefined;
   let back: (() => void) | undefined;
@@ -42,6 +50,7 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
     d.setName("SAGE");
     d.setPips(lesson!.boxes.map((_, j) => (j <= i ? "on" : "")));
     d.say(linkTerms(md(lesson!.boxes[i])));
+    focusDiagram(lesson!.focus[i] ?? []);
     const next = () => (last ? showClear() : showBox(i + 1));
     advance = next;
     back = i > 0 ? () => showBox(i - 1) : undefined;
@@ -49,6 +58,7 @@ export function renderLevel(root: HTMLElement, id: string): () => void {
   }
 
   function showClear(): void {
+    focusDiagram([]);
     markCleared(lesson!.id);
     d.el.classList.add("cleared");
     if (!reducedMotion() && !d.el.querySelector(".confetti")) d.el.append(confetti());

@@ -96,15 +96,17 @@ export function createDialog(name: string): Dialog {
         options[k].append(h("span", { class: "option-tag" }, correct ? "RIGHT!" : "WRONG!"));
         nametag.textContent = correct ? "RIGHT!" : "WRONG!";
         el.dataset.verdict = correct ? "right" : "wrong";
+        // A wrong pick explains why that option is wrong, then why the right one is right.
+        const whyNot = !correct ? q.explain?.[k] : undefined;
         const verdict = h(
-          "p",
+          "div",
           { class: `verdict ${correct ? "right" : "wrong"}` },
-          h("strong", {}, correct ? "✔ RIGHT! " : "✘ WRONG. "),
-          q.why,
+          h("p", {}, h("strong", {}, correct ? "✔ RIGHT! " : "✘ WRONG. "), whyNot ?? q.why),
+          whyNot ? h("p", {}, h("strong", {}, "THE RIGHT ANSWER: "), q.why) : null,
         );
         extra.append(verdict);
         verdict.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
-        live.textContent = `${correct ? "Right." : "Wrong."} ${q.why}`;
+        live.textContent = correct ? `Right. ${q.why}` : `Wrong. ${whyNot ? `${whyNot} The right answer: ` : ""}${q.why}`;
         onAnswer(correct);
       };
     },

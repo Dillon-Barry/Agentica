@@ -15,6 +15,7 @@ export const THEMES: Record<Theme, { base: string; light: string; dark: string; 
   forest: { base: "#38a040", light: "#70d060", dark: "#206828", cliff: "#a86830", cliffDark: "#704018" },
   shadow: { base: "#705098", light: "#9878c0", dark: "#4c3070", cliff: "#403060", cliffDark: "#281a40" },
   castle: { base: "#b0b0c0", light: "#d8d8e8", dark: "#808090", cliff: "#686878", cliffDark: "#484858" },
+  star: { base: "#2c3a78", light: "#f8f0b0", dark: "#1c2450", cliff: "#141a3a", cliffDark: "#0a0e24" },
 };
 
 export const WATER = "#3878e0";
@@ -100,6 +101,12 @@ function texture(theme: Theme, x: number, y: number): 0 | 1 | 2 {
       const h = cellHash(Math.floor((x + (row % 3) * 2) / 6), row);
       if (h < 70) return 2;
       return cellHash(x, y) < 5 ? 1 : 0;
+    }
+    case "star": {
+      // Night ground scattered with tiny stars.
+      const h = cellHash(x, y);
+      if (h < 4) return 1;
+      return cellHash(x >> 3, y >> 3) < 300 && (x + y) % 2 === 0 ? 2 : 0;
     }
     case "castle": {
       // Stone paving: offset bricks with mortar lines.

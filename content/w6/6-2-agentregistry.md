@@ -2,6 +2,12 @@
 id: 6-2
 title: agentregistry
 diagram: registry
+focus:
+  - [registry]
+  - [registry]
+  - [team, registry]
+  - [registry]
+  - [kagent]
 terms:
   - term: agentregistry
     def: An open source registry from Solo.io that catalogs MCP servers, agents, skills, prompts and models in one versioned, searchable place.
@@ -23,6 +29,11 @@ quiz:
       - MCP servers, agents, skills, prompts and models
     answer: 3
     why: It treats every AI building block as a first-class, versioned artifact.
+    explain:
+      - "It catalogs much more than containers."
+      - "Users aren't artifacts."
+      - "Analytics isn't its job."
+      - ""
   - q: Which risks does a curated registry most directly reduce?
     options:
       - Supply chain attacks and sprawl
@@ -31,6 +42,11 @@ quiz:
       - Network latency
     answer: 0
     why: Only vetted, versioned items get deployed, and the catalog doubles as the inventory.
+    explain:
+      - ""
+      - "Typing speed is unrelated."
+      - "Hallucination is a model behaviour, not a supply problem."
+      - "Latency is a network matter."
   - q: What is arctl?
     options:
       - A language model
@@ -39,6 +55,11 @@ quiz:
       - A firewall
     answer: 1
     why: arctl covers the whole path from a new project to a published, deployable artifact.
+    explain:
+      - "It's a command-line tool, not a model."
+      - ""
+      - "It deploys to clusters but isn't one."
+      - "It's for artifacts, not network traffic."
 ---
 Second tool: **agentregistry**, an open source project from Solo.io. Think of it as a trusted app store for AI building blocks.
 ===

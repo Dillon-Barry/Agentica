@@ -2,6 +2,12 @@
 id: 5-6
 title: Agent identity
 diagram: identity
+focus:
+  - []
+  - []
+  - [bit, token]
+  - [token]
+  - [tool]
 terms:
   - term: Agent identity
     def: A verifiable ID for an agent itself, separate from the users it serves, so every action can be traced to a specific agent.
@@ -23,6 +29,11 @@ quiz:
       - Because users don't have identities
     answer: 1
     why: Without its own identity, an agent's actions blur into a shared key or a user's account.
+    explain:
+      - "Identity is about accountability, not social media."
+      - ""
+      - "Identity adds control, not speed."
+      - "Users have identities too. Agents need their own."
   - q: Bit acts for Alex. What should Bit's token say?
     options:
       - Nothing. Tokens should be blank
@@ -31,6 +42,11 @@ quiz:
       - Alex's password
     answer: 2
     why: Naming both the user and the agent, with narrow scopes, lets every check ask the right question.
+    explain:
+      - "A blank token can't be checked."
+      - "Admin on everything is the opposite of least privilege."
+      - ""
+      - "Passwords never belong in tokens."
   - q: Why are short-lived, narrow tokens safer?
     options:
       - A leaked token stops working soon and only unlocks a few actions
@@ -39,6 +55,11 @@ quiz:
       - They let agents skip approval
     answer: 0
     why: Expiry limits how long a leak hurts. Narrow scopes limit how much.
+    explain:
+      - ""
+      - "Tokens aren't meant to be remembered."
+      - "Every token still gets checked."
+      - "Narrow tokens add control. They don't remove approval."
 ---
 In the dungeon so far, one question keeps coming up: who is actually doing this? For agents, that's **identity**.
 ===

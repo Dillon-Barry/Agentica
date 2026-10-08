@@ -2,6 +2,13 @@
 id: 1-1
 title: What is an AI agent?
 diagram: agent-core
+focus:
+  - []
+  - []
+  - [goal, model]
+  - [model, tools, memory]
+  - [goal, tools]
+  - []
 terms:
   - term: AI agent
     def: A program that uses an AI model to reach a goal by deciding its own next steps and taking actions.
@@ -27,6 +34,11 @@ quiz:
       - A person who sells AI software
     answer: 1
     why: An agent pursues a goal. The model picks each next step, and tools carry it out.
+    explain:
+      - "A chatbot only answers. An agent takes actions toward a goal."
+      - ""
+      - "That's storage, not something that pursues goals."
+      - "An agent is software, not a salesperson."
   - q: In the four-part picture of an agent, what do tools do?
     options:
       - Store past conversations
@@ -35,6 +47,11 @@ quiz:
       - Decide what the goal should be
     answer: 2
     why: Tools are the agent's hands. Memory stores history, and the goal comes from you.
+    explain:
+      - "That's memory's job."
+      - "Training happens before; tools are used while the agent runs."
+      - ""
+      - "The goal comes from you, not from tools."
   - q: What happens when you give an agent more autonomy?
     options:
       - It becomes more useful and more risky
@@ -43,6 +60,11 @@ quiz:
       - It no longer needs tools
     answer: 0
     why: More freedom means it can do more on its own, including more damage when it gets something wrong.
+    explain:
+      - ""
+      - "Autonomy adds power, and power adds risk, not safety."
+      - "More freedom always changes what the agent can do."
+      - "Tools are still how it acts. Autonomy is about deciding when."
 ---
 Welcome to **Agentica**, traveler! Over six worlds you'll go from knowing nothing about AI agents to understanding how they work, why they're risky, and how teams keep them in check.
 ===

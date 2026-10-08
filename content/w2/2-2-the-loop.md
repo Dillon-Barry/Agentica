@@ -2,6 +2,12 @@
 id: 2-2
 title: The loop
 diagram: loop
+focus:
+  - [think, act, observe]
+  - [think, act, observe]
+  - [think]
+  - []
+  - []
 terms:
   - term: Stop condition
     def: The rule that ends an agent's loop, such as the goal being met or a limit being hit.
@@ -23,6 +29,11 @@ quiz:
       - Think, act, observe
     answer: 3
     why: The agent thinks about the next step, acts with a tool, observes the result, then repeats.
+    explain:
+      - "That's a software release, not the agent loop."
+      - "Those are file actions, not the loop."
+      - "Agents act and look at results; they don't just guess."
+      - ""
   - q: Who decides when the loop is finished?
     options:
       - The model, so builders add limits in case it gets that wrong
@@ -31,6 +42,11 @@ quiz:
       - It always runs exactly ten times
     answer: 0
     why: The model chooses when it's done. Step limits and budgets catch the times it stops too early or never stops.
+    explain:
+      - ""
+      - "The tool server just answers calls."
+      - "The internet has no say in when the agent stops."
+      - "Loops stop when the goal is met or a limit is hit."
   - q: Why add a human approval checkpoint?
     options:
       - To make the model smarter
@@ -39,6 +55,11 @@ quiz:
       - Because loops can't call tools
     answer: 1
     why: A human checkpoint means the riskiest actions can't happen on the model's say-so alone.
+    explain:
+      - "Approval doesn't change the model's ability."
+      - ""
+      - "Checkpoints are about safety, not saving tokens."
+      - "Loops call tools all the time. Checkpoints decide which actions need a yes."
 ---
 An agent is a model in a **loop**. Each round it *thinks* about what to do, *acts* by calling a tool, then *observes* the result. Then it goes round again.
 ===

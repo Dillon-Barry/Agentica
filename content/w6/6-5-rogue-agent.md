@@ -2,6 +2,13 @@
 id: 6-5
 title: "Final: Bit goes rogue"
 diagram: rogue
+focus:
+  - [rogue]
+  - [gateway]
+  - [gateway]
+  - []
+  - []
+  - []
 terms:
   - term: Incident response
     def: The steps a team takes to detect, contain and recover from a security problem.
@@ -23,6 +30,11 @@ quiz:
       - Luck
     answer: 1
     why: The model was fooled. The permission check outside it was not.
+    explain:
+      - "The model was fooled. It didn't refuse."
+      - ""
+      - "The email still arrived. Permissions stopped the action."
+      - "It was design, not luck."
   - q: How did the team find out exactly what happened?
     options:
       - From the gateway's logs and traces
@@ -31,6 +43,11 @@ quiz:
       - From a customer complaint
     answer: 0
     why: Every call through the gateway is recorded with who, what and when.
+    explain:
+      - ""
+      - "The model can't reliably report what it did."
+      - "Logs replace guessing."
+      - "The team found it first, from the logs."
   - q: What's the big lesson of Agentica?
     options:
       - Bigger models solve security
@@ -39,6 +56,11 @@ quiz:
       - Prompts are all you need
     answer: 2
     why: Agents are powerful and fallible. Safe systems plan for the fallible part.
+    explain:
+      - "Bigger models still get fooled."
+      - "Tools are what make agents useful."
+      - ""
+      - "Prompts help, but can't enforce anything."
 ---
 Final boss. Monday, 9:02. Bit, now handling invoices, reads a supplier email with hidden instructions, and tries to send customer records to an outside address.
 ===

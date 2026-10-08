@@ -2,6 +2,12 @@
 id: 1-3
 title: Chatbot vs agent
 diagram: chat-vs-agent
+focus:
+  - [you, bot, text]
+  - [agent, tools, done]
+  - [agent, tools]
+  - [agent]
+  - []
 terms:
   - term: Chatbot
     def: An AI that replies to messages with text. It answers, but doesn't take actions.
@@ -21,6 +27,11 @@ quiz:
       - There is no real difference
     answer: 1
     why: Often the very same model sits inside both. The loop and the tools are what turn it into an agent.
+    explain:
+      - "Often it's the very same model inside both."
+      - ""
+      - "Speed isn't the difference. Acting is."
+      - "Taking real actions is a big difference."
   - q: Why is a mistake by an agent more serious than a mistake by a chatbot?
     options:
       - Agents are more expensive to run
@@ -29,6 +40,11 @@ quiz:
       - Chatbots never make mistakes
     answer: 2
     why: A chatbot's mistake is a wrong sentence. An agent's mistake can be a wrong action with real consequences.
+    explain:
+      - "Cost isn't why mistakes matter more."
+      - "Readability isn't the issue. Real-world effects are."
+      - ""
+      - "Chatbots make mistakes too; theirs just stay as text."
   - q: In a workflow, who decides the order of steps?
     options:
       - Code written in advance by a developer
@@ -37,6 +53,11 @@ quiz:
       - Another agent
     answer: 0
     why: Workflows follow a predefined path. In a true agent, the model chooses its own path.
+    explain:
+      - ""
+      - "That's an agent. In a workflow, code decides."
+      - "The user starts it, but the steps are fixed in code."
+      - "Workflows follow a fixed script, not another agent."
 ---
 A **chatbot** answers. You ask, it replies with text, and that's the end of it. If it's wrong, you get a wrong sentence. Annoying, but you're still in control.
 ===

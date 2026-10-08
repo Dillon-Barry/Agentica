@@ -2,6 +2,12 @@
 id: 4-5
 title: Agents in production
 diagram: production
+focus:
+  - [agent, tool]
+  - [question]
+  - [question]
+  - []
+  - []
 terms:
   - term: Platform team
     def: The engineers who run shared infrastructure, like clusters, gateways and registries, that other teams build on.
@@ -21,6 +27,11 @@ quiz:
       - Whether to use dark mode
     answer: 1
     why: At scale, identity and permissions matter far more than prompt wording.
+    explain:
+      - "Fonts don't matter at scale. Permissions do."
+      - ""
+      - "Longer prompts don't answer who the agent acts for."
+      - "Styling is unrelated to running agents safely."
   - q: Which earlier tech era faced a similar sprawl problem?
     options:
       - Floppy disks
@@ -29,6 +40,11 @@ quiz:
       - Arcade games
     answer: 2
     why: Microservices multiplied services and connections, and teams answered with registries, gateways and orchestration.
+    explain:
+      - "Floppy disks didn't multiply services."
+      - "Fax machines aren't a platform-sprawl story."
+      - ""
+      - "Arcade games weren't a platform problem."
   - q: What three things do agents in production need?
     options:
       - A trusted catalog, a place to run them, and a checkpoint for their traffic
@@ -37,6 +53,11 @@ quiz:
       - Nothing extra
     answer: 0
     why: Catalog, runtime and gateway. Those map to agentregistry, kagent and agentgateway in World 6.
+    explain:
+      - ""
+      - "More resources don't solve trust or control."
+      - "Branding doesn't make agents safe."
+      - "Scale brings real catalog, runtime and traffic needs."
 ---
 A demo has one agent and two tools. A real company has hundreds of agents, thousands of MCP servers, several model providers and many teams.
 ===

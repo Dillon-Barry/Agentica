@@ -2,6 +2,12 @@
 id: 2-4
 title: Memory
 diagram: memory
+focus:
+  - []
+  - [short-term]
+  - [long-term]
+  - []
+  - [long-term]
 terms:
   - term: Short-term memory
     def: The conversation so far, kept inside the context window. Old parts get cut or summarized when the window fills.
@@ -25,6 +31,11 @@ quiz:
       - On the tool server
     answer: 0
     why: Short-term memory is just the recent conversation, carried along in the context window.
+    explain:
+      - ""
+      - "The weights are fixed after training. They don't store your chat."
+      - "Cookies belong to websites, not the model's memory."
+      - "Tool servers don't hold the conversation."
   - q: What happens when the context window fills up?
     options:
       - The model gets faster
@@ -33,6 +44,11 @@ quiz:
       - Nothing. Windows are unlimited
     answer: 1
     why: Windows have a size limit, so older content gets dropped or squeezed into a summary.
+    explain:
+      - "A full window makes things slower, if anything."
+      - ""
+      - "The agent keeps going, just with less detail."
+      - "Every window has a limit."
   - q: What is memory poisoning?
     options:
       - Deleting an agent's memory
@@ -41,6 +57,11 @@ quiz:
       - Encrypting memory
     answer: 2
     why: A poisoned memory keeps working for the attacker in every future session that recalls it.
+    explain:
+      - "Poisoning adds bad entries; it doesn't delete good ones."
+      - "That's a capacity problem, not an attack."
+      - ""
+      - "Encryption protects memory. It doesn't poison it."
 ---
 Models don't remember you between calls. Each request starts blank. Agents create memory by putting the right text back into the context window.
 ===

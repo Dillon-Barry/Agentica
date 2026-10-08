@@ -5,11 +5,14 @@
   --black: #000000;
   --white: #f8f8f8;
   --gray: #b8b8b8;
-  --dim: #707070;
+  --dim: #8c8c8c; /* 6:1 on black, for locked or secondary text */
   --sky: #68a8f8;
   --yellow: #f8d800;
   --orange: #f88800;
   --red: #e83800;
+  /* Darker shades behind small white text, so it passes WCAG AA (4.5:1). */
+  --red-deep: #c03000;
+  --green-deep: #007c00;
   --green: #00a800;
   --cyan: #58d8f8;
 
@@ -78,6 +81,25 @@ a {
   white-space: nowrap;
 }
 
+/* Hidden until a keyboard user tabs to it. */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 100;
+  padding: 10px 14px;
+  font: 700 16px/1.2 var(--text);
+  color: var(--black);
+  background: var(--yellow);
+  border: 4px solid var(--black);
+  cursor: pointer;
+  transform: translateY(-200%);
+}
+
+.skip-link:focus {
+  transform: none;
+}
+
 /* ---- Shared ----------------------------------------------------------- */
 
 /* Message box: black panel, white border, black outer ring. */
@@ -119,7 +141,7 @@ a {
 
 .btn:disabled {
   background: var(--dim);
-  color: var(--gray);
+  color: var(--black);
   cursor: default;
 }
 
@@ -417,6 +439,20 @@ body.map-mode .level-list {
   max-height: min(320px, 40vh);
 }
 
+/* Diagrams follow the text: the parts a page talks about stay lit, the rest dim. */
+.diagram [data-part] {
+  transition: opacity 0.35s steps(4);
+}
+
+.diagram.focusing [data-part]:not(.lit) {
+  opacity: 0.22;
+}
+
+.diagram.focusing .lit rect,
+.diagram.focusing .lit polygon {
+  stroke: var(--yellow);
+}
+
 /* SVG diagram classes */
 .d-box { fill: var(--black); stroke: var(--white); stroke-width: 2; }
 .d-hl { fill: #2838a8; stroke: var(--yellow); }
@@ -461,13 +497,13 @@ body.map-mode .level-list {
   padding: 6px 10px;
   font: 10px/1.4 var(--pixel);
   color: var(--white);
-  background: var(--red);
+  background: var(--red-deep);
   border: 4px solid var(--white);
   box-shadow: 0 0 0 4px var(--black);
 }
 
 .dialog.cleared .nametag {
-  background: var(--green);
+  background: var(--green-deep);
 }
 
 .pips {
@@ -493,7 +529,7 @@ body.map-mode .level-list {
 }
 
 .dialog[data-verdict="right"] .nametag {
-  background: var(--green);
+  background: var(--green-deep);
 }
 
 .dialog-text:has(+ .dialog-extra .options) {
@@ -619,8 +655,8 @@ body.map-mode .level-list {
 .option.right .option-tag { color: #58f858; }
 .option.wrong .option-tag { color: #f87858; }
 
-.option.right .option-key { background: var(--green); color: var(--white); }
-.option.wrong .option-key { background: var(--red); color: var(--white); }
+.option.right .option-key { background: var(--green-deep); color: var(--white); }
+.option.wrong .option-key { background: var(--red-deep); color: var(--white); }
 
 .verdict {
   margin: 18px 0 0;
@@ -1190,4 +1226,88 @@ body.map-mode .level-list {
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Sandbox challenge settings */
+.ch-settings {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.ch-setting {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-content: flex-start;
+}
+
+.ch-setting .ch-col-title {
+  flex-basis: 100%;
+  margin: 0;
+}
+
+/* Certificate on the finish screen */
+.cert {
+  margin: 30px 4px 0;
+  padding: 18px;
+}
+
+.finish-heading {
+  margin: 0 0 8px;
+  font: 12px/1.8 var(--pixel);
+  color: var(--yellow);
+}
+
+.cert p {
+  margin: 0 0 12px;
+}
+
+.cert-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+  font: 10px var(--pixel);
+  color: var(--gray);
+}
+
+.cert-name {
+  flex: 1;
+  max-width: 360px;
+  padding: 8px 10px;
+  font: 600 18px var(--text);
+  color: var(--white);
+  background: #10102a;
+  border: 3px solid var(--white);
+}
+
+.cert-canvas {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 2px solid var(--dim);
+}
+
+.verdict p {
+  margin: 0;
+}
+
+.verdict p + p {
+  margin-top: 8px;
+}
+
+/* Review pile on the Agentdex page */
+.review {
+  margin: 0 4px 28px;
+  padding: 16px 18px;
+}
+
+.review p {
+  margin: 0 0 10px;
+}
+
+.review .dialog {
+  margin: 24px 0 0;
 }

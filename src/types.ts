@@ -13,6 +13,8 @@ export interface QuizQuestion {
   options: string[];
   /** Index into `options` of the correct answer. */
   answer: number;
+  /** Why each option is wrong, same order as `options` (the right one can be empty). */
+  explain?: string[];
   /** Shown after answering, right or wrong. */
   why: string;
 }
@@ -30,6 +32,8 @@ export interface Lesson {
   quiz: QuizQuestion[];
   /** Markdown, one entry per dialog box. */
   boxes: string[];
+  /** Diagram parts to light up on each box (same order as `boxes`); empty = whole diagram. */
+  focus: string[][];
   /** Optional markdown for the "Go deeper" block. */
   deeper?: string;
   /** Optional read-only example ("What it looks like"), usually a code block. */
@@ -47,7 +51,7 @@ export interface PlannedLevel {
   challenge?: boolean;
 }
 
-export type Theme = "grass" | "forge" | "cave" | "forest" | "shadow" | "castle";
+export type Theme = "grass" | "forge" | "cave" | "forest" | "shadow" | "castle" | "star";
 
 export interface Boss {
   name: string;
