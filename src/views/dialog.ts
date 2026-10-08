@@ -1,0 +1,151 @@
+import { marked } from "marked";
+import { h } from "../dom";
+import { href } from "../nav";
+import { reducedMotion, typewrite, type Typing } from "../typewriter";
+import type { QuizQuestion } from "../types";
+
+/** Shared RPG message box used by lessons and boss fights. */
+
+export const md = (src: string): string => marked.parse(src, { async: false });
+
+export const btn = (label: string, onclick: () => void, cls = "btn") =>
+  h("button", { class: cls, type: "button", onclick }, label);
+
+export interface Dialog {
+  el: HTMLElement;
+  setName(name: string): void;
+  setPips(states: string[]): void;
+  /** Show markdown-rendered HTML, typed out unless `animate` is false. */
+  say(markup: string, animate?: boolean): void;
+  /** Reveal the rest of the text if it's still typing. Returns true if it was. */
+  finishTyping(): boolean;
+  extra: HTMLElement;
+  live: HTMLElement;
+  setActions(...els: HTMLElement[]): void;
+  /** Ask a multiple-choice question; `onAnswer` fires the moment one is picked. */
+  ask(q: QuizQuestion, onAnswer: (correct: boolean) => void): void;
+  /** Number key pressed (0-based); picks an option while a question is open. */
+  pick(k: number): boolean;
+  destroy(): void;
+}
+
+export function createDialog(name: string): Dialog {
+  const nametag = h("div", { class: "nametag" }, name);
+  const pips = h("div", { class: "pips", "aria-hidden": "true" });
+  const text = h("div", { class: "dialog-text" });
+  const live = h("div", { class: "sr-only", "aria-live": "polite" });
+  const extra = h("div", { class: "dialog-extra" });
+  const actions = h("div", { class: "dialog-actions" });
+  const el = h("section", { class: "dialog", tabindex: "-1" }, nametag, pips, text, extra, live, actions);
+
+  let typing: Typing | undefined;
+  let picker: ((k: number) => void) | undefined;
+
+  const d: Dialog = {
+    el,
+    extra,
+    live,
+    setName: (n) => {
+      nametag.textContent = n;
+      delete el.dataset.verdict;
+    },
+    setPips: (states) => pips.replaceChildren(...states.map((s) => h("span", { class: `pip ${s}` }))),
+    say(markup, animate = true) {
+      typing?.cancel();
+      typing = undefined;
+      picker = undefined;
+      live.innerHTML = markup;
+      extra.replaceChildren();
+      if (animate) typing = typewrite(text, markup);
+      else text.innerHTML = markup;
+    },
+    finishTyping() {
+      if (!typing?.active()) return false;
+      typing.finish();
+      return true;
+    },
+    setActions(...els) {
+      actions.replaceChildren(...els);
+      els[els.length - 1]?.focus({ preventScroll: true });
+    },
+    ask(q, onAnswer) {
+      d.say(md(q.q));
+      const options = q.options.map((opt, k) =>
+        h(
+          "button",
+          { class: "option", type: "button", onclick: () => picker?.(k) },
+          h("span", { class: "option-key" }, String.fromCharCode(65 + k)),
+          h("span", {}, opt),
+        ),
+      );
+      extra.append(h("div", { class: "options" }, ...options));
+      actions.replaceChildren();
+      // Focus the box, not an option, so a held Enter key can't pick an answer.
+      el.focus({ preventScroll: true });
+
+      picker = (k) => {
+        if (k >= q.options.length) return;
+        picker = undefined;
+        typing?.finish();
+        const correct = k === q.answer;
+        options.forEach((o, j) => {
+          o.disabled = true;
+          if (j === q.answer) o.classList.add("right");
+          else if (j === k) o.classList.add("wrong");
+        });
+        options[k].append(h("span", { class: "option-tag" }, correct ? "RIGHT!" : "WRONG!"));
+        nametag.textContent = correct ? "RIGHT!" : "WRONG!";
+        el.dataset.verdict = correct ? "right" : "wrong";
+        const verdict = h(
+          "p",
+          { class: `verdict ${correct ? "right" : "wrong"}` },
+          h("strong", {}, correct ? "✔ RIGHT! " : "✘ WRONG. "),
+          q.why,
+        );
+        extra.append(verdict);
+        verdict.scrollIntoView({ block: "nearest", behavior: reducedMotion() ? "auto" : "smooth" });
+        live.textContent = `${correct ? "Right." : "Wrong."} ${q.why}`;
+        onAnswer(correct);
+      };
+    },
+    pick(k) {
+      if (!picker) return false;
+      picker(k);
+      return true;
+    },
+    destroy: () => typing?.cancel(),
+  };
+  return d;
+}
+
+/** A burst of square confetti falling over an element. */
+export function confetti(): HTMLElement {
+  const colors = ["#f8d800", "#e83800", "#00a800", "#58d8f8", "#f8f8f8"];
+  return h(
+    "div",
+    { class: "confetti", "aria-hidden": "true" },
+    ...Array.from({ length: 18 }, (_, i) =>
+      h("span", {
+        style: `left:${(i * 37) % 100}%;background:${colors[i % colors.length]};animation-delay:${(i % 6) * 0.08}s;--drift:${((i % 5) - 2) * 18}px`,
+      }),
+    ),
+  );
+}
+
+/** Message shown for a locked or missing stop. */
+export function blocked(root: HTMLElement, message: string): () => void {
+  root.append(
+    h(
+      "main",
+      { class: "level" },
+      h(
+        "section",
+        { class: "dialog" },
+        h("div", { class: "nametag" }, "SAGE"),
+        h("p", { class: "dialog-text" }, message),
+        h("div", { class: "dialog-actions" }, h("a", { class: "btn", href: href(""), "data-autofocus": true }, "◀ MAP")),
+      ),
+    ),
+  );
+  return () => {};
+}
