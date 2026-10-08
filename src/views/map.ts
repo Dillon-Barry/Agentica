@@ -105,14 +105,19 @@ export function renderMap(root: HTMLElement): () => void {
   const barWorld = h("span", { class: "bar-world" });
   const barTitle = h("h2", { class: "bar-title" });
   const barStatus = h("p", { class: "bar-status", "aria-live": "polite" });
-  const playBtn = h("button", { class: "btn btn-go", type: "button", onclick: () => enter() }, "PLAY");
   const bar = h(
     "section",
     { class: "map-bar" },
     h("div", { class: "bar-text" }, barWorld, barTitle, barStatus),
     h("p", { class: "bar-hint" }, "ARROWS WALK · ENTER PLAYS · CLICK A STOP"),
-    playBtn,
   );
+
+  // The PLAY card floats just under the stop Bit is standing on.
+  const cardKind = h("span", { class: "stop-kind" });
+  const cardTitle = h("span", { class: "stop-title" });
+  const playBtn = h("button", { class: "btn btn-go", type: "button", onclick: () => enter() }, "PLAY");
+  const card = h("div", { class: "stop-card", hidden: true }, cardKind, cardTitle, playBtn);
+  viewport.append(card);
 
   const reset = h(
     "button",
@@ -193,6 +198,8 @@ export function renderMap(root: HTMLElement): () => void {
   // ---- Player -------------------------------------------------------------------
   const start = nodePx(pos);
   const player = { x: start.x, y: start.y, facing: 1 as 1 | -1, walking: false };
+  /** True while a new road draws itself, before Bit walks on automatically. */
+  let pendingWalk = false;
 
   function walkSegment(seg: number, forward: boolean): Promise<void> {
     const { points, length } = SEGMENTS[seg];
@@ -222,6 +229,7 @@ export function renderMap(root: HTMLElement): () => void {
       return;
     }
     player.walking = true;
+    card.hidden = true;
     const dir = Math.sign(target - pos);
     while (pos !== target) {
       await walkSegment(dir > 0 ? pos : pos - 1, dir > 0);
@@ -230,6 +238,7 @@ export function renderMap(root: HTMLElement): () => void {
     }
     player.walking = false;
     setPosition(ROUTE[pos].id);
+    show(pos);
   }
 
   function enter(): void {
@@ -246,9 +255,36 @@ export function renderMap(root: HTMLElement): () => void {
     barWorld.textContent = `WORLD ${w.num} · ${w.name.toUpperCase()}`;
     barTitle.textContent = l.boss ? `★ ${w.boss.name}` : l.challenge ? `! ${w.challenge.title}` : `${l.id} ${l.title}`;
     barStatus.textContent = status ?? (l.boss ? BOSS_STATUS : l.challenge ? CHALLENGE_STATUS : STATUS)[states[i]];
-    playBtn.disabled = !(i === pos && playable(i));
-    playBtn.textContent = l.boss ? "FIGHT" : states[i] === "cleared" ? "REPLAY" : "PLAY";
     bar.classList.toggle("boss", !!l.boss);
+
+    // The card describes the stop Bit is standing on.
+    if (i !== pos) return;
+    const here = ROUTE[pos];
+    cardKind.textContent = here.boss ? `WORLD ${w.num} BOSS` : here.challenge ? `WORLD ${w.num} CHALLENGE` : `LEVEL ${here.id}`;
+    cardTitle.textContent = here.boss ? w.boss.name : here.challenge ? w.challenge.title : here.title;
+    playBtn.textContent = here.boss ? "FIGHT ▶" : states[pos] === "cleared" ? "REPLAY ▶" : "PLAY ▶";
+    card.classList.toggle("boss", !!here.boss);
+    card.hidden = player.walking || pendingWalk || !playable(pos);
+  }
+
+  /** Keep the PLAY card just below Bit's stop (or above it near the bottom edge). */
+  let cardPos = "";
+  function placeCard(): void {
+    if (card.hidden) return;
+    const n = nodePx(pos);
+    const vw = viewport.clientWidth;
+    const vh = viewport.clientHeight;
+    const w = card.offsetWidth;
+    const hgt = card.offsetHeight;
+    const sx = (n.x - cam.x) * cssPerPx;
+    let top = (n.y - cam.y + 12) * cssPerPx;
+    if (top + hgt > vh - 6) top = (n.y - cam.y - (ROUTE[pos].boss ? 30 : 24)) * cssPerPx - hgt;
+    const left = Math.min(vw - w / 2 - 6, Math.max(w / 2 + 6, sx));
+    const key = `${Math.round(left)},${Math.round(top)}`;
+    if (key === cardPos) return;
+    cardPos = key;
+    card.style.left = `${Math.round(left)}px`;
+    card.style.top = `${Math.round(top)}px`;
   }
 
   // ---- Input --------------------------------------------------------------------
@@ -281,7 +317,8 @@ export function renderMap(root: HTMLElement): () => void {
   // Drag to look around (when the map is bigger than the frame); tap selects.
   let drag: { x: number; y: number; cx: number; cy: number; moved: boolean; node: number } | undefined;
   const onDown = (e: PointerEvent) => {
-    if (e.button !== 0) return;
+    // Let clicks on the PLAY card reach its button.
+    if (e.button !== 0 || (e.target as Element).closest(".stop-card")) return;
     drag = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y, moved: false, node: nodeAt(toMap(e)) };
     viewport.setPointerCapture(e.pointerId);
   };
@@ -328,11 +365,28 @@ export function renderMap(root: HTMLElement): () => void {
     cam.x += (camTarget.x - cam.x) * k;
     cam.y += (camTarget.y - cam.y) * k;
     draw.draw(ctx, { cam, tick: reducedMotion() ? 0 : tick, states, roadShown, nodeHidden, player });
+    placeCard();
     raf = requestAnimationFrame(loop);
   };
 
+  // Just cleared a stop? Once the new road has drawn itself, Bit walks on to
+  // the next stop by itself, ready to play.
+  const newRoad = revealedBefore <= maxPlayable && pos < maxPlayable;
+  pendingWalk = newRoad;
+  let autoWalk = 0;
+  if (newRoad) {
+    autoWalk = window.setTimeout(
+      async () => {
+        pendingWalk = false;
+        await walkTo(maxPlayable);
+        if (document.activeElement === document.body || !document.activeElement) playBtn.focus({ preventScroll: true });
+      },
+      skipReveal ? 0 : 450 + offset,
+    );
+  }
+
   if (!introSeen()) showIntro();
-  show(pos, revealedBefore <= maxPlayable ? "New road open! Press → to walk on." : undefined);
+  show(pos, newRoad ? "New road open! Bit is on the way." : undefined);
   layout();
   const resize = new ResizeObserver(layout);
   resize.observe(viewport);
@@ -340,6 +394,7 @@ export function renderMap(root: HTMLElement): () => void {
   loop();
 
   let cleanup = () => {
+    window.clearTimeout(autoWalk);
     cancelAnimationFrame(raf);
     resize.disconnect();
     document.body.classList.remove("map-mode");

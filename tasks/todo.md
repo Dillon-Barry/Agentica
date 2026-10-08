@@ -177,3 +177,11 @@ World 6 — Solo Citadel
 - Scripted Edge run on the built file: intro + help, term popover, peek, all 6 challenges solved and saved, trifecta leaks with all legs on, gate deny-all fails legit calls, boss recap then fight, finish screen; zero page errors.
 - Found + fixed: multi-tab progress overwrite (save now merges with stored progress).
 - Facts checked: MCP to AAIF Dec 2025 (10k+ servers), A2A 1.0 Agent Card at /.well-known/agent-card.json, Agent Skills open standard Dec 2025, kagent v1alpha2 Agent shape, agentgateway mcpAuthorization CEL rules, RFC 8693 act claim.
+
+### Round 3: legibility + flow (2026-10-08)
+- Body font -> Atkinson Hyperlegible Next (2/5, 1/l, 0/O distinct); Aa now opts in to pixel text.
+- PLAY card floats under Bit's stop (flips above near the bottom edge), hidden while walking.
+- After clearing a stop, the new road draws and Bit walks to the next stop by itself; PLAY gets
+  focus so Enter starts it. No auto-walk when returning without a new clear.
+- Verified in Edge: font applied, card position + click, auto-walk + saved position + focus,
+  no walk on plain return, pixel toggle; full round-2 regression (20 checks) still passes.

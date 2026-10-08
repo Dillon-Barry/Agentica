@@ -27,6 +27,11 @@
   than the start time, giving tick -1 and a negative frame index. Unit tests + build passed, but I
   never loaded the page. Rule: after any change to rendering or timing, load the built file in a
   real browser (scripted Edge) and check for page errors before saying it works.
+- Pixel body font (Pixelify Sans) still read badly: "2 looks like 5". Rule: body text uses a
+  font designed for legibility (Atkinson Hyperlegible Next); retro pixel fonts only for short
+  headings, labels and buttons, with the pixel body font as an opt-in toggle.
+- Controls belong where the eye is: the PLAY button sits under the player's stop, not in a
+  corner. After a clear, move the player on automatically instead of making them walk.
 - "Interactive" means something to *do*, not just read: user wanted a walkable overworld map.
 - User wants high-level, short content first. Rule: lesson boxes are 2-4 sentences (cap 70 words,
   enforced by test). Detail goes in the optional "Go deeper" section, never in the main path.

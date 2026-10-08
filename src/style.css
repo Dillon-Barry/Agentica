@@ -14,12 +14,14 @@
   --cyan: #58d8f8;
 
   --pixel: "Press Start 2P", monospace;
-  --text: "Pixelify Sans", "Press Start 2P", monospace;
+  /* Body text: Atkinson Hyperlegible keeps look-alike characters (2/5, 1/l,
+     0/O) distinct. Pixel fonts are kept for short headings and labels. */
+  --text: "Atkinson Hyperlegible Next", system-ui, -apple-system, "Segoe UI", sans-serif;
 }
 
-/* Reader option: plain body text instead of the pixel font. */
-.plain-font {
-  --text: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+/* Reader option: retro pixel body text instead of the legible default. */
+.pixel-text {
+  --text: "Pixelify Sans", "Press Start 2P", monospace;
 }
 
 *,
@@ -37,7 +39,7 @@ body {
   min-height: 100vh;
   background: var(--sky);
   color: var(--white);
-  font: 500 20px/1.6 var(--text);
+  font: 400 20px/1.6 var(--text);
 }
 
 /* Pixel hills along the bottom of the screen. */
@@ -247,12 +249,49 @@ a {
   font-size: 17px;
 }
 
-.map-bar .btn-go {
-  min-width: 120px;
-  font-size: 13px;
+/* PLAY card: floats just under the stop Bit stands on, like a game prompt. */
+.stop-card {
+  position: absolute;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  max-width: 240px;
+  padding: 8px 10px 10px;
+  transform: translateX(-50%);
+  text-align: center;
+  color: var(--white);
+  background: var(--black);
+  border: 3px solid var(--white);
+  box-shadow: 0 0 0 3px var(--black);
 }
 
-.map-bar.boss .btn-go:not(:disabled) {
+.stop-card[hidden] {
+  display: none;
+}
+
+.stop-kind {
+  font: 8px/1.6 var(--pixel);
+  color: var(--yellow);
+}
+
+.stop-card.boss .stop-kind {
+  color: #f87858;
+}
+
+.stop-title {
+  font: 600 16px/1.25 var(--text);
+}
+
+.stop-card .btn-go {
+  min-height: 36px;
+  margin-top: 4px;
+  padding: 6px 14px;
+  font-size: 12px;
+}
+
+.stop-card.boss .btn-go {
   background: var(--red);
 }
 
@@ -530,7 +569,7 @@ body.map-mode .level-list {
   gap: 14px;
   width: 100%;
   padding: 10px 12px;
-  font: 500 19px/1.35 var(--text);
+  font: 400 19px/1.35 var(--text);
   text-align: left;
   color: var(--white);
   background: var(--black);
@@ -704,7 +743,7 @@ body.map-mode .level-list {
   color: var(--white);
   border: 4px solid var(--yellow);
   box-shadow: 0 0 0 4px var(--black);
-  font: 500 17px/1.5 var(--text);
+  font: 400 17px/1.5 var(--text);
 }
 
 .term-pop strong {
@@ -887,7 +926,7 @@ body.map-mode .level-list {
   gap: 6px;
   padding: 12px;
   text-align: left;
-  font: 500 17px/1.4 var(--text);
+  font: 400 17px/1.4 var(--text);
   color: var(--white);
   background: #2838a8;
   border: 4px solid var(--white);
@@ -975,7 +1014,7 @@ body.map-mode .level-list {
 .ch-sentence {
   display: inline;
   padding: 0 2px;
-  font: 500 19px/1.7 var(--text);
+  font: 400 19px/1.7 var(--text);
   text-align: left;
   color: #101018;
   background: none;
@@ -1013,7 +1052,7 @@ body.map-mode .level-list {
   gap: 4px;
   padding: 10px;
   text-align: left;
-  font: 500 16px/1.4 var(--text);
+  font: 400 16px/1.4 var(--text);
   color: var(--gray);
   background: var(--black);
   border: 4px solid var(--dim);
@@ -1134,7 +1173,7 @@ body.map-mode .level-list {
   .map-bar { flex-wrap: wrap; gap: 10px; }
   .bar-text { flex-basis: 100%; }
   .bar-hint { display: none; }
-  .map-bar .btn-go { width: 100%; }
+
   body.map-mode .hud { gap: 10px; }
   .hud-right { gap: 10px; }
   .counter { font-size: 10px; }

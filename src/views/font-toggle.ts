@@ -1,33 +1,33 @@
 import { h } from "../dom";
 
-const KEY = "agentica.plainFont";
+const KEY = "agentica.pixelText";
 
-const isPlain = () => document.documentElement.classList.contains("plain-font");
+const isPixel = () => document.documentElement.classList.contains("pixel-text");
 
 /** Restore the reader's font choice on load. */
 export function applyFontPref(): void {
   try {
-    if (localStorage.getItem(KEY) === "1") document.documentElement.classList.add("plain-font");
+    if (localStorage.getItem(KEY) === "1") document.documentElement.classList.add("pixel-text");
   } catch {
     /* ignore */
   }
 }
 
-/** "Aa" button: swaps the pixel body font for a plain one. */
+/** "Aa" button: swaps the legible body font for a retro pixel one, and back. */
 export function fontToggle(): HTMLButtonElement {
   const btn = h(
     "button",
     {
       class: "btn btn-small btn-ghost",
       type: "button",
-      title: "Switch between pixel and plain text",
-      "aria-pressed": String(isPlain()),
+      title: "Switch lesson text between the easy-to-read font and a retro pixel font",
+      "aria-pressed": String(isPixel()),
       onclick: () => {
-        const plain = !isPlain();
-        document.documentElement.classList.toggle("plain-font", plain);
-        btn.setAttribute("aria-pressed", String(plain));
+        const pixel = !isPixel();
+        document.documentElement.classList.toggle("pixel-text", pixel);
+        btn.setAttribute("aria-pressed", String(pixel));
         try {
-          localStorage.setItem(KEY, plain ? "1" : "0");
+          localStorage.setItem(KEY, pixel ? "1" : "0");
         } catch {
           /* ignore */
         }
