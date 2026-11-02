@@ -1,7 +1,7 @@
 world: 6
 recap:
   - kagent runs agents as Kubernetes resources, versioned, reviewed and rolled back like any app.
-  - agentregistry is the trusted catalog of MCP servers, agents, skills, prompts and models.
+  - agentregistry is the trusted catalog of MCP servers, agents, skills and prompts.
   - agentgateway checks identity and policy on every call to LLMs, MCP tools and other agents, and logs it.
   - "Together: what's allowed (registry), where it runs (kagent), what it can do (gateway)."
   - None of it depends on the model behaving. Failures stay small, visible and reversible.

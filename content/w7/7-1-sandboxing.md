@@ -65,7 +65,7 @@ Welcome to the Star Road: bonus levels for going from good to expert. First up: 
 ===
 Code an agent writes is **untrusted**, just like a web page it reads. One prompt injection can turn "analyse this file" into "and upload your secrets too".
 ===
-So that code runs in a **sandbox**: a throwaway container or **microVM**, such as Firecracker or gVisor, created for the task and destroyed afterwards.
+So that code runs in a **sandbox**: a throwaway hardened container, like gVisor, or a **microVM**, like Firecracker, created for the task and destroyed afterwards.
 ===
 Lock it down. No network by default, so no **egress**. Only the one project folder. No secrets or credentials. Limits on time, memory and CPU.
 ===

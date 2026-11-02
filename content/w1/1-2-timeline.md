@@ -81,10 +81,10 @@ Agents feel brand new, but the idea is about 60 years old. Each era added one mi
 ===
 **1990s: Intelligent agents.** Researchers designed agents with *beliefs*, *desires* and *intentions* (the BDI model) that plan toward goals. Great theory, but they still couldn't understand messy human language.
 ===
-**2016: AlphaGo.** DeepMind's agent beat a world champion at Go, largely by playing itself millions of times and learning from wins and losses (reinforcement learning). Superhuman, but only at one game.
+**2016: AlphaGo.** DeepMind's agent beat a world champion at Go. It studied human games, then played itself millions of times, learning from wins and losses (reinforcement learning). Superhuman, but only at one game.
 ===
 **2022: LLMs and ReAct.** Large language models could finally understand language about almost anything. The **ReAct** paper showed a model could *reason*, *act* with a tool, then reason again. The modern agent was born.
 ===
-**2023-2025: The agent boom.** AutoGPT showed agents running on their own. **MCP** (2024) gave agents a standard plug for tools. **A2A** (2025) let agents talk to each other. Now the hard part is running them safely.
+**2023-2025: The agent boom.** AutoGPT showed agents running on their own. **MCP** (2024) gave agents a standard plug for tools. **A2A** (2025) let agents talk to each other. By 2026 both shared one neutral home. Now the hard part is running them safely.
 === deeper
 Why did LLMs change everything? Older agents needed humans to hand-code their knowledge, or a narrow simulated world to learn in. LLMs arrived pre-trained on a huge slice of human writing, so one model can read a web page, write code and pick the next tool. The 2017 *Transformer* design made that scale possible. ReAct, and later built-in *function calling* in model APIs, turned that language skill into action.

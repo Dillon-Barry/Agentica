@@ -71,4 +71,4 @@ And clicks have consequences: buying, sending, deleting. Some can't be undone, a
 ===
 Protections: a sandboxed browser or VM, an **allowlist** of sites, no saved passwords, and a human confirming payments, sends and deletes.
 === deeper
-Anthropic released computer use in October 2024 and OpenAI launched Operator in January 2025; browser agents are now common. Screens are also a privacy risk, because screenshots capture whatever is visible. Good designs keep the agent's browser separate from your personal one, hand sign-ins to the user, and log every action for review.
+Anthropic released computer use in October 2024 and OpenAI launched Operator in January 2025, later folded into ChatGPT agent. Browser agents are now common. Screens are also a privacy risk, because screenshots capture whatever is visible. Good designs keep the agent's browser separate from your personal one, hand sign-ins to the user, and log every action for review.

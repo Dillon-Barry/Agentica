@@ -74,4 +74,4 @@ Why it works: the model sees one stream of text. It can't reliably tell your ins
 ===
 It's number one on the OWASP Top 10 for LLM applications, and no model is immune. Assume any untrusted text can try to take the wheel.
 === deeper
-Injected text can be invisible to people: white text on white, HTML comments, image metadata, odd Unicode characters. Filters and model training lower the odds, but none are reliable alone. The safest designs limit what a hijacked agent could do: fewer tools, narrower permissions, approval for risky actions, and checks enforced outside the model.
+Injected text can be invisible to people: white text on white, HTML comments, image metadata, odd Unicode characters. Filters and model training lower the odds, but none are reliable alone. OWASP's Top 10 for Agentic Applications ranks the result, agent goal hijack, first. The safest designs limit what a hijacked agent could do: fewer tools, narrower permissions, approval for risky actions, and checks enforced outside the model.
