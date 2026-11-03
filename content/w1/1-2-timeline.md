@@ -45,7 +45,7 @@ quiz:
       - "ELIZA understood nothing. It only rearranged your words."
       - ""
       - "It had no internet access. It worked from simple patterns."
-      - "That was game-playing AI, decades later."
+      - "Game-playing programs were a separate line of work. ELIZA only chatted."
   - q: What was the main weakness of expert systems?
     options:
       - They were too creative

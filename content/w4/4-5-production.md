@@ -59,7 +59,7 @@ quiz:
       - "Branding doesn't make agents safe."
       - "Scale brings real catalog, runtime and traffic needs."
 ---
-A demo has one agent and two tools. A real company has hundreds of agents, thousands of MCP servers, several model providers and many teams.
+A demo has one agent and two tools. A large company can have hundreds of agents and MCP servers, several model providers and many teams.
 ===
 Suddenly the hard questions aren't about prompts. **Who** is this agent acting for? **What** is it allowed to call? **Which** version is running?
 ===

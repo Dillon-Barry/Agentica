@@ -59,12 +59,12 @@ quiz:
     explain:
       - ""
       - "Other text in the window can argue against it."
-      - "Capital letters change nothing about how models weigh text."
+      - "Capitals can add emphasis, but they don't make a rule unbreakable."
       - "No model treats a prompt as unbreakable."
 ---
 Bit wants to do more than chat. Welcome to The Forge, where we open Bit up and see what an agent is made of, starting with its brain.
 ===
-The brain of an agent is a **large language model** (LLM). At heart it does one thing: given some text, it predicts the most likely next word. Then the next. Then the next.
+The brain of an agent is a **large language model** (LLM). At heart it does one thing: given some text, it predicts a likely next word. Then the next. Then the next.
 ===
 Everything the model knows *right now* sits in its **context window**: your message, its instructions, the chat so far and any tool results. If it isn't in the window, the model can't see it.
 ===

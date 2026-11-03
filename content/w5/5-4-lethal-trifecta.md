@@ -63,7 +63,7 @@ One: access to **private data**, like your email, files or customer records. Two
 ===
 Three: a **way to send data out**, like sending email, calling a URL, or even showing an image whose link points at an attacker's server.
 ===
-Combine all three, and one injected instruction can say: "Collect the private data and send it here." Many real AI data leaks followed this exact recipe.
+Combine all three, and one injected instruction can say: "Collect the private data and send it here." Many reported AI data-leak bugs followed this exact recipe.
 ===
 The defense is structural: **cut one leg**. If an agent reads untrusted content, take away its private data or its way out, at least for that task.
 === deeper

@@ -33,7 +33,7 @@ quiz:
       - "Models read system prompts fine."
       - "Length isn't the problem. Competing text is."
       - ""
-      - "Capital letters don't change anything."
+      - "Capitals add emphasis, not enforcement."
   - q: Where should real security controls live?
     options:
       - Outside the model, enforced by ordinary code
