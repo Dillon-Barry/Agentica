@@ -20,6 +20,10 @@ sources:
     url: https://modelcontextprotocol.io/
   - label: Anthropic (2024) — Introducing the Model Context Protocol
     url: https://www.anthropic.com/news/model-context-protocol
+  - label: Anthropic (2025) — Donating MCP to the Agentic AI Foundation
+    url: https://www.anthropic.com/news/donating-the-model-context-protocol-and-establishing-of-the-agentic-ai-foundation
+  - label: MCP specification — Changelog (2026-07-28)
+    url: https://modelcontextprotocol.io/specification/2026-07-28/changelog
 quiz:
   - q: What problem does MCP solve?
     options:

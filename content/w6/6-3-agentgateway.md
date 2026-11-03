@@ -20,8 +20,10 @@ terms:
 sources:
   - label: agentgateway
     url: https://agentgateway.dev/
-  - label: AAIF (2026) — agentgateway joins the Agentic AI Foundation
-    url: https://aaif.io/blog/agentgateway-joins-aaif-as-an-open-gateway-for-agentic-ai-infrastructure
+  - label: Solo.io (2026) — agentgateway joins AAIF
+    url: https://www.solo.io/blog/agentgateway-joins-aaif-as-an-open-gateway-for-agentic-ai-infrastructure
+  - label: agentgateway docs — MCP authorization
+    url: https://agentgateway.dev/docs/standalone/latest/documentation/configuration/security/mcp-authz/
 quiz:
   - q: Where does agentgateway sit?
     options:

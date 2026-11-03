@@ -18,6 +18,8 @@ terms:
 sources:
   - label: Chen et al. (2021) — Evaluating LLMs trained on code (pass@k)
     url: https://arxiv.org/abs/2107.03374
+  - label: Zheng et al. (2023) — Judging LLM-as-a-judge
+    url: https://arxiv.org/abs/2306.05685
   - label: Anthropic — Building effective agents
     url: https://www.anthropic.com/engineering/building-effective-agents
 quiz:

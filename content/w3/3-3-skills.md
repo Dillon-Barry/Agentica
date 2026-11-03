@@ -16,8 +16,8 @@ terms:
 sources:
   - label: Agent Skills specification
     url: https://agentskills.io/
-  - label: The New Stack — Agent Skills as an open standard
-    url: https://thenewstack.io/agent-skills-anthropics-next-bid-to-define-ai-standards/
+  - label: Anthropic (2026) — Donating Agent Skills to the Agentic AI Foundation
+    url: https://www.anthropic.com/news/donating-agent-skills-to-the-agentic-ai-foundation
 quiz:
   - q: What is a skill?
     options:

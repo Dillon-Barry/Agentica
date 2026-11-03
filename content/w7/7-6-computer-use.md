@@ -18,6 +18,10 @@ terms:
 sources:
   - label: Anthropic (2024) — Introducing computer use
     url: https://www.anthropic.com/news/3-5-models-and-computer-use
+  - label: OpenAI (2025) — Introducing Operator
+    url: https://openai.com/index/introducing-operator/
+  - label: OpenAI (2025) — Introducing ChatGPT agent
+    url: https://openai.com/index/introducing-chatgpt-agent/
   - label: OWASP — LLM01 Prompt Injection
     url: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
 quiz:

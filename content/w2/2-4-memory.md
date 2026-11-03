@@ -20,8 +20,8 @@ terms:
 sources:
   - label: Pinecone — What is a vector database?
     url: https://www.pinecone.io/learn/vector-database/
-  - label: OWASP — Top 10 for LLM Applications
-    url: https://genai.owasp.org/llm-top-10/
+  - label: OWASP — Top 10 for Agentic Applications (ASI06 Memory & Context Poisoning)
+    url: https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/
 quiz:
   - q: Where does an agent's short-term memory live?
     options:
