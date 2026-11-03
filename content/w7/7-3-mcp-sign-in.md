@@ -10,14 +10,14 @@ focus:
   - [mcp-server, other-api]
 terms:
   - term: OAuth 2.1
-    def: The current version of the standard behind "Sign in with..." buttons. MCP uses it for remote servers.
+    def: The modern update to OAuth 2.0, the standard behind "Sign in with..." buttons. Still an IETF draft, but MCP builds on it for remote servers.
   - term: PKCE
     def: Proof Key for Code Exchange. A one-time secret pair that makes a stolen login code useless to anyone else.
   - term: Audience binding
     def: A token naming exactly which server it's for, so any other server must reject it.
 sources:
-  - label: MCP specification — Authorization (2025-11-25)
-    url: https://modelcontextprotocol.io/specification/2025-11-25/basic/authorization
+  - label: MCP specification — Authorization (2026-07-28)
+    url: https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization
   - label: RFC 8707 — Resource Indicators for OAuth 2.0
     url: https://www.rfc-editor.org/rfc/rfc8707.html
 quiz:
@@ -71,7 +71,7 @@ Step 3: the token names exactly which MCP server it's for. That's **audience bin
 ===
 One more rule: an MCP server must never pass your token on to another service. If it calls other APIs, it gets its own token. That stops confused deputies.
 === deeper
-The details: servers publish Protected Resource Metadata (RFC 9728) listing their login servers. Apps identify themselves with a Client ID Metadata Document, a pre-registered ID, or dynamic registration. Every request names the target server with a resource parameter (RFC 8707). Local servers that talk over stdio skip all this and take credentials from their environment.
+The details: servers publish Protected Resource Metadata (RFC 9728) listing their login servers. Apps identify themselves with a Client ID Metadata Document, a pre-registered ID, or the older, now-deprecated dynamic registration. Every request names the target server with a resource parameter (RFC 8707). Local servers that talk over stdio skip all this and take credentials from their environment.
 === peek
 The metadata an MCP server publishes at /.well-known/oauth-protected-resource, telling apps where to sign in (trimmed).
 

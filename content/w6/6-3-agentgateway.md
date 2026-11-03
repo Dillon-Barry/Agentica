@@ -63,7 +63,7 @@ quiz:
       - ""
       - "Device type has nothing to do with it."
 ---
-Third tool: **agentgateway**, an open source proxy built for agent traffic. Solo.io created it, and it's now hosted by the Linux Foundation's Agentic AI Foundation, alongside MCP.
+Third tool: **agentgateway**, an open source proxy built for agent traffic. Solo.io created it, and it's now hosted by the Linux Foundation's Agentic AI Foundation, alongside MCP and A2A.
 ===
 It sits between agents and everything they call: **LLMs**, **MCP servers** and other agents over **A2A**. One checkpoint for all of it.
 ===

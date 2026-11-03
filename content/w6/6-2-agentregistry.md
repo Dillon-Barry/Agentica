@@ -10,7 +10,7 @@ focus:
   - [kagent]
 terms:
   - term: agentregistry
-    def: An open source registry from Solo.io that catalogs MCP servers, agents, skills, prompts and models in one versioned, searchable place.
+    def: An open source registry from Solo.io that catalogs MCP servers, agents, skills and prompts in one versioned, searchable place.
   - term: Artifact catalog
     def: A central inventory of every AI building block an organization uses, with owners and versions.
   - term: arctl
@@ -26,7 +26,7 @@ quiz:
       - Only container images
       - Only user accounts
       - Website analytics
-      - MCP servers, agents, skills, prompts and models
+      - MCP servers, agents, skills and prompts
     answer: 3
     why: It treats every AI building block as a first-class, versioned artifact.
     explain:
@@ -63,7 +63,7 @@ quiz:
 ---
 Second tool: **agentregistry**, an open source project from Solo.io. Think of it as a trusted app store for AI building blocks.
 ===
-It catalogs **MCP servers, agents, skills, prompts and models** in one searchable, versioned place, instead of scattered across npm, PyPI, Docker Hub and GitHub.
+It catalogs **MCP servers, agents, skills and prompts** in one searchable, versioned place, instead of scattered across npm, PyPI, Docker Hub and GitHub.
 ===
 Teams publish artifacts to the registry. Others discover them and pull approved versions. Every item has an owner, a version and a history.
 ===

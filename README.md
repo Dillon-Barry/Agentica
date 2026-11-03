@@ -64,8 +64,7 @@ it, no server needed.
 auto-walk, lessons, every challenge, a boss fight, the review pile, the certificate, study
 mode, skip ahead, search, links, cheat sheets, diagram zoom, phone layouts, and
 [axe](https://github.com/dequelabs/axe-core) accessibility scans of each screen. Locally it
-runs two browsers at a time. Locally
-it uses the installed Microsoft Edge; CI uses Playwright's Chromium.
+runs two browsers at a time and uses the installed Microsoft Edge; CI uses Playwright's Chromium.
 `npm run og-image` redraws the link-preview image, `public/og-image.png`.
 
 ### Accessibility

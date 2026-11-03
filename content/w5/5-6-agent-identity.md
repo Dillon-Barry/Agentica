@@ -19,7 +19,7 @@ sources:
   - label: RFC 8693 — OAuth 2.0 Token Exchange
     url: https://datatracker.ietf.org/doc/html/rfc8693
   - label: MCP specification — Authorization
-    url: https://modelcontextprotocol.io/specification/2025-06-18/basic/authorization
+    url: https://modelcontextprotocol.io/specification/2026-07-28/basic/authorization
 quiz:
   - q: Why should an agent have its own identity?
     options:
