@@ -100,9 +100,9 @@ const toolCall = svg(
 );
 
 const mcp = svg(
-  "Diagram: one agent with an MCP client connects to three MCP servers, for GitHub, a database and Slack, all through the same protocol",
+  "Diagram: one agent, running one MCP client per server, connects to three MCP servers, for GitHub, a database and Slack, all through the same protocol",
   `
-  ${box(8, 52, 92, 56, "AGENT", "d-box d-hl", "MCP CLIENT")}
+  ${box(8, 52, 92, 56, "AGENT", "d-box d-hl", "MCP CLIENTS")}
   ${box(214, 10, 98, 30, "GITHUB", "d-box", "MCP SERVER")}
   ${box(214, 65, 98, 30, "DATABASE", "d-box", "MCP SERVER")}
   ${box(214, 120, 98, 30, "SLACK", "d-box", "MCP SERVER")}
@@ -300,7 +300,7 @@ const kagent = svg(
 
 const items: [number, number, string][] = [
   [106, 36, "MCP v2"], [162, 36, "AGENT"], [106, 72, "SKILL"],
-  [162, 72, "MCP v1"], [106, 108, "PROMPT"], [162, 108, "MODEL"],
+  [162, 72, "MCP v1"], [106, 108, "PROMPT"], [162, 108, "SKILL v2"],
 ];
 const registry = svg(
   "Diagram: a team publishes MCP servers, agents and skills into a versioned registry; approved items are deployed to kagent",

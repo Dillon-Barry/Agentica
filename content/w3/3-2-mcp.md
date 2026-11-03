@@ -14,7 +14,7 @@ terms:
   - term: MCP server
     def: A program that wraps a system, like GitHub or a database, and offers its tools, resources and prompts over MCP.
   - term: MCP client
-    def: The part of an agent's app that connects to MCP servers and passes their tools to the model.
+    def: The part of an agent's app that connects to an MCP server and passes its tools to the model. Apps run one client per server.
 sources:
   - label: Model Context Protocol
     url: https://modelcontextprotocol.io/

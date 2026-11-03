@@ -71,4 +71,4 @@ That hits sprawl and supply chain risk directly. If it isn't in the registry, it
 ===
 Its CLI, **arctl**, scaffolds, runs, builds and publishes artifacts, and the registry can deploy them straight to kagent.
 === deeper
-agentregistry describes each kind of artifact with Kubernetes-style resource specs. Solo's enterprise edition adds approval workflows, where changes wait for an admin, role-based rules for who can publish or deploy, and discovery of agents already running elsewhere, so shadow AI can be found and brought under control. Deployed MCP servers can then sit behind agentgateway for runtime policy.
+agentregistry describes each kind of artifact with Kubernetes-style resource specs. Solo's enterprise edition adds approval workflows, where changes wait for an admin, role-based rules for who can publish or deploy, and discovery of agents already running in other clouds, like AWS and Azure, so shadow AI can be found and brought under control. Deployed MCP servers can then sit behind agentgateway for runtime policy.
