@@ -18,8 +18,8 @@ terms:
 sources:
   - label: OWASP — LLM06 Excessive Agency
     url: https://genai.owasp.org/llmrisk/llm062025-excessive-agency/
-  - label: Wikipedia — Confused deputy problem
-    url: https://en.wikipedia.org/wiki/Confused_deputy_problem
+  - label: Hardy (1988) — The Confused Deputy
+    url: https://dl.acm.org/doi/10.1145/54289.871709
 quiz:
   - q: What is excessive agency?
     options:

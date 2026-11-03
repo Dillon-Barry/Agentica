@@ -19,6 +19,8 @@ terms:
 sources:
   - label: OWASP — LLM01 Prompt Injection
     url: https://genai.owasp.org/llmrisk/llm01-prompt-injection/
+  - label: OWASP — Top 10 for Agentic Applications
+    url: https://genai.owasp.org/2025/12/09/owasp-top-10-for-agentic-applications-the-benchmark-for-agentic-security-in-the-age-of-autonomous-ai/
   - label: Simon Willison — Prompt injection series
     url: https://simonwillison.net/series/prompt-injection/
 quiz:

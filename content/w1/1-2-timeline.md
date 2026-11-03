@@ -26,12 +26,22 @@ terms:
 sources:
   - label: Weizenbaum (1966) — ELIZA
     url: https://dl.acm.org/doi/10.1145/365153.365168
+  - label: Buchanan & Shortliffe (1984) — The MYCIN experiments
+    url: https://people.dbmi.columbia.edu/~ehs7001/Buchanan-Shortliffe-1984/MYCIN%20Book.htm
+  - label: Rao & Georgeff (1995) — BDI agents
+    url: https://cdn.aaai.org/ICMAS/1995/ICMAS95-042.pdf
+  - label: Google DeepMind — AlphaGo
+    url: https://deepmind.google/research/breakthroughs/alphago/
   - label: Vaswani et al. (2017) — Attention Is All You Need
     url: https://arxiv.org/abs/1706.03762
   - label: Yao et al. (2022) — ReAct
     url: https://arxiv.org/abs/2210.03629
+  - label: AutoGPT on GitHub
+    url: https://github.com/Significant-Gravitas/AutoGPT
   - label: Anthropic (2024) — Introducing the Model Context Protocol
     url: https://www.anthropic.com/news/model-context-protocol
+  - label: A2A (2026) — Joining the Agentic AI Foundation
+    url: https://a2a-protocol.org/latest/blog/2026/08/27/a-new-chapter-for-a2a-joining-the-agentic-ai-foundation/
 quiz:
   - q: What did ELIZA (1966) actually do?
     options:
@@ -81,7 +91,7 @@ Agents feel brand new, but the idea is about 60 years old. Each era added one mi
 ===
 **1990s: Intelligent agents.** Researchers designed agents with *beliefs*, *desires* and *intentions* (the BDI model) that plan toward goals. Great theory, but they still couldn't understand messy human language.
 ===
-**2016: AlphaGo.** DeepMind's agent beat a world champion at Go. It studied human games, then played itself millions of times, learning from wins and losses (reinforcement learning). Superhuman, but only at one game.
+**2016: AlphaGo.** DeepMind's agent beat a world champion at Go. It studied thousands of expert games, then played against versions of itself, learning from wins and losses (reinforcement learning). Superhuman, but only at one game.
 ===
 **2022: LLMs and ReAct.** Large language models could finally understand language about almost anything. The **ReAct** paper showed a model could *reason*, *act* with a tool, then reason again. The modern agent was born.
 ===

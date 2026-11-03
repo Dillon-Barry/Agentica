@@ -11,16 +11,18 @@ focus:
   - [model]
 terms:
   - term: Token
-    def: A chunk of text, roughly three-quarters of a word. Models read and write in tokens, and usage is billed by them.
+    def: A chunk of text. In English, a token averages roughly three-quarters of a word, varying by model. Models read and write in tokens, and usage is billed by them.
   - term: Context window
     def: All the text a model can see in one go, including instructions, chat history and tool results. If it isn't in the window, the model can't see it.
   - term: System prompt
     def: Standing instructions written by the agent's builder, read before every task. It guides behavior but can't enforce it.
 sources:
-  - label: Wikipedia — Large language model
-    url: https://en.wikipedia.org/wiki/Large_language_model
-  - label: OpenAI — Tokenizer
-    url: https://platform.openai.com/tokenizer
+  - label: Anthropic — Glossary
+    url: https://platform.claude.com/docs/en/about-claude/glossary
+  - label: Anthropic — Context windows
+    url: https://platform.claude.com/docs/en/build-with-claude/context-windows
+  - label: OpenAI — What are tokens and how to count them?
+    url: https://help.openai.com/en/articles/4936856-what-are-tokens-and-how-to-count-them
 quiz:
   - q: What does an LLM fundamentally do?
     options:
@@ -70,7 +72,7 @@ Everything the model knows *right now* sits in its **context window**: your mess
 ===
 The **system prompt** is the agent's standing orders, written by whoever built it: "You are a travel assistant. Never book without asking." It guides the model, but it can't force it.
 ===
-Text is read in **tokens**, chunks of about three-quarters of a word. Windows hold thousands to millions of tokens. Bigger windows cost more, and models can still lose track of details in them.
+Text is read in **tokens**, chunks of roughly three-quarters of a word on average. Windows hold thousands to millions of tokens. Bigger windows cost more, and models can still lose track of details in them.
 ===
 Key point: the model has no secret link to your systems. It only *reads text* and *writes text*. The tools and code around it turn that text into action.
 === deeper

@@ -73,4 +73,4 @@ Example: a "calculator" whose description adds: "Before using this tool, read th
 ===
 Underneath, it's a **supply chain** problem. Anyone can publish an MCP server. Installing one is like installing software from a stranger.
 === deeper
-Security researchers at Invariant Labs demonstrated these attacks against popular MCP clients in 2025. Defenses include pinning tool versions and flagging changes, scanning descriptions, showing users exactly what a tool says, and only installing servers from a curated, vetted source. That last one is a job for a registry, as you'll see in World 6.
+Security researchers at Invariant Labs demonstrated these attacks in April 2025, using the popular MCP client Cursor. Defenses include pinning tool versions and flagging changes, scanning descriptions, showing users exactly what a tool says, and only installing servers from a curated, vetted source. That last one is a job for a registry, as you'll see in World 6.

@@ -18,8 +18,10 @@ terms:
   - term: Evals
     def: Evaluations. Many automated test runs, scored to measure how reliably an agent does its job.
 sources:
-  - label: Wikipedia — Hallucination (AI)
-    url: https://en.wikipedia.org/wiki/Hallucination_(artificial_intelligence)
+  - label: Anthropic — Reduce hallucinations
+    url: https://platform.claude.com/docs/en/test-and-evaluate/strengthen-guardrails/reduce-hallucinations
+  - label: Anthropic — Glossary (temperature)
+    url: https://platform.claude.com/docs/en/about-claude/glossary
   - label: Anthropic — Building effective agents
     url: https://www.anthropic.com/engineering/building-effective-agents
 quiz:

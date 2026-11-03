@@ -20,6 +20,8 @@ sources:
     url: https://arxiv.org/abs/2201.11903
   - label: Shinn et al. (2023) — Reflexion
     url: https://arxiv.org/abs/2303.11366
+  - label: Anthropic — Extended thinking
+    url: https://platform.claude.com/docs/en/build-with-claude/extended-thinking
   - label: Anthropic — Building effective agents
     url: https://www.anthropic.com/engineering/building-effective-agents
 quiz:

@@ -20,6 +20,10 @@ sources:
     url: https://aregistry.ai/
   - label: Solo.io — The problems agentregistry solves
     url: https://www.solo.io/blog/understanding-the-agentregistry-project-and-the-problems-it-solves
+  - label: Solo.io — agentregistry product page
+    url: https://www.solo.io/products/agentregistry
+  - label: Solo.io docs — Artifact approval
+    url: https://docs.solo.io/agentregistry/latest/security/approval/
 quiz:
   - q: What does agentregistry catalog?
     options:
@@ -63,7 +67,7 @@ quiz:
 ---
 Second tool: **agentregistry**, an open source project from Solo.io. Think of it as a trusted app store for AI building blocks.
 ===
-It catalogs **MCP servers, agents, skills and prompts** in one searchable, versioned place, instead of scattered across npm, PyPI, Docker Hub and GitHub.
+It catalogs **MCP servers, agents, skills and prompts** in one searchable, versioned place, instead of scattered across npm, PyPI, container registries and GitHub.
 ===
 Teams publish artifacts to the registry. Others discover them and pull approved versions. Every item has an owner, a version and a history.
 ===
@@ -71,4 +75,4 @@ That hits sprawl and supply chain risk directly. If it isn't in the registry, it
 ===
 Its CLI, **arctl**, scaffolds, runs, builds and publishes artifacts, and the registry can deploy them straight to kagent.
 === deeper
-agentregistry describes each kind of artifact with Kubernetes-style resource specs. Solo's enterprise edition adds approval workflows, where changes wait for an admin, role-based rules for who can publish or deploy, and discovery of agents already running in other clouds, like AWS and Azure, so shadow AI can be found and brought under control. Deployed MCP servers can then sit behind agentgateway for runtime policy.
+agentregistry describes each kind of artifact with Kubernetes-style resource specs. Solo's enterprise edition adds approval workflows, where changes wait for an admin, role-based access control, and discovery of agents already running elsewhere, like Azure AI Foundry, so shadow AI can be found and brought under control. Deployed MCP servers can then sit behind agentgateway for runtime policy.
